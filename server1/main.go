@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // album represents data about a record album.
@@ -46,6 +48,9 @@ func getAlbums(cnx *gin.Context) {
 func getAlbumByID(cnx *gin.Context) {
 	id := cnx.Param("id")
 
+	res, _ := HashPassword(id)
+	fmt.Println(res)
+
 	for _, album := range albums {
 		if album.ID == id {
 			cnx.IndentedJSON(http.StatusOK, album)
@@ -57,4 +62,14 @@ func getAlbumByID(cnx *gin.Context) {
 
 func home(cnx *gin.Context) {
 	cnx.IndentedJSON(http.StatusOK, "Home")
+}
+
+func HashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
+}
+
+func CheckPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
 }
