@@ -22,7 +22,7 @@ func CreateQuest(con *gin.Context) {
 		return
 	}
 	// Create quest
-	quest := models.Quest{Title: questInput.Title, Description: questInput.Description, Reward: questInput.Reward}
+	quest := models.Quest{ Title: questInput.Title, Description: questInput.Description, Reward: questInput.Reward}
 	models.DB.Create(&quest)
 
 	con.IndentedJSON(http.StatusCreated, gin.H{ "data": quest })
@@ -33,6 +33,7 @@ func FindQuest(con *gin.Context) {
 
 	if err := models.DB.Where("id = ?", con.Param("id")).First(&quest).Error; err != nil {
 		con.IndentedJSON(http.StatusBadRequest, gin.H{ "error": "Record not found!" })
+		return
 	}
 
 	con.IndentedJSON(http.StatusOK, gin.H{ "data": quest })
@@ -42,6 +43,7 @@ func UpdateQuest(con *gin.Context) {
 	var quest models.Quest
 	if err := models.DB.Where("id = ?", con.Param("id")).First(&quest).Error; err != nil {
 		con.IndentedJSON(http.StatusBadRequest, gin.H{ "error": "Record not found!" })
+		return
 	}
 
 	// Validate input

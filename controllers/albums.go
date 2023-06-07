@@ -7,40 +7,66 @@ import (
 	"server/models"
 )
 
-// albums slice to seed record album data.
-var albums = []models.Album{
-	{ID: "1", Title: "Blue Train", Artist: "John Coltrane", Price: 56.99},
-	{ID: "2", Title: "Jeru", Artist: "Gerry Mulligan", Price: 17.99},
-	{ID: "3", Title: "Sarah Vaughan and Clifford Brown", Artist: "Sarah Vaughan", Price: 39.99},
-}
-
-func PostAlbums(cnx *gin.Context) {
-	var newAlbum models.Album
-	if err := cnx.BindJSON(&newAlbum); err != nil {
+func PostAlbum(cnx *gin.Context) {
+	var albumInput models.CreateAlbumInput
+	if err := cnx.ShouldBindJSON(&albumInput); err != nil {
+		cnx.IndentedJSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
 		return
 	}
-	albums = append(albums, newAlbum)
-	cnx.IndentedJSON(http.StatusCreated, newAlbum)
+	album := models.Album{ Title: albumInput.Title, Artist: albumInput.Artist, Price: albumInput.Price }
+	models.DB.Create(&album)
+
+	cnx.IndentedJSON(http.StatusCreated, gin.H{ "data": album })
 }
 
 func GetAlbums(cnx *gin.Context) {
-	cnx.IndentedJSON(http.StatusOK, albums)
+	var albums []models.Album
+	models.DB.Find(&albums)
+	cnx.IndentedJSON(http.StatusOK, gin.H{ "data": albums })
 }
 
 func GetAlbumByID(cnx *gin.Context) {
-	id := cnx.Param("id")
+	var album models.Album
 
-	for _, album := range albums {
-		if album.ID == id {
-			cnx.IndentedJSON(http.StatusOK, album)
-			return
-		}
+	if err := models.DB.Where("id = ? ", cnx.Param("id")).First(&album).Error; err != nil {
+		cnx.IndentedJSON(http.StatusBadRequest, gin.H{ "error": "Record not found" })
+		return
 	}
-	cnx.IndentedJSON(http.StatusNotFound, gin.H{"message": "album not found"})
+	cnx.IndentedJSON(http.StatusOK, gin.H{ "data": album })
 }
 
+func UpdateAlbum(cnx *gin.Context) {
+	var album models.Album
+
+	if err := models.DB.Where("id = ?", cnx.Param("id")).First(&album).Error; err != nil {
+		cnx.IndentedJSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
+		return
+	}
+
+	var updateAlbumInput models.UpdateAlbumInput
+	if err := cnx.ShouldBindJSON(&updateAlbumInput); err != nil {
+		cnx.IndentedJSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
+		return
+	}
+	models.DB.Model(&album).Updates(updateAlbumInput)
+	cnx.IndentedJSON(http.StatusOK, gin.H{ "data": album })
+}
+
+func DeleteAlbum(con *gin.Context) {
+  // Get model if exist
+  var album models.Album
+  if err := models.DB.Where("id = ?", con.Param("id")).First(&album).Error; err != nil {
+    con.IndentedJSON(http.StatusBadRequest, gin.H{ "error": "Record not found!" })
+    return
+  }
+
+  models.DB.Delete(&album)
+  con.IndentedJSON(http.StatusOK, gin.H{ "data": true })
+}
+
+
 func Home(cnx *gin.Context) {
-	cnx.IndentedJSON(http.StatusOK, gin.H{"mesage": "Welcome to Go API"})
+	cnx.IndentedJSON(http.StatusOK, gin.H{ "mesage": "Welcome to Go API" })
 }
 
 func HashPassword(password string) (string, error) {

@@ -21,6 +21,7 @@ func main() {
 	if port == "" {
 		port = "8000"
 	}
+	// gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 
 	router.GET("/", controllers.Home)
@@ -34,8 +35,10 @@ func main() {
 
 	// Album Endpoints
 	router.GET("/albums", controllers.GetAlbums)
-	router.POST("/albums", controllers.PostAlbums)
+	router.POST("/albums", controllers.PostAlbum)
 	router.GET("/albums/:id", controllers.GetAlbumByID)
+	router.PATCH("/albums/:id", controllers.UpdateAlbum)
+	router.DELETE("/albums/:id", controllers.DeleteAlbum)
 
 	models.ConnectDatabase()
 	if err := router.Run("localhost:"+port); err != nil {
