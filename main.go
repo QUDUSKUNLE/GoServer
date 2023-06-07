@@ -24,11 +24,21 @@ func main() {
 	router := gin.Default()
 
 	router.GET("/", controllers.Home)
-	router.GET("/books", controllers.FindBooks)
+
+	// Quests Endpoints
+	router.GET("/quests", controllers.FindQuests)
+	router.POST("/quests", controllers.CreateQuest)
+	router.GET("/quests/:id", controllers.FindQuest)
+	router.PATCH("/quests/:id", controllers.UpdateQuest)
+	router.DELETE("/quests/:id", controllers.DeleteQuest)
+
+	// Album Endpoints
 	router.GET("/albums", controllers.GetAlbums)
-	router.GET("/albums/:id", controllers.GetAlbumByID)
 	router.POST("/albums", controllers.PostAlbums)
+	router.GET("/albums/:id", controllers.GetAlbumByID)
 
 	models.ConnectDatabase()
-	router.Run("localhost:"+port)
+	if err := router.Run("localhost:"+port); err != nil {
+		return
+	}
 }
