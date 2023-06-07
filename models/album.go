@@ -1,13 +1,16 @@
 package models
 
-import "time"
+import (
+	"time"
+	// "gorm.io/gorm"
+)
 
 // album represents data about a record album.
 type Album struct {
-	ID uint `json:"id" gorm:"primary_key"` 
-	Title  string  `json:"title"`
-	Artist string  `json:"artist"`
-	Price  float64 `json:"price"`
+	ID uint `gorm:"primary_key" json:"id"` 
+	Title string `gorm:"size:255;not null;unique" json:"title"`
+	Artist string  `gorm:"size:255;not null" json:"artist"`
+	Price  float64 `gorm:"not null" json:"price"`
 	CreatedAt time.Time `json:"created_at"`
   UpdatedAt time.Time `json:"updated_at"`
 }
@@ -22,4 +25,11 @@ type UpdateAlbumInput struct {
 	Title  string  `json:"title"`
 	Artist string  `json:"artist"`
 	Price  float64 `json:"price"`
+}
+
+func (album *Album) Save() (*Album, error) {
+	if err := DB.Create(&album).Error; err != nil {
+		return &Album{}, err
+	}
+	return album, nil
 }

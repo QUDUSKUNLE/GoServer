@@ -1,12 +1,14 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 type Quest struct {
-  ID uint `json:"id" gorm:"primary_key"`  
-  Title string `json:"title"`
-  Description string `json:"description"`
-  Reward int `json:"reward"`
+  ID uint `gorm:"primary_key" json:"id" `  
+  Title string `gorm:"size:255;not null;unique" json:"title"`
+  Description string `gorm:"size:255;not null" json:"description"`
+  Reward int `gorm:"not null" json:"reward"`
   CreatedAt time.Time `json:"created_at"`
   UpdatedAt time.Time `json:"updated_at"`
 }
@@ -21,4 +23,11 @@ type UpdateQuestInput struct {
   Title string `json:"title"`
   Description string `json:"description"`
   Reward int `json:"reward"`
+}
+
+func (quest *Quest) Save() (*Quest, error) {
+  if err := DB.Create(&quest).Error; err != nil {
+    return &Quest{}, err
+  }
+  return quest, nil
 }

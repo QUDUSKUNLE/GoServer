@@ -22,9 +22,11 @@ func ConnectDatabase() {
 
 	if err != nil {
 		panic("Failed to connect to database")
+	} else {
+		fmt.Println("Successfully connected to the database.")
 	}
 
-	database.AutoMigrate(&Album{}, &Quest{})
+	database.AutoMigrate(&Album{}, &Quest{}, &User{})
 
 	DB = database
 }
