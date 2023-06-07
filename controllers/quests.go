@@ -66,5 +66,5 @@ func DeleteQuest(con *gin.Context) {
   }
 
   models.DB.Delete(&quest)
-  con.IndentedJSON(http.StatusOK, gin.H{ "data": true })
+  con.IndentedJSON(http.StatusOK, gin.H{ "data": "Deleted successfully" })
 }
