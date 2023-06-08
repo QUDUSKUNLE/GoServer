@@ -1,20 +1,21 @@
 package main
 
 import (
-	"os"
 	"log"
 	"net/http"
-	"github.com/joho/godotenv"
-	"github.com/gin-gonic/gin"
-	"server/models"
+	"os"
 	"server/controllers"
-	// "server/middlewares"
+	"server/middlewares"
+	"server/models"
+
+	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func init() {
 	err := godotenv.Load(".env")
 	if err != nil {
-			log.Fatal("Error loading .env file")
+		log.Fatal("Error loading .env file")
 	}
 }
 
@@ -26,8 +27,8 @@ func main() {
 	// gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 
-	router.GET("/", func (context *gin.Context) {
-		context.IndentedJSON(http.StatusOK, gin.H{ "mesage": "Welcome to Go API" })
+	router.GET("/", func(context *gin.Context) {
+		context.JSON(http.StatusOK, gin.H{"mesage": "Welcome to Go API"})
 	})
 
 	// PublicRoutes Endpoints
@@ -37,7 +38,7 @@ func main() {
 
 	// ProtectedRoutes Endpoints
 	protectedRoutes := router.Group("/api")
-	// protectedRoutes.Use(middlewares.JWTAuthMiddleware())
+	protectedRoutes.Use(middlewares.JWTAuthMiddleware())
 	protectedRoutes.GET("/quests", controllers.FindQuests)
 	protectedRoutes.POST("/quests", controllers.CreateQuest)
 	protectedRoutes.GET("/quests/:questID", controllers.FindQuest)
@@ -52,7 +53,7 @@ func main() {
 	protectedRoutes.DELETE("/albums/:albumID", controllers.DeleteAlbum)
 
 	models.ConnectDatabase()
-	if err := router.Run("localhost:"+port); err != nil {
+	if err := router.Run("localhost:" + port); err != nil {
 		return
 	}
 }
