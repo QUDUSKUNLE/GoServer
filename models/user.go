@@ -46,7 +46,7 @@ func (user *User) ValidatePassword(password string) error {
 func FindUserByUsername(username string) (User, error) {
 	var user User
 
-	if err := DB.Where("username=?", username).Find(&user).Error; err != nil {
+	if err := DB.Where("username=?", username).First(&user).Error; err != nil {
 		return User{}, nil
 	}
 	return user, nil
@@ -54,9 +54,8 @@ func FindUserByUsername(username string) (User, error) {
 
 func FindUserById(id uint) (User, error) {
 	var user User
-	err := DB.Preload("Entries").Where("ID=?", id).Find(&user).Error
-	if err != nil {
-			return User{}, err
+	if err := DB.Where("ID=?", id).First(&user).Error; err != nil {
+		return User{}, err
 	}
 	return user, nil
 }
