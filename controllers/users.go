@@ -41,8 +41,8 @@ func Login(context *gin.Context) {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
 		return
 	}
-
-	user, err := models.FindUserByUsername(loginInput.Username)
+	var user models.User
+	_, err := user.FindUserByUsername(loginInput.Username)
 	if err != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
 		return
@@ -58,5 +58,5 @@ func Login(context *gin.Context) {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
 		return
 	}
-	context.IndentedJSON(http.StatusBadRequest, gin.H{ "token": jwt })
+	context.IndentedJSON(http.StatusOK, gin.H{ "token": jwt })
 }

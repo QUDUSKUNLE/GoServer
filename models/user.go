@@ -4,6 +4,7 @@ import (
 	"html"
 	"strings"
 	"time"
+	"errors"
 
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -40,13 +41,15 @@ func (user *User) BeforeSave(*gorm.DB) error {
 }
 
 func (user *User) ValidatePassword(password string) error {
-	return bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
+		return errors.New("invalid log in credentials")
+	}
+	return nil
 }
 
-func FindUserByUsername(username string) (User, error) {
-	var user User
-	if err := DB.Where("username=?", username).First(&user).Error; err != nil {
-		return User{}, nil
+func (user *User) FindUserByUsername(username string) (*User, error) {
+	if err := DB.Where(&User{ Username: username }).First(&user).Error; err != nil {
+		return user, errors.New("invalid log in credentials")
 	}
 	return user, nil
 }
