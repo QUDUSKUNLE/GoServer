@@ -28,19 +28,18 @@ func GenerateJWT(user models.User) (string, error) {
 func ValidateJWT(context *gin.Context) error {
 	token, err := getToken(context)
 	if err != nil {
-			return err
+		return err
 	}
 	_, ok := token.Claims.(jwt.MapClaims)
 	if ok && token.Valid {
-			return nil
+		return nil
 	}
 	return errors.New("invalid token provided")
 }
 
 func CurrentUser(context *gin.Context) (models.User, error) {
-	err := ValidateJWT(context)
-	if err != nil {
-			return models.User{}, err
+	if err := ValidateJWT(context); err != nil {
+		return models.User{}, err
 	}
 	token, _ := getToken(context)
 	claims, _ := token.Claims.(jwt.MapClaims)
@@ -48,14 +47,13 @@ func CurrentUser(context *gin.Context) (models.User, error) {
 
 	user, err := models.FindUserById(userId)
 	if err != nil {
-			return models.User{}, err
+		return models.User{}, err
 	}
 	return user, nil
 }
 
-
 func getToken(context *gin.Context) (*jwt.Token, error) {
-	tokenString := extractToken(context)
+	tokenString, _ := extractToken(context)
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
@@ -65,11 +63,11 @@ func getToken(context *gin.Context) (*jwt.Token, error) {
 	return token, err
 }
 
-func extractToken(context *gin.Context) string {
+func extractToken(context *gin.Context) (string, error) {
 	bearerToken := context.Request.Header.Get("Authorization")
 	splitToken := strings.Split(bearerToken, " ")
-	if len(splitToken) == 2 {
-		return splitToken[1]
+	if len(splitToken) == 2 && splitToken[0] == os.Getenv("TOKEN_TYPE") {
+		return splitToken[1], nil
 	}
-	return ""
+	return "", errors.New("invalid authorization token")
 }
