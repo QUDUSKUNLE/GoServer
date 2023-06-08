@@ -59,5 +59,5 @@ func Login(context *gin.Context) {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	context.JSON(http.StatusOK, gin.H{"token": jwt})
+	context.JSON(http.StatusOK, gin.H{"token": jwt })
 }

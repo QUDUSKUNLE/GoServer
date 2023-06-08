@@ -28,28 +28,13 @@ func GenerateJWT(user models.User) (string, error) {
 func ValidateJWT(context *gin.Context) error {
 	token, err := getToken(context)
 	if err != nil {
-		return err
+		return errors.New("invalid token provided")
 	}
 	_, ok := token.Claims.(jwt.MapClaims)
 	if ok && token.Valid {
 		return nil
 	}
-	return errors.New("invalid token provided")
-}
-
-func CurrentUser(context *gin.Context) (models.User, error) {
-	if err := ValidateJWT(context); err != nil {
-		return models.User{}, err
-	}
-	token, _ := getToken(context)
-	claims, _ := token.Claims.(jwt.MapClaims)
-	userId := uint(claims["id"].(float64))
-
-	user, err := models.FindUserById(userId)
-	if err != nil {
-		return models.User{}, err
-	}
-	return user, nil
+	return errors.New("invalid token")
 }
 
 func getToken(context *gin.Context) (*jwt.Token, error) {

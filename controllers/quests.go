@@ -34,7 +34,6 @@ func CreateQuest(context *gin.Context) {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
 	context.JSON(http.StatusCreated, gin.H{"data": savedQuest})
 }
 

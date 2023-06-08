@@ -10,7 +10,7 @@ import (
 func JWTAuthMiddleware() gin.HandlerFunc {
 	return func(context *gin.Context) {
 		if err := helpers.ValidateJWT(context); err != nil {
-			context.JSON(http.StatusUnauthorized, gin.H{"error": "Authentication is required"})
+			context.JSON(http.StatusUnauthorized, gin.H{ "error": err.Error() })
 			context.Abort()
 			return
 		}
