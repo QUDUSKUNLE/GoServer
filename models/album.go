@@ -2,7 +2,7 @@ package models
 
 import (
 	"time"
-	// "gorm.io/gorm"
+	"errors"
 )
 
 // album represents data about a record album.
@@ -30,6 +30,37 @@ type UpdateAlbumInput struct {
 func (album *Album) Save() (*Album, error) {
 	if err := DB.Create(&album).Error; err != nil {
 		return &Album{}, err
+	}
+	return album, nil
+}
+
+func (album *Album) Update(updateAlbum UpdateAlbumInput, albumID string) (*Album, error) {
+	if err := DB.First(&album, albumID).Error; err != nil {
+		return &Album{}, err
+	}
+	if err := DB.Model(&album).Updates(updateAlbum).Error; err != nil {
+		return &Album{}, err
+	}
+	return album, nil
+}
+
+func (album *Album) FindAll() []Album {
+	var albums []Album
+	DB.Find(&albums)
+	return albums
+}
+
+func (album *Album) Delete(albumID string) (bool, error) {
+	if err := DB.First(&album, albumID).Error; err != nil {
+		return false, errors.New("record not found")
+	}
+	DB.Delete(&album)
+	return true, nil
+}
+
+func (album *Album) FindAlbumByID(albumID string) (*Album, error) {
+	if err := DB.First(&album, albumID).Error; err != nil {
+		return album, err
 	}
 	return album, nil
 }
