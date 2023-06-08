@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	"net/http"
 	"server/models"
 	"testing"
@@ -16,5 +17,9 @@ func TestAddQuest(t *testing.T) {
 	}
 
 	writer := makeRequest("POST", "/api/quests", quest, true)
+	var response map[string]string
+	json.Unmarshal(writer.Body.Bytes(), &response)
+	_, exists := response["data"]
+	assert.Equal(t, true, exists)
 	assert.Equal(t, http.StatusCreated, writer.Code)
 }
