@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"server/models"
 	"server/controllers"
-	"server/middlewares"
+	// "server/middlewares"
 )
 
 func init() {
@@ -30,27 +30,26 @@ func main() {
 		context.IndentedJSON(http.StatusOK, gin.H{ "mesage": "Welcome to Go API" })
 	})
 
-	// Users Endpoints
-
+	// PublicRoutes Endpoints
 	publicRoutes := router.Group("/auth")
 	publicRoutes.POST("/register", controllers.Register)
 	publicRoutes.POST("/login", controllers.Login)
 
+	// ProtectedRoutes Endpoints
 	protectedRoutes := router.Group("/api")
-	// Quests Endpoints
-	protectedRoutes.Use(middlewares.JWTAuthMiddleware())
+	// protectedRoutes.Use(middlewares.JWTAuthMiddleware())
 	protectedRoutes.GET("/quests", controllers.FindQuests)
 	protectedRoutes.POST("/quests", controllers.CreateQuest)
-	protectedRoutes.GET("/quests/:id", controllers.FindQuest)
-	protectedRoutes.PATCH("/quests/:id", controllers.UpdateQuest)
-	protectedRoutes.DELETE("/quests/:id", controllers.DeleteQuest)
+	protectedRoutes.GET("/quests/:questID", controllers.FindQuest)
+	protectedRoutes.PATCH("/quests/:questID", controllers.UpdateQuest)
+	protectedRoutes.DELETE("/quests/:questID", controllers.DeleteQuest)
 
 	// Album Endpoints
 	protectedRoutes.GET("/albums", controllers.GetAlbums)
 	protectedRoutes.POST("/albums", controllers.PostAlbum)
-	protectedRoutes.GET("/albums/:id", controllers.GetAlbumByID)
-	protectedRoutes.PATCH("/albums/:id", controllers.UpdateAlbum)
-	protectedRoutes.DELETE("/albums/:id", controllers.DeleteAlbum)
+	protectedRoutes.GET("/albums/:albumID", controllers.GetAlbumByID)
+	protectedRoutes.PATCH("/albums/:albumID", controllers.UpdateAlbum)
+	protectedRoutes.DELETE("/albums/:albumID", controllers.DeleteAlbum)
 
 	models.ConnectDatabase()
 	if err := router.Run("localhost:"+port); err != nil {

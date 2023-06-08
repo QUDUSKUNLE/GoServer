@@ -19,56 +19,52 @@ func PostAlbum(context *gin.Context) {
 	}
 
 	savedAlbum, err := album.Save()
-
 	if err != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
 		return
 	}
-
 	context.IndentedJSON(http.StatusCreated, gin.H{ "data": savedAlbum })
 }
 
 func GetAlbums(context *gin.Context) {
-	var albums []models.Album
-	models.DB.Find(&albums)
-	context.IndentedJSON(http.StatusOK, gin.H{ "data": albums })
+	var album models.Album
+	result := album.FindAll()
+	context.IndentedJSON(http.StatusOK, gin.H{ "data": result })
 }
 
 func GetAlbumByID(context *gin.Context) {
 	var album models.Album
-
-	if err := models.DB.Where("id = ? ", context.Param("id")).First(&album).Error; err != nil {
+	result, err := album.FindAlbumByID(context.Param("albumID"))
+	if err != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{ "error": "Record not found" })
 		return
 	}
-	context.IndentedJSON(http.StatusOK, gin.H{ "data": album })
+	context.IndentedJSON(http.StatusOK, gin.H{ "data": result })
 }
 
 func UpdateAlbum(context *gin.Context) {
-	var album models.Album
-
-	if err := models.DB.Where("id = ?", context.Param("id")).First(&album).Error; err != nil {
-		context.IndentedJSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
-		return
-	}
-
 	var updateAlbumInput models.UpdateAlbumInput
 	if err := context.ShouldBindJSON(&updateAlbumInput); err != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
 		return
 	}
-	models.DB.Model(&album).Updates(updateAlbumInput)
-	context.IndentedJSON(http.StatusOK, gin.H{ "data": album })
+	var album models.Album
+	updatedAlbum, err := album.Update(updateAlbumInput, context.Param("albumID"))
+
+	if err != nil {
+		context.IndentedJSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
+		return
+	}
+	context.IndentedJSON(http.StatusOK, gin.H{ "data": updatedAlbum })
 }
 
-func DeleteAlbum(con *gin.Context) {
+func DeleteAlbum(context *gin.Context) {
   // Get model if exist
   var album models.Album
-  if err := models.DB.Where("id = ?", con.Param("id")).First(&album).Error; err != nil {
-    con.IndentedJSON(http.StatusBadRequest, gin.H{ "error": "Record not found!" })
+	result, err := album.Delete(context.Param("questID"))
+  if err != nil {
+    context.IndentedJSON(http.StatusBadRequest, gin.H{ "error": "Record not found!" })
     return
   }
-
-  models.DB.Delete(&album)
-  con.IndentedJSON(http.StatusOK, gin.H{ "data": true })
+  context.IndentedJSON(http.StatusOK, gin.H{ "data": result })
 }

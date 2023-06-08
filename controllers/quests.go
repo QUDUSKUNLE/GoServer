@@ -40,7 +40,7 @@ func CreateQuest(context *gin.Context) {
 func FindQuest(context *gin.Context) {
 	var quest models.Quest
 
-	if err := models.DB.Where("id = ?", context.Param("id")).First(&quest).Error; err != nil {
+	if err := models.DB.Where("id = ?", context.Param("albumID")).First(&quest).Error; err != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{ "error": "Record not found!" })
 		return
 	}
@@ -50,7 +50,7 @@ func FindQuest(context *gin.Context) {
 
 func UpdateQuest(context *gin.Context) {
 	var quest models.Quest
-	if err := models.DB.Where("id = ?", context.Param("id")).First(&quest).Error; err != nil {
+	if err := models.DB.Where("id = ?", context.Param("albumID")).First(&quest).Error; err != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{ "error": "Record not found!" })
 		return
 	}
@@ -69,7 +69,7 @@ func UpdateQuest(context *gin.Context) {
 func DeleteQuest(context *gin.Context) {
   // Get model if exist
   var quest models.Quest
-  if err := models.DB.Where("id = ?", context.Param("id")).First(&quest).Error; err != nil {
+  if err := models.DB.Where("id = ?", context.Param("albumID")).First(&quest).Error; err != nil {
     context.IndentedJSON(http.StatusBadRequest, gin.H{ "error": "Record not found!" })
     return
   }
