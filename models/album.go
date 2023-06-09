@@ -1,30 +1,30 @@
 package models
 
 import (
-	"time"
 	"errors"
+	"time"
 )
 
 // album represents data about a record album.
 type Album struct {
-	ID uint `gorm:"primary_key" json:"id"` 
-	Title string `gorm:"size:255;not null;unique" json:"title"`
-	Artist string  `gorm:"size:255;not null" json:"artist"`
-	Price  float64 `gorm:"not null" json:"price"`
-	CreatedAt time.Time `json:"created_at"`
-  UpdatedAt time.Time `json:"updated_at"`
+	ID        uint      `gorm:"primary_key" json:"ID"`
+	Title     string    `gorm:"size:255;not null;unique" json:"Title"`
+	Artist    string    `gorm:"size:255;not null" json:"Artist"`
+	Price     float64   `gorm:"not null" json:"Price"`
+	CreatedAt time.Time `json:"CreatedAt"`
+	UpdatedAt time.Time `json:"UpdatedAt"`
 }
 
 type CreateAlbumInput struct {
-	Title  string  `json:"title" binding:"required"`
-	Artist string  `json:"artist" binding:"required"`
-	Price  float64 `json:"price" binding:"required"`
+	Title  string  `json:"Title" binding:"required"`
+	Artist string  `json:"Artist" binding:"required"`
+	Price  float64 `json:"Price" binding:"required"`
 }
 
 type UpdateAlbumInput struct {
-	Title  string  `json:"title"`
-	Artist string  `json:"artist"`
-	Price  float64 `json:"price"`
+	Title  string  `json:"Title"`
+	Artist string  `json:"Artist"`
+	Price  float64 `json:"Price"`
 }
 
 func (album *Album) Save() (*Album, error) {
@@ -34,8 +34,8 @@ func (album *Album) Save() (*Album, error) {
 	return album, nil
 }
 
-func (album *Album) Update(updateAlbum UpdateAlbumInput, albumID string) (*Album, error) {
-	if err := DB.First(&album, albumID).Error; err != nil {
+func (album *Album) Update(updateAlbum UpdateAlbumInput, id string) (*Album, error) {
+	if err := DB.First(&album, id).Error; err != nil {
 		return &Album{}, err
 	}
 	if err := DB.Model(&album).Updates(updateAlbum).Error; err != nil {
@@ -50,16 +50,16 @@ func (album *Album) FindAll() []Album {
 	return albums
 }
 
-func (album *Album) Delete(albumID string) (bool, error) {
-	if err := DB.First(&album, albumID).Error; err != nil {
+func (album *Album) Delete(id string) (bool, error) {
+	if err := DB.First(&album, id).Error; err != nil {
 		return false, errors.New("record not found")
 	}
 	DB.Delete(&album)
 	return true, nil
 }
 
-func (album *Album) FindAlbumByID(albumID string) (*Album, error) {
-	if err := DB.First(&album, albumID).Error; err != nil {
+func (album *Album) FindAlbumByID(id string) (*Album, error) {
+	if err := DB.First(&album, id).Error; err != nil {
 		return album, err
 	}
 	return album, nil

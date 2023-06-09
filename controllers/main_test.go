@@ -1,9 +1,9 @@
 package controllers
 
 import (
+	"bytes"
 	"encoding/json"
 	"log"
-	"bytes"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -14,7 +14,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
-
 
 func TestMain(m *testing.M) {
 	gin.SetMode(gin.TestMode)
@@ -51,18 +50,18 @@ func apiRouter() *gin.Engine {
 	protectedRouters.Use(middlewares.JWTAuthMiddleware())
 	protectedRouters.POST("/quests", AddQuest)
 	protectedRouters.GET("/quests", GetQuests)
-	protectedRouters.GET("/quests/:questID", GetQuest)
-	protectedRouters.PATCH("/quests/:questID", UpdateQuest)
-	protectedRouters.DELETE("/quests/:questID", DeleteQuest)
+	protectedRouters.GET("/quests/:id", GetQuest)
+	protectedRouters.PATCH("/quests/:id", UpdateQuest)
+	protectedRouters.DELETE("/quests/:id", DeleteQuest)
 
 	protectedRouters.POST("/albums", AddAlbum)
 	protectedRouters.GET("/albums", GetAlbums)
-	protectedRouters.GET("/albums/:albumID", GetAlbum)
-	protectedRouters.PATCH("/albums/:albumID", UpdateAlbum)
-	protectedRouters.DELETE("/albums/:albumID", DeleteAlbum)
+	protectedRouters.GET("/albums/:id", GetAlbum)
+	protectedRouters.PATCH("/albums/:id", UpdateAlbum)
+	protectedRouters.DELETE("/albums/:id", DeleteAlbum)
 
 	return router
-} 
+}
 
 func makeRequest(method, url string, body interface{}, isAuthenticated bool, username, password string) *httptest.ResponseRecorder {
 	requestBody, _ := json.Marshal(body)
