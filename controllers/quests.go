@@ -7,14 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// GET /quests
-// GET all quests
-func GetQuests(context *gin.Context) {
-	var quests []models.Quest
-	models.DB.Find(&quests)
-	context.JSON(http.StatusOK, gin.H{"data": quests})
-}
-
 func AddQuest(context *gin.Context) {
 	// Validate quest
 	var questInput models.CreateQuestInput
@@ -37,43 +29,48 @@ func AddQuest(context *gin.Context) {
 	context.JSON(http.StatusCreated, gin.H{"data": savedQuest})
 }
 
+// GET /quests
+// GET all quests
+func GetQuests(context *gin.Context) {
+	var quest models.Quest
+	result := quest.GetQuests()
+	context.JSON(http.StatusOK, gin.H{ "data": result })
+}
+
 func GetQuest(context *gin.Context) {
 	var quest models.Quest
-
-	if err := models.DB.Where("id = ?", context.Param("questID")).First(&quest).Error; err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+	result, err := quest.GetQuest(context.Param("questID"))
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{ "error": "Record not found", })
 		return
 	}
 
-	context.JSON(http.StatusOK, gin.H{"data": quest})
+	context.JSON(http.StatusOK, gin.H{ "data": result })
 }
 
 func UpdateQuest(context *gin.Context) {
-	var quest models.Quest
-	if err := models.DB.Where("id = ?", context.Param("questID")).First(&quest).Error; err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
-		return
-	}
-
-	// Validate input
 	var updateQuestInput models.UpdateQuestInput
 	if err := context.ShouldBindJSON(&updateQuestInput); err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		context.JSON(http.StatusUnprocessableEntity, gin.H{ "error": err.Error() })
 		return
 	}
 
-	models.DB.Model(&quest).Updates(updateQuestInput)
-	context.JSON(http.StatusOK, gin.H{"data": quest})
+	var quest models.Quest
+	updatedQuest, err := quest.UpdateQuest(updateQuestInput, context.Param("questID"))
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{ "error": "Record not found!" })
+		return
+	}
+	context.JSON(http.StatusNoContent, gin.H{"data": updatedQuest })
 }
 
 func DeleteQuest(context *gin.Context) {
 	// Get model if exist
 	var quest models.Quest
-	if err := models.DB.Where("id = ?", context.Param("questID")).First(&quest).Error; err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+	_, err := quest.DeleteQuest(context.Param("questID"))
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{ "error": "Record not found!" })
 		return
 	}
-
-	models.DB.Delete(&quest)
-	context.JSON(http.StatusOK, gin.H{"data": "Deleted successfully"})
+	context.JSON(http.StatusNoContent, gin.H{ "data": "Deleted successfully" })
 }
