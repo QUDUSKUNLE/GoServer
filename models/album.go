@@ -44,7 +44,7 @@ func (album *Album) Update(updateAlbum UpdateAlbumInput, albumID string) (*Album
 	return album, nil
 }
 
-func (album *Album) FindAll() []Album {
+func (album *Album) GetAlbums() []Album {
 	var albums []Album
 	DB.Find(&albums)
 	return albums

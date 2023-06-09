@@ -31,3 +31,9 @@ func (quest *Quest) Save() (*Quest, error) {
   }
   return quest, nil
 }
+
+func (quest *Quest) AllQuests() []Quest {
+  var quests []Quest
+  DB.Find(&quests)
+  return quests
+}

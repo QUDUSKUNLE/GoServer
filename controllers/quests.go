@@ -7,14 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// GET /quests
-// GET all quests
-func GetQuests(context *gin.Context) {
-	var quests []models.Quest
-	models.DB.Find(&quests)
-	context.JSON(http.StatusOK, gin.H{"data": quests})
-}
-
 func AddQuest(context *gin.Context) {
 	// Validate quest
 	var questInput models.CreateQuestInput
@@ -35,6 +27,14 @@ func AddQuest(context *gin.Context) {
 		return
 	}
 	context.JSON(http.StatusCreated, gin.H{"data": savedQuest})
+}
+
+// GET /quests
+// GET all quests
+func GetQuests(context *gin.Context) {
+	var quest models.Quest
+	result := quest.AllQuests()
+	context.JSON(http.StatusOK, gin.H{ "data": result })
 }
 
 func GetQuest(context *gin.Context) {

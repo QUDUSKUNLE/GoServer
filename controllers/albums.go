@@ -29,7 +29,7 @@ func AddAlbum(context *gin.Context) {
 
 func GetAlbums(context *gin.Context) {
 	var album models.Album
-	result := album.FindAll()
+	result := album.GetAlbums()
 	context.JSON(http.StatusOK, gin.H{"data": result})
 }
 
