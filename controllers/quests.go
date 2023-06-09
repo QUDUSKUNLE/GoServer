@@ -34,43 +34,43 @@ func AddQuest(context *gin.Context) {
 func GetQuests(context *gin.Context) {
 	var quest models.Quest
 	result := quest.GetQuests()
-	context.JSON(http.StatusOK, gin.H{ "data": result })
+	context.JSON(http.StatusOK, gin.H{"data": result})
 }
 
 func GetQuest(context *gin.Context) {
 	var quest models.Quest
-	result, err := quest.GetQuest(context.Param("questID"))
+	result, err := quest.GetQuest(context.Param("id"))
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{ "error": "Record not found", })
+		context.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
 		return
 	}
 
-	context.JSON(http.StatusOK, gin.H{ "data": result })
+	context.JSON(http.StatusOK, gin.H{"data": result})
 }
 
 func UpdateQuest(context *gin.Context) {
 	var updateQuestInput models.UpdateQuestInput
 	if err := context.ShouldBindJSON(&updateQuestInput); err != nil {
-		context.JSON(http.StatusUnprocessableEntity, gin.H{ "error": err.Error() })
+		context.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 		return
 	}
 
 	var quest models.Quest
-	updatedQuest, err := quest.UpdateQuest(updateQuestInput, context.Param("questID"))
+	updatedQuest, err := quest.UpdateQuest(updateQuestInput, context.Param("id"))
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{ "error": "Record not found!" })
+		context.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}
-	context.JSON(http.StatusNoContent, gin.H{"data": updatedQuest })
+	context.JSON(http.StatusNoContent, gin.H{"data": updatedQuest})
 }
 
 func DeleteQuest(context *gin.Context) {
 	// Get model if exist
 	var quest models.Quest
-	_, err := quest.DeleteQuest(context.Param("questID"))
+	_, err := quest.DeleteQuest(context.Param("id"))
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{ "error": "Record not found!" })
+		context.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}
-	context.JSON(http.StatusNoContent, gin.H{ "data": "Deleted successfully" })
+	context.JSON(http.StatusNoContent, gin.H{"data": "Deleted successfully"})
 }

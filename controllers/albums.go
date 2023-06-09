@@ -35,9 +35,9 @@ func GetAlbums(context *gin.Context) {
 
 func GetAlbum(context *gin.Context) {
 	var album models.Album
-	result, err := album.FindAlbumByID(context.Param("albumID"))
+	result, err := album.FindAlbumByID(context.Param("id"))
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{ "error": "Record not found" })
+		context.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
 		return
 	}
 	context.JSON(http.StatusOK, gin.H{"data": result})
@@ -51,7 +51,7 @@ func UpdateAlbum(context *gin.Context) {
 	}
 
 	var album models.Album
-	updatedAlbum, err := album.Update(updateAlbumInput, context.Param("albumID"))
+	updatedAlbum, err := album.Update(updateAlbumInput, context.Param("id"))
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -62,10 +62,10 @@ func UpdateAlbum(context *gin.Context) {
 func DeleteAlbum(context *gin.Context) {
 	// Get model if exist
 	var album models.Album
-	result, err := album.Delete(context.Param("questID"))
+	result, err := album.Delete(context.Param("id"))
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}
-	context.JSON(http.StatusOK, gin.H{ "data": result })
+	context.JSON(http.StatusOK, gin.H{"data": result})
 }

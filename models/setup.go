@@ -26,7 +26,7 @@ func ConnectDatabase() {
 		fmt.Println("Successfully connected to the database.")
 	}
 
-	database.AutoMigrate(&Album{}, &Quest{}, &User{})
+	database.AutoMigrate(&Album{}, &Quest{}, &User{}, &Stock{})
 
 	DB = database
 }

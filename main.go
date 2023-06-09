@@ -43,16 +43,22 @@ func main() {
 	// Quest Endpoints
 	protectedRoutes.GET("/quests", controllers.GetQuests)
 	protectedRoutes.POST("/quests", controllers.AddQuest)
-	protectedRoutes.GET("/quests/:questID", controllers.GetQuest)
-	protectedRoutes.PATCH("/quests/:questID", controllers.UpdateQuest)
-	protectedRoutes.DELETE("/quests/:questID", controllers.DeleteQuest)
+	protectedRoutes.GET("/quests/:id", controllers.GetQuest)
+	protectedRoutes.PATCH("/quests/:id", controllers.UpdateQuest)
+	protectedRoutes.DELETE("/quests/:id", controllers.DeleteQuest)
 
 	// Album Endpoints
 	protectedRoutes.GET("/albums", controllers.GetAlbums)
 	protectedRoutes.POST("/albums", controllers.AddAlbum)
-	protectedRoutes.GET("/albums/:albumID", controllers.GetAlbum)
-	protectedRoutes.PATCH("/albums/:albumID", controllers.UpdateAlbum)
-	protectedRoutes.DELETE("/albums/:albumID", controllers.DeleteAlbum)
+	protectedRoutes.GET("/albums/:id", controllers.GetAlbum)
+	protectedRoutes.PATCH("/albums/:id", controllers.UpdateAlbum)
+	protectedRoutes.DELETE("/albums/:id", controllers.DeleteAlbum)
+
+	protectedRoutes.GET("/stocks", controllers.GetStocks)
+	protectedRoutes.POST("/stocks", controllers.AddStock)
+	protectedRoutes.GET("/stocks/:id", controllers.GetStock)
+	protectedRoutes.PATCH("/stocks/:id", controllers.UpdateAlbum)
+	protectedRoutes.DELETE("/stocks/:id", controllers.DeleteAlbum)
 
 	models.ConnectDatabase()
 	if err := router.Run("localhost:" + port); err != nil {

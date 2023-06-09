@@ -1,21 +1,21 @@
 package models
 
 import (
+	"errors"
 	"html"
 	"strings"
 	"time"
-	"errors"
 
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
 type User struct {
-	ID uint `gorm:"primary_key" json:"id"`
-	Username string `gorm:"size:255;not null;unique" json:"username"`
-	Password string `gorm:"size:255;not null;" json:"-"`
-	CreatedAt time.Time `json:"created_at"`
-  UpdatedAt time.Time `json:"updated_at"`
+	ID        uint      `gorm:"primary_key" json:"ID"`
+	Username  string    `gorm:"size:255;not null;unique" json:"username"`
+	Password  string    `gorm:"size:255;not null;" json:"-"`
+	CreatedAt time.Time `json:"CreatedAt"`
+	UpdatedAt time.Time `json:"UpdatedAt"`
 }
 
 type UserInput struct {
@@ -48,15 +48,15 @@ func (user *User) ValidatePassword(password string) error {
 }
 
 func (user *User) FindUserByUsername(username string) (*User, error) {
-	if err := DB.Where(&User{ Username: username }).First(&user).Error; err != nil {
+	if err := DB.Where(&User{Username: username}).First(&user).Error; err != nil {
 		return user, errors.New("invalid log in credentials")
 	}
 	return user, nil
 }
 
-func FindUserById(id uint) (User, error) {
+func FindUserById(ID uint) (User, error) {
 	var user User
-	if err := DB.Where("ID=?", id).First(&user).Error; err != nil {
+	if err := DB.Where("ID=?", ID).First(&user).Error; err != nil {
 		return User{}, err
 	}
 	return user, nil

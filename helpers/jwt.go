@@ -1,13 +1,13 @@
 package helpers
 
 import (
-	"os"
+	"errors"
 	"fmt"
+	"os"
 	"server/models"
 	"strconv"
 	"strings"
 	"time"
-	"errors"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
@@ -18,7 +18,7 @@ var privateKey = []byte(os.Getenv("JWT_PRIVATE_KEY"))
 func GenerateJWT(user models.User) (string, error) {
 	tokenTTL, _ := strconv.Atoi(os.Getenv("TOKEN_TTL"))
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"id": user.ID,
+		"ID":  user.ID,
 		"iat": time.Now().Unix(),
 		"eat": time.Now().Add(time.Second * time.Duration(tokenTTL)).Unix(),
 	})
