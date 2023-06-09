@@ -2,6 +2,7 @@ package models
 
 import (
 	"time"
+  "errors"
 )
 
 type Quest struct {
@@ -30,4 +31,35 @@ func (quest *Quest) Save() (*Quest, error) {
     return &Quest{}, err
   }
   return quest, nil
+}
+
+func (quest *Quest) GetQuests() []Quest {
+  var quests []Quest
+  DB.Find(&quests)
+  return quests
+}
+
+func (quest *Quest) GetQuest(questID string) (*Quest, error) {
+  if err := DB.First(&quest, questID).Error; err != nil {
+    return quest, err
+  }
+  return quest, nil
+}
+
+func (quest *Quest) UpdateQuest(updateQuest UpdateQuestInput, questID string) (*Quest, error) {
+	if err := DB.First(&quest, questID).Error; err != nil {
+		return &Quest{}, err
+	}
+	if err := DB.Model(&quest).Updates(updateQuest).Error; err != nil {
+		return &Quest{}, err
+	}
+	return quest, nil
+}
+
+func (quest *Quest) DeleteQuest(questID string) (bool, error) {
+	if err := DB.First(&quest, questID).Error; err != nil {
+		return false, errors.New("record not found")
+	}
+	DB.Delete(&quest)
+	return true, nil
 }
