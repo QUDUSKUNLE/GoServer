@@ -9,13 +9,13 @@ import (
 
 // GET /quests
 // GET all quests
-func FindQuests(context *gin.Context) {
+func GetQuests(context *gin.Context) {
 	var quests []models.Quest
 	models.DB.Find(&quests)
 	context.JSON(http.StatusOK, gin.H{"data": quests})
 }
 
-func CreateQuest(context *gin.Context) {
+func AddQuest(context *gin.Context) {
 	// Validate quest
 	var questInput models.CreateQuestInput
 	if err := context.ShouldBindJSON(&questInput); err != nil {
@@ -37,10 +37,10 @@ func CreateQuest(context *gin.Context) {
 	context.JSON(http.StatusCreated, gin.H{"data": savedQuest})
 }
 
-func FindQuest(context *gin.Context) {
+func GetQuest(context *gin.Context) {
 	var quest models.Quest
 
-	if err := models.DB.Where("id = ?", context.Param("albumID")).First(&quest).Error; err != nil {
+	if err := models.DB.Where("id = ?", context.Param("questID")).First(&quest).Error; err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}
@@ -50,7 +50,7 @@ func FindQuest(context *gin.Context) {
 
 func UpdateQuest(context *gin.Context) {
 	var quest models.Quest
-	if err := models.DB.Where("id = ?", context.Param("albumID")).First(&quest).Error; err != nil {
+	if err := models.DB.Where("id = ?", context.Param("questID")).First(&quest).Error; err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}
@@ -69,7 +69,7 @@ func UpdateQuest(context *gin.Context) {
 func DeleteQuest(context *gin.Context) {
 	// Get model if exist
 	var quest models.Quest
-	if err := models.DB.Where("id = ?", context.Param("albumID")).First(&quest).Error; err != nil {
+	if err := models.DB.Where("id = ?", context.Param("questID")).First(&quest).Error; err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}

@@ -14,7 +14,7 @@ func TestRegister(t *testing.T) {
 		Username: "quduskunle",
 		Password: "test",
 	}
-	writer := makeRequest("POST", "/auth/register", newUser, false)
+	writer := makeRequest("POST", "/auth/register", newUser, false, "", "")
 	assert.Equal(t, http.StatusCreated, writer.Code)
 }
 
@@ -24,7 +24,7 @@ func TestLogin(t *testing.T) {
 		Password: "test",
 	}
 
-	writer := makeRequest("POST", "/auth/login", user, false)
+	writer := makeRequest("POST", "/auth/login", user, false, "", "")
 	assert.Equal(t, http.StatusOK, writer.Code)
 	var response map[string]string
 	json.Unmarshal(writer.Body.Bytes(), &response)

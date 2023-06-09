@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func PostAlbum(context *gin.Context) {
+func AddAlbum(context *gin.Context) {
 	var albumInput models.CreateAlbumInput
 	if err := context.ShouldBindJSON(&albumInput); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -33,7 +33,7 @@ func GetAlbums(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"data": result})
 }
 
-func GetAlbumByID(context *gin.Context) {
+func GetAlbum(context *gin.Context) {
 	var album models.Album
 	result, err := album.FindAlbumByID(context.Param("albumID"))
 	if err != nil {

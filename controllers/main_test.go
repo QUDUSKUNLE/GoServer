@@ -49,30 +49,39 @@ func apiRouter() *gin.Engine {
 
 	protectedRouters := router.Group("/api")
 	protectedRouters.Use(middlewares.JWTAuthMiddleware())
-	protectedRouters.GET("/quests", FindQuests)
-	protectedRouters.POST("/quests", CreateQuest)
+	protectedRouters.POST("/quests", AddQuest)
+	protectedRouters.GET("/quests", GetQuests)
+	protectedRouters.GET("/quests/:questID", GetQuest)
+	protectedRouters.PATCH("/quests/:questID", UpdateQuest)
+	protectedRouters.DELETE("/quests/:questID", DeleteQuest)
+
+	protectedRouters.POST("/albums", AddAlbum)
+	protectedRouters.GET("/albums", GetAlbums)
+	protectedRouters.GET("/albums/:albumID", GetAlbum)
+	protectedRouters.PATCH("/albums/:albumID", UpdateAlbum)
+	protectedRouters.DELETE("/albums/:albumID", DeleteAlbum)
 
 	return router
 } 
 
-func makeRequest(method, url string, body interface{}, isAuthenticated bool) *httptest.ResponseRecorder {
+func makeRequest(method, url string, body interface{}, isAuthenticated bool, username, password string) *httptest.ResponseRecorder {
 	requestBody, _ := json.Marshal(body)
 	request, _ := http.NewRequest(method, url, bytes.NewBuffer(requestBody))
 	if isAuthenticated {
-		request.Header.Add("Authorization", "Bearer "+bearerToken())
+		request.Header.Add("Authorization", "Bearer "+bearerToken(username, password))
 	}
 	writer := httptest.NewRecorder()
 	apiRouter().ServeHTTP(writer, request)
 	return writer
 }
 
-func bearerToken() string {
+func bearerToken(username, password string) string {
 	user := models.UserInput{
-		Username: "quduskunle",
-		Password: "test",
+		Username: username,
+		Password: password,
 	}
 
-	writer := makeRequest("POST", "/auth/login", user, false)
+	writer := makeRequest("POST", "/auth/login", user, false, "", "")
 	var response map[string]string
 	json.Unmarshal(writer.Body.Bytes(), &response)
 	return response["token"]
