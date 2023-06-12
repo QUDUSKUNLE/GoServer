@@ -38,14 +38,14 @@ func (order *Order) BeforeSave(scope *gorm.DB) error {
  }
 
  func (order *Order) Save() (*Order, error) {
-	if err := DB.Model(&order).Create(&order).Error; err != nil {
+	if err := DB.Omit("Stocks.*").Create(&order).Error; err != nil {
 		return &Order{}, err
 	}
 	return order, nil
 }
 
 func (order *Order) Association() (*Order, error) {
-	if er := DB.Model(&order).Association("Stocks").Append(&order.Stocks); er != nil {
+	if er := DB.Association("Stocks").Append(&order.Stocks); er != nil {
 		return &Order{}, er
 	}
 	return order, nil

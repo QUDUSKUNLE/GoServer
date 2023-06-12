@@ -9,7 +9,7 @@ import (
 	"server/models"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
+	// "gorm.io/gorm"
 	// "github.com/satori/go.uuid"
 )
 
@@ -40,16 +40,10 @@ func AddOrder(context *gin.Context) {
 	}
 	orderMadeInput.Quantity = len(orderInput.Stocks)
 	orderMadeInput.Stocks = stocks
-	
-	// if err := context.ShouldBindJSON(&orderMadeInput); err != nil {
-	// 	fmt.Println(err.Error(), ">>>>>>>>>>>>>>>>>>>>")
-	// 	context.JSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
-	// 	return
-	// }
 
 	order := models.Order{
 		Quantity: orderMadeInput.Quantity,
-		// Stocks: orderMadeInput.Stocks,
+		Stocks: orderMadeInput.Stocks,
 		UserID: orderMadeInput.UserID,
 	}
 
@@ -58,19 +52,7 @@ func AddOrder(context *gin.Context) {
 		context.JSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
 		return
 	}
-
-	if er := models.DB.Session(&gorm.Session{ FullSaveAssociations: true }).Model(savedOrder).Updates(stocks); er != nil {
-		context.JSON(http.StatusBadRequest, gin.H{ "error": er })
-		return
-	}
-	savedOrder.Stocks = stocks
-	associatedOrder, err := savedOrder.Association()
-
-	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
-		return
-	}
-	context.JSON(http.StatusCreated, gin.H{ "data":  associatedOrder })
+	context.JSON(http.StatusCreated, gin.H{ "data":  savedOrder })
 }
 
 func GetOrders(context *gin.Context) {
