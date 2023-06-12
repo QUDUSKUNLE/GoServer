@@ -15,7 +15,7 @@ type Stock struct {
 	Unit int `gorm:"not null" json:"-"`
 	Slot int `gorm:"not null" json:"Slot"`
 	Description string `gorm:"size:255;not null" json:"Description"`
-	Orders []Order `gorm:"many2many:stock_orders;" json:"Orders"`
+	Orders []*Order `gorm:"many2many:stock_orders;" json:"Orders"`
 	CreatedAt time.Time `json:"CreatedAt"`
   UpdatedAt time.Time `json:"UpdatedAt"`
 }
@@ -45,6 +45,12 @@ func (stock *Stock) BeforeSave(scope *gorm.DB) error {
 func (stock *Stock) FindAll() []Stock {
 	var stocks []Stock
 	DB.Preload("Orders").Find(&stocks)
+	return stocks
+}
+
+func (stock *Stock) FindIn(IDs []string) []*Stock {
+	var stocks []*Stock
+	DB.Where(IDs).Find(&stocks)
 	return stocks
 }
 

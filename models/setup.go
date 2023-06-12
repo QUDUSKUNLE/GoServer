@@ -27,6 +27,5 @@ func ConnectDatabase() {
 	}
 
 	database.AutoMigrate(&Album{}, &Quest{}, &User{}, &Stock{}, &Order{})
-
 	DB = database
 }

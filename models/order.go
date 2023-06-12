@@ -9,7 +9,7 @@ import (
 type Order struct {
 	ID uuid.UUID `gorm:"type:uuid;primary_key" json:"ID"`
 	Quantity int `gorm:"not null" json:"Quantity"`
-	Stocks []Stock `gorm:"many2many:stock_orders;" json:"Stocks"`
+	Stocks []*Stock `gorm:"many2many:stock_orders;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"Stocks"`
 	UserID uuid.UUID `gorm:"foreignKey:ID"`
 	CreatedAt time.Time `json:"CreatedAt"`
   UpdatedAt time.Time `json:"UpdatedAt"`
@@ -53,7 +53,6 @@ func (order *Order) Association() (*Order, error) {
 
 func (order *Order) FindAll() []Order {
 	var orders []Order
-	// DB.Association("Stocks").Find(&orders)
 	DB.Preload("Stocks").Find(&orders)
 	return orders
 }
