@@ -18,7 +18,7 @@ var privateKey = []byte(os.Getenv("JWT_PRIVATE_KEY"))
 func GenerateJWT(user models.User) (string, error) {
 	tokenTTL, _ := strconv.Atoi(os.Getenv("TOKEN_TTL"))
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"ID":  user.ID,
+		"id":  user.ID,
 		"iat": time.Now().Unix(),
 		"eat": time.Now().Add(time.Second * time.Duration(tokenTTL)).Unix(),
 	})
@@ -55,4 +55,20 @@ func extractToken(context *gin.Context) (string, error) {
 		return splitToken[1], nil
 	}
 	return "", errors.New("invalid authorization token")
+}
+
+func CurrentUser(context *gin.Context) (models.User, error) {
+	err := ValidateJWT(context)
+	if err != nil {
+			return models.User{}, err
+	}
+	token, _ := getToken(context)
+	claims, _ := token.Claims.(jwt.MapClaims)
+	userId := claims["id"].(string)
+	
+	user, err := models.FindUserById(userId)
+	if err != nil {
+			return models.User{}, err
+	}
+	return user, nil
 }

@@ -54,11 +54,17 @@ func main() {
 	protectedRoutes.PATCH("/albums/:id", controllers.UpdateAlbum)
 	protectedRoutes.DELETE("/albums/:id", controllers.DeleteAlbum)
 
+	// Stock Endpoints
 	protectedRoutes.GET("/stocks", controllers.GetStocks)
 	protectedRoutes.POST("/stocks", controllers.AddStock)
 	protectedRoutes.GET("/stocks/:id", controllers.GetStock)
 	protectedRoutes.PATCH("/stocks/:id", controllers.UpdateAlbum)
 	protectedRoutes.DELETE("/stocks/:id", controllers.DeleteAlbum)
+
+	// Order Endpoints
+	protectedRoutes.GET("/orders", controllers.GetOrders)
+	protectedRoutes.POST("/orders", controllers.AddOrder)
+	protectedRoutes.GET("/orders/:id", controllers.GetOrder)
 
 	models.ConnectDatabase()
 	if err := router.Run("localhost:" + port); err != nil {

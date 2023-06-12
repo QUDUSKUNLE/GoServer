@@ -2,19 +2,21 @@ package models
 
 import (
 	"errors"
+	// "fmt"
 	"html"
 	"strings"
 	"time"
-
+	"github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
 type User struct {
-	ID        uint      `gorm:"primary_key" json:"ID"`
+	ID        uuid.UUID `gorm:"type:uuid;primary_key" json:"ID"`
 	Username  string    `gorm:"size:255;not null;unique" json:"username"`
 	Password  string    `gorm:"size:255;not null;" json:"-"`
-	CreatedAt time.Time `json:"CreatedAt"`
+	Orders 		[]Order  	`gorm:"foreignKey:UserID" json:"-"`
+ 	CreatedAt time.Time `json:"CreatedAt"`
 	UpdatedAt time.Time `json:"UpdatedAt"`
 }
 
@@ -37,6 +39,7 @@ func (user *User) BeforeSave(*gorm.DB) error {
 	}
 	user.Password = string(passwordHash)
 	user.Username = html.EscapeString(strings.TrimSpace(user.Username))
+	user.ID = uuid.NewV4()
 	return nil
 }
 
@@ -54,9 +57,9 @@ func (user *User) FindUserByUsername(username string) (*User, error) {
 	return user, nil
 }
 
-func FindUserById(ID uint) (User, error) {
+func FindUserById(ID string) (User, error) {
 	var user User
-	if err := DB.Where("ID=?", ID).First(&user).Error; err != nil {
+	if err := DB.Where("ID = ?", ID).First(&user).Error; err != nil {
 		return User{}, err
 	}
 	return user, nil
