@@ -7,7 +7,7 @@ import (
 )
 
 type Stock struct {
-	ID uuid.UUID `gorm:"type:uuid;primaryKey" json:"ID"`
+	ID uuid.UUID `gorm:"type:uuid;primaryKey" json:"StockID"`
 	Type string `gorm:"size:10;not null;" json:"Type"`
 	Cost float32 `gorm:"not null" json:"-"`
 	Price float32 `gorm:"not null" json:"Price"`
@@ -15,7 +15,6 @@ type Stock struct {
 	Unit int `gorm:"not null" json:"-"`
 	Slot int `gorm:"not null" json:"Slot"`
 	Description string `gorm:"size:255;not null" json:"Description"`
-	Orders []*Order `gorm:"many2many:stock_orders;" json:"Orders"`
 	CreatedAt time.Time `json:"CreatedAt"`
   UpdatedAt time.Time `json:"UpdatedAt"`
 }

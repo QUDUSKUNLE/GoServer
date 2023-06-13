@@ -7,7 +7,6 @@ import (
 	"server/controllers"
 	"server/middlewares"
 	"server/models"
-
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
@@ -24,7 +23,6 @@ func main() {
 	if port == "" {
 		port = "8000"
 	}
-	// gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 
 	router.GET("/", func(context *gin.Context) {

@@ -3,13 +3,14 @@ package models
 import (
 	"time"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"github.com/satori/go.uuid"
 )
 
 type Order struct {
-	ID uuid.UUID `gorm:"type:uuid;primary_key" json:"ID"`
+	ID uuid.UUID `gorm:"type:uuid;primary_key" json:"OrderID"`
 	Quantity int `gorm:"not null" json:"Quantity"`
-	Stocks []*Stock `gorm:"many2many:stock_orders;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"Stocks"`
+	Stocks []*Stock `gorm:"many2many:order_stocks;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"Stocks"`
 	UserID uuid.UUID `gorm:"foreignKey:ID"`
 	CreatedAt time.Time `json:"CreatedAt"`
   UpdatedAt time.Time `json:"UpdatedAt"`
@@ -53,7 +54,7 @@ func (order *Order) Association() (*Order, error) {
 
 func (order *Order) FindAll() []Order {
 	var orders []Order
-	DB.Preload("Stocks").Find(&orders)
+	DB.Preload(clause.Associations).Find(&orders)
 	return orders
 }
 
