@@ -6,6 +6,8 @@ require (
 	github.com/gin-gonic/gin v1.9.1
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/joho/godotenv v1.5.1
+	github.com/satori/go.uuid v1.2.0
+	github.com/stretchr/testify v1.8.4
 	gorm.io/driver/postgres v1.5.2
 )
 
@@ -17,9 +19,6 @@ require (
 	github.com/kr/text v0.2.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rogpeppe/go-internal v1.10.0 // indirect
-	github.com/satori/go.uuid v1.2.0 // indirect
-	github.com/stretchr/objx v0.5.0 // indirect
-	github.com/stretchr/testify v1.8.4 // indirect
 )
 
 require (

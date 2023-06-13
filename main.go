@@ -7,7 +7,6 @@ import (
 	"server/controllers"
 	"server/middlewares"
 	"server/models"
-
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
@@ -24,7 +23,6 @@ func main() {
 	if port == "" {
 		port = "8000"
 	}
-	// gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 
 	router.GET("/", func(context *gin.Context) {
@@ -54,11 +52,17 @@ func main() {
 	protectedRoutes.PATCH("/albums/:id", controllers.UpdateAlbum)
 	protectedRoutes.DELETE("/albums/:id", controllers.DeleteAlbum)
 
+	// Stock Endpoints
 	protectedRoutes.GET("/stocks", controllers.GetStocks)
 	protectedRoutes.POST("/stocks", controllers.AddStock)
 	protectedRoutes.GET("/stocks/:id", controllers.GetStock)
 	protectedRoutes.PATCH("/stocks/:id", controllers.UpdateAlbum)
 	protectedRoutes.DELETE("/stocks/:id", controllers.DeleteAlbum)
+
+	// Order Endpoints
+	protectedRoutes.GET("/orders", controllers.GetOrders)
+	protectedRoutes.POST("/orders", controllers.AddOrder)
+	protectedRoutes.GET("/orders/:id", controllers.GetOrder)
 
 	models.ConnectDatabase()
 	if err := router.Run("localhost:" + port); err != nil {

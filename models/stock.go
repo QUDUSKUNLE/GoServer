@@ -7,7 +7,7 @@ import (
 )
 
 type Stock struct {
-	ID uuid.UUID `gorm:"type:uuid;primary_key" json:"ID"`
+	ID uuid.UUID `gorm:"type:uuid;primaryKey" json:"StockID"`
 	Type string `gorm:"size:10;not null;" json:"Type"`
 	Cost float32 `gorm:"not null" json:"-"`
 	Price float32 `gorm:"not null" json:"Price"`
@@ -43,7 +43,13 @@ func (stock *Stock) BeforeSave(scope *gorm.DB) error {
 
 func (stock *Stock) FindAll() []Stock {
 	var stocks []Stock
-	DB.Find(&stocks)
+	DB.Preload("Orders").Find(&stocks)
+	return stocks
+}
+
+func (stock *Stock) FindIn(IDs []string) []*Stock {
+	var stocks []*Stock
+	DB.Where(IDs).Find(&stocks)
 	return stocks
 }
 
@@ -52,4 +58,11 @@ func (stock *Stock) FindStockByID(ID string) (*Stock, error) {
 		return stock, err
 	}
 	return stock, nil
+}
+
+func (stock *Stock) FindStockBy(ID string) (Stock, error) {
+	if err := DB.Where("id = ?", ID).First(&stock).Error; err != nil {
+		return *stock, err
+	}
+	return *stock, nil
 }
