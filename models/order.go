@@ -10,27 +10,19 @@ import (
 type Order struct {
 	ID uuid.UUID `gorm:"type:uuid;primary_key" json:"OrderID"`
 	Quantity int `gorm:"not null" json:"Quantity"`
-	Stocks []*Stock `gorm:"many2many:order_stocks;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"Stocks"`
+	Products []Product `gorm:"many2many:order_products;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"Products"`
 	UserID uuid.UUID `gorm:"foreignKey:ID"`
 	CreatedAt time.Time `json:"CreatedAt"`
   UpdatedAt time.Time `json:"UpdatedAt"`
 }
 
-type OrderMadeInput struct {
-	Quantity int `json:"Quantity" binding:"required"`
-	UserID uuid.UUID `json:"UserID" binding:"required"`
-	Stocks []Stock
-}
-
 type OrderRequest struct {
 	Quantity int
-	Stock string
+	StockID uuid.UUID
 }
 
-type OrderInputs []OrderRequest
-
-type OrderInput struct {
-	Stocks []OrderRequest `json:"Stocks" binding:"required"`
+type OrderInputs struct {
+	Products []OrderRequest `json:"Stocks" binding:"required"`
 }
 
 func (order *Order) BeforeSave(scope *gorm.DB) error {
@@ -39,15 +31,8 @@ func (order *Order) BeforeSave(scope *gorm.DB) error {
  }
 
  func (order *Order) Save() (*Order, error) {
-	if err := DB.Omit("Stocks.*").Create(&order).Error; err != nil {
+	if err := DB.Create(&order).Error; err != nil {
 		return &Order{}, err
-	}
-	return order, nil
-}
-
-func (order *Order) Association() (*Order, error) {
-	if er := DB.Association("Stocks").Append(&order.Stocks); er != nil {
-		return &Order{}, er
 	}
 	return order, nil
 }
