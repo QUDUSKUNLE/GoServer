@@ -47,8 +47,8 @@ func (stock *Stock) FindAll() []Stock {
 	return stocks
 }
 
-func (stock *Stock) FindIn(IDs []string) []*Stock {
-	var stocks []*Stock
+func (stock *Stock) FindIn(IDs []string) []Stock {
+	var stocks []Stock
 	DB.Where(IDs).Find(&stocks)
 	return stocks
 }

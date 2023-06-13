@@ -1,47 +1,75 @@
 package controllers
 
 import (
-	"encoding/json"
-	"io"
+	// "encoding/json"
+	// "io"
 	"net/http"
 	"server/helpers"
 	"server/models"
 	"github.com/gin-gonic/gin"
+	"fmt"
 )
 
 func AddOrder(context *gin.Context) {
-	var stock models.Stock
-	var stocks []*models.Stock
-	var stockIDs []string
+	// var stocks []models.Stock
+	// var products []models.Product
+	// var productInput models.ProductInput
+	// var stockIDs []string
 	user, err := helpers.CurrentUser(context)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
 		return
 	}
+	fmt.Println(user)
 
-	jsonData, _ := io.ReadAll(context.Request.Body)
-	var orderInput models.OrderInput
-	if err := json.Unmarshal(jsonData, &orderInput); err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
-	}
-	if len(orderInput.Stocks) >= 1 {
-		for _, stockID := range orderInput.Stocks {
-			stockIDs = append(stockIDs, stockID.Stock)
-		}
-		stocks = stock.FindIn(stockIDs)
-		order := models.Order{
-			Quantity: len(orderInput.Stocks),
-			Stocks: stocks,
-			UserID: user.ID,
-		}
-		savedOrder, err := order.Save()
-		if err != nil {
-			context.JSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
-			return
-		}
-		context.JSON(http.StatusCreated, gin.H{ "data":  savedOrder })
-		return
-	}
+	// jsonData, _ := io.ReadAll(context.Request.Body)
+	// var orderInput models.OrderInputs
+	// if err := json.Unmarshal(jsonData, &orderInput); err != nil {
+	// 	context.JSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
+	// }
+	// var stock models.Stock
+	// orderedProducts := make(map[string]models.ProductInput)
+	// if len(orderInput.Products) >= 1 {
+	// 	for _, product := range orderInput.Products {
+	// 		stockIDs = append(stockIDs, (product.StockID).String())
+	// 		var productInput = models.ProductInput{
+	// 			Quantity: product.Quantity,
+	// 			StockID: product.StockID,
+	// 		}
+	// 		orderedProducts[(product.StockID).String()] = productInput
+	// 	}
+	// 	stocks = stock.FindIn(stockIDs)
+
+	// 	if len(stocks) >= 1  {
+	// 		for _, stock := range stocks {
+	// 			productInput = orderedProducts[(stock.ID).String()]
+	// 			productInput.Stock = stock
+	// 			product := models.Product{
+	// 				Quantity: productInput.Quantity,
+	// 				Stock: stock,
+	// 				StockID: stock.ID,
+	// 			}
+	// 			products = append(products, product)
+	// 		}
+	// 	}
+
+	// 	if err != nil {
+	// 		context.JSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
+	// 		return
+	// 	}
+	// 	order := models.Order{
+	// 		Quantity: len(orderInput.Products),
+	// 		Products: products,
+	// 		UserID: user.ID,
+	// 	}
+	// 	savedOrder, err := order.Save()
+	// 	if err != nil {
+	// 		context.JSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
+	// 		return
+	// 	}
+	// 	context.JSON(http.StatusCreated, gin.H{ "data":  savedOrder })
+	// 	return
+	// }
 	context.JSON(http.StatusBadRequest, gin.H{ "message": "No order made" })
 }
 
