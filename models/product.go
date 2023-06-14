@@ -11,8 +11,8 @@ type Product struct {
 	Quantity int `gorm:"not null" json:"ProductQuantity"`
 	Stock Stock  `gorm:"" json:"Stock"`
 	StockID uuid.UUID `gorm:"foreignKey:ID"`
-	CreatedAt time.Time `json:"CreatedAt"`
-  UpdatedAt time.Time `json:"UpdatedAt"`
+	CreatedAt time.Time `json:"-"`
+  UpdatedAt time.Time `json:"-"`
 }
 
 type ProductInput struct {

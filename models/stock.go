@@ -15,8 +15,8 @@ type Stock struct {
 	Unit int `gorm:"not null" json:"-"`
 	Slot int `gorm:"not null" json:"Slot"`
 	Description string `gorm:"size:255;not null" json:"Description"`
-	CreatedAt time.Time `json:"CreatedAt"`
-  UpdatedAt time.Time `json:"UpdatedAt"`
+	CreatedAt time.Time `json:"-"`
+  UpdatedAt time.Time `json:"-"`
 }
 
 type CreateStockInput struct {

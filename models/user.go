@@ -12,11 +12,11 @@ import (
 
 type User struct {
 	ID        uuid.UUID `gorm:"type:uuid;primary_key" json:"UserID"`
-	Username  string    `gorm:"size:255;not null;unique" json:"username"`
+	Username  string    `gorm:"size:255;not null;unique" json:"Username"`
 	Password  string    `gorm:"size:255;not null;" json:"-"`
 	Orders 		[]Order  	`gorm:"foreignKey:UserID" json:"-"`
- 	CreatedAt time.Time `json:"CreatedAt"`
-	UpdatedAt time.Time `json:"UpdatedAt"`
+ 	CreatedAt time.Time `json:"-"`
+	UpdatedAt time.Time `json:"-"`
 }
 
 type UserInput struct {
