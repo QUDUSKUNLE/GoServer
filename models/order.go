@@ -9,20 +9,21 @@ import (
 
 type Order struct {
 	ID uuid.UUID `gorm:"type:uuid;primary_key" json:"OrderID"`
-	Quantity int `gorm:"not null" json:"Quantity"`
+	TotalQuantity int `gorm:"not null" json:"TotalQuantity"`
 	Products []Product `gorm:"many2many:order_products;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"Products"`
 	UserID uuid.UUID `gorm:"foreignKey:ID"`
+	User User `gorm:"belongs_to:user" json:"User"`
 	CreatedAt time.Time `json:"CreatedAt"`
   UpdatedAt time.Time `json:"UpdatedAt"`
 }
 
 type OrderRequest struct {
-	Quantity int
-	StockID uuid.UUID
+	Quantity int `json:"Quantity" binding:"required"`
+	StockID uuid.UUID `json:"StockID" binding:"required"`
 }
 
 type OrderInputs struct {
-	Products []OrderRequest `json:"Stocks" binding:"required"`
+	Products []OrderRequest `json:"Products" binding:"required"`
 }
 
 func (order *Order) BeforeSave(scope *gorm.DB) error {

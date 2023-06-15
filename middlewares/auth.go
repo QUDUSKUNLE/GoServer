@@ -14,6 +14,12 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 			context.Abort()
 			return
 		}
+		_, err := helpers.CurrentUser(context)
+		if err != nil {
+			context.JSON(http.StatusUnauthorized, gin.H{ "error": "unauthorized request." })
+			context.Abort()
+			return
+		}
 		context.Next()
 	}
 }

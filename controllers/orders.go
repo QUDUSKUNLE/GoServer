@@ -26,11 +26,7 @@ func AddOrder(context *gin.Context) {
 		context.JSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
 		return
 	}
-
-	if err := context.ShouldBindJSON(&orderInput); err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+	var totalQuantity int
 	var stock models.Stock
 	orderedProducts := make(map[string]models.ProductInput)
 	if len(orderInput.Products) >= 1 {
@@ -47,22 +43,16 @@ func AddOrder(context *gin.Context) {
 		if len(stocks) >= 1  {
 			for _, stock := range stocks {
 				productInput = orderedProducts[(stock.ID).String()]
-				productInput.Stock = stock
 				product := models.Product{
 					Quantity: productInput.Quantity,
-					Stock: stock,
 					StockID: stock.ID,
 				}
 				products = append(products, product)
+				totalQuantity += productInput.Quantity
 			}
 		}
-
-		if err != nil {
-			context.JSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
-			return
-		}
 		order := models.Order{
-			Quantity: len(orderInput.Products),
+			TotalQuantity: totalQuantity,
 			Products: products,
 			UserID: user.ID,
 		}

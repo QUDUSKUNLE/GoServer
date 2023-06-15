@@ -12,11 +12,10 @@ import (
 
 type User struct {
 	ID        uuid.UUID `gorm:"type:uuid;primary_key" json:"UserID"`
-	Username  string    `gorm:"size:255;not null;unique" json:"Username"`
-	Password  string    `gorm:"size:255;not null;" json:"-"`
-	Orders 		[]Order  	`gorm:"foreignKey:UserID" json:"-"`
- 	CreatedAt time.Time `json:"-"`
-	UpdatedAt time.Time `json:"-"`
+	Username  string    `gorm:"size:255;unique" json:"Username"`
+	Password  string    `gorm:"size:255;" json:"-"`
+ 	CreatedAt time.Time `json:"CreatedAt"`
+	UpdatedAt time.Time `json:"UpdatedAt"`
 }
 
 type UserInput struct {
@@ -44,14 +43,14 @@ func (user *User) BeforeSave(*gorm.DB) error {
 
 func (user *User) ValidatePassword(password string) error {
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
-		return errors.New("invalid log in credentials")
+		return errors.New("incorrect log in credentials")
 	}
 	return nil
 }
 
 func (user *User) FindUserByUsername(username string) (*User, error) {
 	if err := DB.Where(&User{Username: username}).First(&user).Error; err != nil {
-		return user, errors.New("invalid log in credentials")
+		return user, errors.New("incorrect log in credentials")
 	}
 	return user, nil
 }
