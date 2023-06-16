@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"server/helpers"
 	"server/models"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -26,6 +27,19 @@ func AddOrder(context *gin.Context) {
 		context.JSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
 		return
 	}
+
+	orderInputs := models.OrderInputs{}
+	if err := context.ShouldBindJSON(&orderInputs); err != nil {
+		context.AbortWithStatusJSON(
+			http.StatusBadRequest,
+			gin.H{
+				"error": "VALIDATEERR-1",
+				"message": "Invalid inputs. Please check your inputs",
+			},
+		)
+		return
+	}
+
 	var totalQuantity int
 	var stock models.Stock
 	orderedProducts := make(map[string]models.ProductInput)
