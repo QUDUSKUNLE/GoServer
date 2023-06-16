@@ -10,7 +10,7 @@ type Product struct {
 	ID uuid.UUID `gorm:"type:uuid;primary_key" json:"ProductID"`
 	Quantity int `gorm:"not null" json:"ProductQuantity"`
 	StockID uuid.UUID `gorm:"foreignKey:ID"`
-	Stock Stock `gorm:"belongs_to:stock" json:"-"`
+	Stock Stock `gorm:"belongs_to:stock" json:"Stock"`
 	CreatedAt time.Time `json:"CreatedAt"`
   UpdatedAt time.Time `json:"UpdatedAt"`
 }

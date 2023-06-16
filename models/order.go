@@ -40,7 +40,7 @@ func (order *Order) BeforeSave(scope *gorm.DB) error {
 
 func (order *Order) FindAll() []Order {
 	var orders []Order
-	DB.Preload(clause.Associations).Find(&orders)
+	DB.Preload(clause.Associations).Preload("Products.Stock").Find(&orders)
 	return orders
 }
 
