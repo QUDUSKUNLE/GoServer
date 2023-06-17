@@ -1,13 +1,18 @@
 package controllers
 
 import (
-	"encoding/json"
-	"io"
+	// "encoding/json"
+	// "io"
 	"net/http"
 	"server/helpers"
 	"server/models"
 
 	"github.com/gin-gonic/gin"
+	"github.com/golodash/galidator"
+)
+
+var (
+	g = galidator.New()
 )
 
 func AddOrder(context *gin.Context) {
@@ -15,26 +20,26 @@ func AddOrder(context *gin.Context) {
 	var products []models.Product
 	var productInput models.ProductInput
 	var stockIDs []string
+	var customizer = g.Validator(models.OrderInputs{}, galidator.Messages{ "required": "$field is required"})
 	user, err := helpers.CurrentUser(context)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
 		return
 	}
 
-	jsonData, _ := io.ReadAll(context.Request.Body)
-	var orderInput models.OrderInputs
-	if err := json.Unmarshal(jsonData, &orderInput); err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
-		return
-	}
+	// jsonData, _ := io.ReadAll(context.Request.Body)
+	// var orderInput models.OrderInputs
+	// if err := json.Unmarshal(jsonData, &orderInput); err != nil {
+	// 	context.JSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
+	// 	return
+	// }
 
-	orderInputs := models.OrderInputs{}
-	if err := context.ShouldBindJSON(&orderInputs); err != nil {
-		context.AbortWithStatusJSON(
+	orderInput := &models.OrderInputs{}
+	if err := context.BindJSON(orderInput); err != nil {
+		context.JSON(
 			http.StatusBadRequest,
 			gin.H{
-				"error": "VALIDATEERR-1",
-				"message": "Invalid inputs. Please check your inputs",
+				"message": customizer.DecryptErrors(err),
 			},
 		)
 		return
@@ -68,14 +73,15 @@ func AddOrder(context *gin.Context) {
 		order := models.Order{
 			TotalQuantity: totalQuantity,
 			Products: products,
+			ShippingAddress: orderInput.ShippingAddress,
 			UserID: user.ID,
 		}
-		savedOrder, err := order.Save()
+		_, err := order.Save()
 		if err != nil {
 			context.JSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
 			return
 		}
-		context.JSON(http.StatusCreated, gin.H{ "data":  savedOrder })
+		context.JSON(http.StatusCreated, gin.H{ "data":  "Order created successfully." })
 		return
 	}
 	context.JSON(http.StatusBadRequest, gin.H{ "message": "No order made" })
