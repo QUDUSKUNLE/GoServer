@@ -8,10 +8,10 @@ import (
 )
 
 type ShippingAddress struct {
-	StreetNo int
-	StreetName string
-	Province string
-	State string
+	StreetNo int `json:"StreetNo" binding:"required,gte=0,lte=1000"`
+	StreetName string  `json:"StreetName" binding:"required,max=50"`
+	Province string  `json:"Province" binding:"required,max=50"`
+	State string  `json:"State" binding:"required,max=50"`
 }
 
 type Order struct {
