@@ -1,18 +1,12 @@
 package controllers
 
 import (
-	// "encoding/json"
-	// "io"
 	"net/http"
 	"server/helpers"
 	"server/models"
+	"server/middlewares"
 
 	"github.com/gin-gonic/gin"
-	"github.com/golodash/galidator"
-)
-
-var (
-	g = galidator.New()
 )
 
 func AddOrder(context *gin.Context) {
@@ -20,26 +14,19 @@ func AddOrder(context *gin.Context) {
 	var products []models.Product
 	var productInput models.ProductInput
 	var stockIDs []string
-	var customizer = g.Validator(models.OrderInputs{}, galidator.Messages{ "required": "$field is required"})
 	user, err := helpers.CurrentUser(context)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
 		return
 	}
 
-	// jsonData, _ := io.ReadAll(context.Request.Body)
-	// var orderInput models.OrderInputs
-	// if err := json.Unmarshal(jsonData, &orderInput); err != nil {
-	// 	context.JSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
-	// 	return
-	// }
-
-	orderInput := &models.OrderInputs{}
-	if err := context.BindJSON(orderInput); err != nil {
-		context.JSON(
+	orderInput := models.OrderInputs{}
+	if err := context.ShouldBindJSON(&orderInput); err != nil {
+		context.AbortWithStatusJSON(
 			http.StatusBadRequest,
 			gin.H{
-				"message": customizer.DecryptErrors(err),
+				"errors": middlewares.CompileErrors(err),
+				"message": "Required fields are essential",
 			},
 		)
 		return
