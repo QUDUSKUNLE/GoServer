@@ -23,7 +23,7 @@ func Register(context *gin.Context) {
 	}
 	savedUser, err := user.Save()
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": middlewares.CompileErrors(err) })
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error() })
 		return
 	}
 

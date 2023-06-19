@@ -16,7 +16,7 @@ func AddOrder(context *gin.Context) {
 	var stockIDs []string
 	user, err := helpers.CurrentUser(context)
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
+		context.JSON(http.StatusBadRequest, gin.H{ "error": middlewares.CompileErrors(err) })
 		return
 	}
 

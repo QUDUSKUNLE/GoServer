@@ -55,7 +55,7 @@ func (stock *Stock) FindIn(IDs []string) []Stock {
 
 func (stock *Stock) FindStockByID(ID string) (*Stock, error) {
 	if err := DB.Where("id = ?", ID).First(&stock).Error; err != nil {
-		return stock, err
+		return &Stock{}, err
 	}
 	return stock, nil
 }
