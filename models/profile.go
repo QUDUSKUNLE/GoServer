@@ -4,11 +4,12 @@ import (
 	"time"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"github.com/satori/go.uuid"
 )
 
 type Profile struct {
-	ID        	uuid.UUID 	`gorm:"type:uuid;primary_key" json:"UserID"`
+	ID        	uuid.UUID 	`gorm:"type:uuid;primary_key" json:"ProfileID"`
 	Email  			string    	`gorm:"size:50;unique" json:"Email"`
 	FirstName  	string    	`gorm:"size:50;not null" json:"FirstName"`
 	LastName 		string      `gorm:"size:50;not null" json:"LastName"`
@@ -30,9 +31,22 @@ func (profile *Profile) BeforeSave(scope *gorm.DB) error {
 	return nil
 }
 
-func (user *Profile) Save() (*Profile, error) {
-	if err := DB.Create(&user).Error; err != nil {
+func (profile *Profile) Save() (*Profile, error) {
+	if err := DB.Create(&profile).Error; err != nil {
 		return &Profile{}, err
 	}
-	return user, nil
+	return profile, nil
+}
+
+func (profile *Profile) FindProfiles() []Profile {
+	var profiles []Profile
+	DB.Preload(clause.Associations).Find(&profiles)
+	return profiles
+}
+
+func (profile *Profile) FindProfile(ID string) (*Profile, error) {
+	if err := DB.Preload(clause.Associations).Where("id = ?", ID).First(&profile).Error; err != nil {
+		return &Profile{}, err
+	}
+	return profile, nil
 }

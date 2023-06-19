@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"net/http"
+	"net/mail"
 	"server/helpers"
 	"errors"
 
@@ -40,6 +41,14 @@ func UUidMiddleware() gin.HandlerFunc {
 		}
 		context.Next()
 	}
+}
+
+func VaidateEmail(email string) error {
+	_, err := mail.ParseAddress(email)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func getErrorMessage(message validator.FieldError) string {
