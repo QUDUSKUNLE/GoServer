@@ -54,7 +54,7 @@ func (order *Order) FindAll() []Order {
 }
 
 func (order *Order) FindOrderByID(ID string) (*Order, error) {
-	if err := DB.Where("id = ?", ID).First(&order).Error; err != nil {
+	if err := DB.Where("id = ?", ID).Preload(clause.Associations).Preload("Products.Stock").First(&order).Error; err != nil {
 		return order, err
 	}
 	return order, nil

@@ -8,10 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 )
-type States string
-const (
-	Required States = "required"
-)
 
 type ErrorMessage struct {
 	Field string `json:"field"`
@@ -29,6 +25,17 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 		if err != nil {
 			context.JSON(http.StatusUnauthorized, gin.H{ "error": "unauthorized request." })
 			context.Abort()
+			return
+		}
+		context.Next()
+	}
+}
+
+func UUidMiddleware() gin.HandlerFunc {
+	return func(context *gin.Context) {
+		err := helpers.ValidateUUID(context.Param("id"))
+		if err != nil {
+			context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error() })
 			return
 		}
 		context.Next()

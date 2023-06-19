@@ -26,6 +26,15 @@ func ConnectDatabase() {
 		fmt.Println("Successfully connected to the database.")
 	}
 
-	database.AutoMigrate(&Album{}, &Quest{}, &User{}, &Stock{}, &Order{}, &Product{})
+	database.AutoMigrate(
+		&Album{},
+		&Quest{},
+		&User{},
+		&Stock{},
+		&Order{},
+		&Product{},
+		&Address{},
+		&Profile{},
+)
 	DB = database
 }

@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/golang-jwt/jwt/v4"
 )
 
@@ -71,4 +72,11 @@ func CurrentUser(context *gin.Context) (models.User, error) {
 			return models.User{}, err
 	}
 	return user, nil
+}
+
+func ValidateUUID(uu string) error {
+	if _, err := uuid.Parse(uu); err != nil {
+		return errors.New("invalid id credential")
+	}
+	return nil
 }
