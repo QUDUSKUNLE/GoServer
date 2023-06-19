@@ -10,8 +10,8 @@ import (
 
 type Profile struct {
 	ID        	uuid.UUID 	`gorm:"type:uuid;primary_key" json:"ProfileID"`
-	Email  			string    	`gorm:"size:50;unique" json:"Email"`
-	FirstName  	string    	`gorm:"size:50;not null" json:"FirstName"`
+	Email  			string    	`gorm:"size:50;unique" sql:"unique:idx_email_firstname" json:"Email"`
+	FirstName  	string    	`gorm:"size:50;not null" sql:"unique:idx_email_firstname" json:"FirstName"`
 	LastName 		string      `gorm:"size:50;not null" json:"LastName"`
 	UserID 		  uuid.UUID
 	Addresses 	[]Address   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"Addresses"`
@@ -46,6 +46,13 @@ func (profile *Profile) FindProfiles() []Profile {
 
 func (profile *Profile) FindProfile(ID string) (*Profile, error) {
 	if err := DB.Preload(clause.Associations).Where("id = ?", ID).First(&profile).Error; err != nil {
+		return &Profile{}, err
+	}
+	return profile, nil
+}
+
+func (profile *Profile) FindProfileByUserID(UserID string) (*Profile, error) {
+	if err := DB.Preload(clause.Associations).Where("user_id = ?", UserID).First(&profile).Error; err != nil {
 		return &Profile{}, err
 	}
 	return profile, nil
