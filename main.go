@@ -26,7 +26,7 @@ func main() {
 	router := gin.Default()
 
 	router.GET("/", func(context *gin.Context) {
-		context.JSON(http.StatusOK, gin.H{"mesage": "Welcome to Go API"})
+		context.JSON(http.StatusOK, gin.H{"mesage": "Welcome to e-Commerce HalalMeat"})
 	})
 
 	// PublicRoutes Endpoints
@@ -41,28 +41,44 @@ func main() {
 	// Quest Endpoints
 	protectedRoutes.GET("/quests", controllers.GetQuests)
 	protectedRoutes.POST("/quests", controllers.AddQuest)
-	protectedRoutes.GET("/quests/:id", controllers.GetQuest)
-	protectedRoutes.PATCH("/quests/:id", controllers.UpdateQuest)
-	protectedRoutes.DELETE("/quests/:id", controllers.DeleteQuest)
+	protectedRoutes.GET("/quests/:id", middlewares.UUidMiddleware(), controllers.GetQuest)
+	protectedRoutes.PATCH("/quests/:id", middlewares.UUidMiddleware(), controllers.UpdateQuest)
+	protectedRoutes.DELETE("/quests/:id", middlewares.UUidMiddleware(), controllers.DeleteQuest)
 
 	// Album Endpoints
 	protectedRoutes.GET("/albums", controllers.GetAlbums)
 	protectedRoutes.POST("/albums", controllers.AddAlbum)
-	protectedRoutes.GET("/albums/:id", controllers.GetAlbum)
-	protectedRoutes.PATCH("/albums/:id", controllers.UpdateAlbum)
-	protectedRoutes.DELETE("/albums/:id", controllers.DeleteAlbum)
+	protectedRoutes.GET("/albums/:id", middlewares.UUidMiddleware(), controllers.GetAlbum)
+	protectedRoutes.PATCH("/albums/:id", middlewares.UUidMiddleware(), controllers.UpdateAlbum)
+	protectedRoutes.DELETE("/albums/:id", middlewares.UUidMiddleware(), controllers.DeleteAlbum)
 
 	// Stock Endpoints
 	protectedRoutes.GET("/stocks", controllers.GetStocks)
 	protectedRoutes.POST("/stocks", controllers.AddStock)
-	protectedRoutes.GET("/stocks/:id", controllers.GetStock)
-	protectedRoutes.PATCH("/stocks/:id", controllers.UpdateAlbum)
-	protectedRoutes.DELETE("/stocks/:id", controllers.DeleteAlbum)
+	protectedRoutes.GET("/stocks/:id", middlewares.UUidMiddleware(), controllers.GetStock)
+	protectedRoutes.PATCH("/stocks/:id", middlewares.UUidMiddleware(), controllers.UpdateAlbum)
+	protectedRoutes.DELETE("/stocks/:id", middlewares.UUidMiddleware(), controllers.DeleteAlbum)
 
 	// Order Endpoints
-	protectedRoutes.GET("/orders", controllers.GetOrders)
 	protectedRoutes.POST("/orders", controllers.AddOrder)
-	protectedRoutes.GET("/orders/:id", controllers.GetOrder)
+	protectedRoutes.GET("/orders", controllers.GetOrders)
+	protectedRoutes.GET("/orders/:id", middlewares.UUidMiddleware(), controllers.GetOrder)
+	protectedRoutes.PATCH("/orders/:id", middlewares.UUidMiddleware(), controllers.PatchOrder)
+	protectedRoutes.DELETE("/orders/:id", middlewares.UUidMiddleware(), controllers.DeleteOrder)
+
+	// Address Endpoints
+	protectedRoutes.POST("/addresses", controllers.AddAddress)
+	protectedRoutes.GET("/addresses", controllers.GetAddresses)
+	protectedRoutes.GET("/addresses/:id", middlewares.UUidMiddleware(), controllers.GetAddress)
+	protectedRoutes.PATCH("/addresses/:id", middlewares.UUidMiddleware(), controllers.PatchAddress)
+	protectedRoutes.DELETE("/addresses/:id", middlewares.UUidMiddleware(), controllers.DeleteAddress)
+
+	// Profile Endpoints
+	protectedRoutes.POST("/profiles", controllers.AddProfile)
+	protectedRoutes.GET("/profiles", controllers.GetProfiles)
+	protectedRoutes.GET("/profiles/:id", middlewares.UUidMiddleware(), controllers.GetProfile)
+	protectedRoutes.PATCH("/profiles/:id", middlewares.UUidMiddleware(), controllers.PatchProfile)
+	protectedRoutes.DELETE("/profiles/:id", middlewares.UUidMiddleware(), controllers.DeleteProfile)
 
 	models.ConnectDatabase()
 	if err := router.Run("localhost:" + port); err != nil {

@@ -89,3 +89,11 @@ func GetOrder(context *gin.Context) {
 	}
 	context.JSON(http.StatusOK, gin.H{ "data": result })
 }
+
+func PatchOrder(context *gin.Context) {
+	context.JSON(http.StatusOK, gin.H{ "data": "Patch an Order" })
+}
+
+func DeleteOrder(context *gin.Context) {
+	context.JSON(http.StatusOK, gin.H{ "data": "Delete a Order" })
+}

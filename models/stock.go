@@ -32,7 +32,7 @@ type CreateStockInput struct {
 func (stock *Stock) BeforeSave(scope *gorm.DB) error {
 	stock.ID = uuid.NewV4()
 	return nil
- }
+}
 
  func (stock *Stock) Save() (*Stock, error) {
 	if err := DB.Create(&stock).Error; err != nil {
