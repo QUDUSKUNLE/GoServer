@@ -34,9 +34,8 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 
 func UUidMiddleware() gin.HandlerFunc {
 	return func(context *gin.Context) {
-		err := helpers.ValidateUUID(context.Param("id"))
-		if err != nil {
-			context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		if !helpers.ValidateUUID(context.Param("id")) {
+			context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "invalid id credential"})
 			return
 		}
 		context.Next()

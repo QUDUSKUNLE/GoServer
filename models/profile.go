@@ -13,7 +13,8 @@ type Profile struct {
 	Email     string    `gorm:"size:50;unique" sql:"unique:idx_email_firstname" json:"Email"`
 	FirstName string    `gorm:"size:50;not null" sql:"unique:idx_email_firstname" json:"FirstName"`
 	LastName  string    `gorm:"size:50;not null" json:"LastName"`
-	UserID    uuid.UUID
+	UserID    uuid.UUID `gorm:"foreignKey:ID" json:"-"`
+	User      User      `gorm:"belongs_to:user;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"User"`
 	Addresses []Address `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"Addresses"`
 	CreatedAt time.Time `json:"CreatedAt"`
 	UpdatedAt time.Time `json:"UpdatedAt"`

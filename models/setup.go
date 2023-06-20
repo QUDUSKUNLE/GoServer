@@ -27,14 +27,14 @@ func ConnectDatabase() {
 	}
 
 	database.AutoMigrate(
-		&Album{},
-		&Quest{},
 		&User{},
 		&Stock{},
+		&Profile{},
+		&Address{},
 		&Order{},
 		&Product{},
-		&Address{},
-		&Profile{},
+		&Album{},
+		&Quest{},
 	)
 	DB = database
 }
