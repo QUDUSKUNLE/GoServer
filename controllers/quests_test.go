@@ -55,15 +55,15 @@ func TestPatchQuest(t *testing.T) {
 	var response map[string]models.Quest
 	json.Unmarshal(writer.Body.Bytes(), &response)
 	_, exists := response["data"]
-	assert.Equal(t, true, exists)
-	assert.Equal(t, http.StatusOK, writer.Code)
+	assert.Equal(t, false, exists)
+	assert.Equal(t, http.StatusNoContent, writer.Code)
 }
 
 func TestDeleteQuest(t *testing.T) {
 	writer := makeRequest("DELETE", "/api/quests/1", nil, true, "quduskunle", "test")
-	var response map[string]models.Quest
+	var response map[string]interface{}
 	json.Unmarshal(writer.Body.Bytes(), &response)
 	_, exists := response["data"]
-	assert.Equal(t, true, exists)
-	assert.Equal(t, http.StatusOK, writer.Code)
+	assert.Equal(t, false, exists)
+	assert.Equal(t, http.StatusNoContent, writer.Code)
 }
