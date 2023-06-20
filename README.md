@@ -1,2 +1,2 @@
 # GoServer
-Simple CRUD with Go
+Halal Meat
