@@ -14,7 +14,7 @@ type User struct {
 	ID        uuid.UUID `gorm:"type:uuid;primary_key" json:"UserID"`
 	Username  string    `gorm:"size:255;unique" json:"Username"`
 	Password  string    `gorm:"size:255;" json:"-"`
-	Profile   Profile
+	Role      string    `gorm:"type:string;default:customer" json:"Role"`
 	CreatedAt time.Time `json:"CreatedAt"`
 	UpdatedAt time.Time `json:"UpdatedAt"`
 }
@@ -24,14 +24,7 @@ type UserInput struct {
 	Password string `json:"password" binding:"required"`
 }
 
-func (user *User) Save() (*User, error) {
-	if err := DB.Create(&user).Error; err != nil {
-		return &User{}, err
-	}
-	return user, nil
-}
-
-func (user *User) BeforeSave(*gorm.DB) error {
+func (user *User) BeforeSave(tx *gorm.DB) error {
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return err
@@ -40,6 +33,13 @@ func (user *User) BeforeSave(*gorm.DB) error {
 	user.Username = html.EscapeString(strings.TrimSpace(user.Username))
 	user.ID = uuid.NewV4()
 	return nil
+}
+
+func (user *User) Save() (*User, error) {
+	if err := DB.Create(&user).Error; err != nil {
+		return &User{}, err
+	}
+	return user, nil
 }
 
 func (user *User) ValidatePassword(password string) error {
@@ -56,7 +56,7 @@ func (user *User) FindUserByUsername(username string) (*User, error) {
 	return user, nil
 }
 
-func FindUserById(ID string) (User, error) {
+func FindUserByID(ID string) (User, error) {
 	var user User
 	if err := DB.Where("ID = ?", ID).First(&user).Error; err != nil {
 		return User{}, err

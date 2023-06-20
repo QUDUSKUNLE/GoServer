@@ -7,16 +7,17 @@ import (
 )
 
 type Stock struct {
-	ID          uuid.UUID `gorm:"type:uuid;primaryKey" json:"StockID"`
-	Type        string    `gorm:"size:10;not null;" json:"Type"`
-	Cost        float32   `gorm:"not null" json:"-"`
-	Price       float32   `gorm:"not null" json:"Price"`
-	Province    string    `gorm:"not null;unique" json:"Province"`
-	Unit        int       `gorm:"not null" json:"-"`
-	Slot        int       `gorm:"not null" json:"Slot"`
-	Description string    `gorm:"size:255;not null" json:"Description"`
-	CreatedAt   time.Time `json:"CreatedAt"`
-	UpdatedAt   time.Time `json:"UpdatedAt"`
+	ID           uuid.UUID `gorm:"type:uuid;primaryKey" json:"StockID"`
+	Type         string    `gorm:"size:10;not null;" json:"Type"`
+	Description  string    `gorm:"size:255;not null" json:"Description"`
+	Availability bool      `gorm:"type:bool;default:false" json:"Availability"`
+	Cost         float32   `gorm:"not null" json:"-"`
+	Price        float32   `gorm:"not null" json:"Price"`
+	Province     string    `gorm:"not null;unique" json:"Province"`
+	Unit         int       `gorm:"not null" json:"-"`
+	Slot         int       `gorm:"not null" json:"Slot"`
+	CreatedAt    time.Time `json:"CreatedAt"`
+	UpdatedAt    time.Time `json:"UpdatedAt"`
 }
 
 type CreateStockInput struct {

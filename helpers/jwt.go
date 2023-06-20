@@ -67,16 +67,16 @@ func CurrentUser(context *gin.Context) (models.User, error) {
 	claims, _ := token.Claims.(jwt.MapClaims)
 	userId := claims["id"].(string)
 
-	user, err := models.FindUserById(userId)
+	user, err := models.FindUserByID(userId)
 	if err != nil {
 		return models.User{}, err
 	}
 	return user, nil
 }
 
-func ValidateUUID(uu string) error {
+func ValidateUUID(uu string) bool {
 	if _, err := uuid.Parse(uu); err != nil {
-		return errors.New("invalid id credential")
+		return false
 	}
-	return nil
+	return true
 }
