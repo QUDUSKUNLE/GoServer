@@ -3,8 +3,8 @@ package controllers
 import (
 	"net/http"
 	"server/helpers"
-	"server/models"
 	"server/middlewares"
+	"server/models"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,7 +16,7 @@ func AddOrder(context *gin.Context) {
 	var stockIDs []string
 	user, err := helpers.CurrentUser(context)
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{ "error": middlewares.CompileErrors(err) })
+		context.JSON(http.StatusBadRequest, gin.H{"error": middlewares.CompileErrors(err)})
 		return
 	}
 
@@ -25,7 +25,7 @@ func AddOrder(context *gin.Context) {
 		context.AbortWithStatusJSON(
 			http.StatusBadRequest,
 			gin.H{
-				"errors": middlewares.CompileErrors(err),
+				"errors":  middlewares.CompileErrors(err),
 				"message": "Required fields are essential",
 			},
 		)
@@ -40,60 +40,60 @@ func AddOrder(context *gin.Context) {
 			stockIDs = append(stockIDs, (product.StockID).String())
 			var productInput = models.ProductInput{
 				Quantity: product.Quantity,
-				StockID: product.StockID,
+				StockID:  product.StockID,
 			}
 			orderedProducts[(product.StockID).String()] = productInput
 		}
 		stocks = stock.FindIn(stockIDs)
 
-		if len(stocks) >= 1  {
+		if len(stocks) >= 1 {
 			for _, stock := range stocks {
 				productInput = orderedProducts[(stock.ID).String()]
 				product := models.Product{
 					Quantity: productInput.Quantity,
-					StockID: stock.ID,
+					StockID:  stock.ID,
 				}
 				products = append(products, product)
 				totalQuantity += productInput.Quantity
 			}
 		}
 		order := models.Order{
-			TotalQuantity: totalQuantity,
-			Products: products,
+			TotalQuantity:   totalQuantity,
+			Products:        products,
 			ShippingAddress: orderInput.ShippingAddress,
-			UserID: user.ID,
+			UserID:          user.ID,
 		}
 		_, err := order.Save()
 		if err != nil {
-			context.JSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
+			context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-		context.JSON(http.StatusCreated, gin.H{ "data":  "Order created successfully." })
+		context.JSON(http.StatusCreated, gin.H{"data": "Order created successfully."})
 		return
 	}
-	context.JSON(http.StatusBadRequest, gin.H{ "message": "No order made" })
+	context.JSON(http.StatusBadRequest, gin.H{"message": "No order made"})
 }
 
 func GetOrders(context *gin.Context) {
 	var order models.Order
 	result := order.FindAll()
-	context.JSON(http.StatusOK, gin.H{ "data": result })
+	context.JSON(http.StatusOK, gin.H{"data": result})
 }
 
 func GetOrder(context *gin.Context) {
 	var order models.Order
 	result, err := order.FindOrderByID(context.Param("id"))
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{ "error": "Record not found", })
+		context.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
 		return
 	}
-	context.JSON(http.StatusOK, gin.H{ "data": result })
+	context.JSON(http.StatusOK, gin.H{"data": result})
 }
 
 func PatchOrder(context *gin.Context) {
-	context.JSON(http.StatusOK, gin.H{ "data": "Patch an Order" })
+	context.JSON(http.StatusOK, gin.H{"data": "Patch an Order"})
 }
 
 func DeleteOrder(context *gin.Context) {
-	context.JSON(http.StatusOK, gin.H{ "data": "Delete a Order" })
+	context.JSON(http.StatusOK, gin.H{"data": "Delete a Order"})
 }

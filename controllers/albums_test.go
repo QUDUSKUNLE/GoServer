@@ -2,11 +2,11 @@ package controllers
 
 import (
 	"encoding/json"
+	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"server/models"
 	"testing"
-	"github.com/stretchr/testify/assert"
 )
 
 func NewUser() *httptest.ResponseRecorder {
@@ -20,9 +20,9 @@ func NewUser() *httptest.ResponseRecorder {
 
 func TestAddAlbum(t *testing.T) {
 	album := models.CreateAlbumInput{
-		Title: "Arrow of God",
+		Title:  "Arrow of God",
 		Artist: "Okay",
-		Price: 12.45,
+		Price:  12.45,
 	}
 	NewUser()
 
@@ -38,7 +38,7 @@ func TestAddAlbum(t *testing.T) {
 }
 
 func TestGetAlbums(t *testing.T) {
-	writer := makeRequest("GET", "/api/albums", nil, true,  "quduskunle@gmail.co", "test")
+	writer := makeRequest("GET", "/api/albums", nil, true, "quduskunle@gmail.co", "test")
 	var response map[string][]models.Album
 	json.Unmarshal(writer.Body.Bytes(), &response)
 	_, exists := response["data"]
@@ -47,7 +47,7 @@ func TestGetAlbums(t *testing.T) {
 }
 
 func TestGetAlbum(t *testing.T) {
-	writer := makeRequest("GET", "/api/albums/1", nil, true,  "quduskunle@gmail.co", "test")
+	writer := makeRequest("GET", "/api/albums/1", nil, true, "quduskunle@gmail.co", "test")
 	var response map[string]models.Album
 	json.Unmarshal(writer.Body.Bytes(), &response)
 	_, exists := response["data"]
@@ -57,9 +57,9 @@ func TestGetAlbum(t *testing.T) {
 
 func TestPatchAlbum(t *testing.T) {
 	quest := models.Album{
-		Title: "Arrow of Name",
+		Title:  "Arrow of Name",
 		Artist: "Okay",
-		Price: 12,
+		Price:  12,
 	}
 	writer := makeRequest("PATCH", "/api/albums/1", quest, true, "quduskunle@gmail.co", "test")
 	var response map[string]models.Album

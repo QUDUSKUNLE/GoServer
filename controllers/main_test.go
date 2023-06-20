@@ -3,6 +3,8 @@ package controllers
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	"log"
 	"net/http"
 	"net/http/httptest"
@@ -10,9 +12,6 @@ import (
 	"server/middlewares"
 	"server/models"
 	"testing"
-
-	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
 
 func TestMain(m *testing.M) {
