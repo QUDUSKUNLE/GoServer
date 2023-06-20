@@ -10,8 +10,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/google/uuid"
 )
 
 var privateKey = []byte(os.Getenv("JWT_PRIVATE_KEY"))
@@ -61,15 +61,15 @@ func extractToken(context *gin.Context) (string, error) {
 func CurrentUser(context *gin.Context) (models.User, error) {
 	err := ValidateJWT(context)
 	if err != nil {
-			return models.User{}, err
+		return models.User{}, err
 	}
 	token, _ := getToken(context)
 	claims, _ := token.Claims.(jwt.MapClaims)
 	userId := claims["id"].(string)
-	
+
 	user, err := models.FindUserById(userId)
 	if err != nil {
-			return models.User{}, err
+		return models.User{}, err
 	}
 	return user, nil
 }

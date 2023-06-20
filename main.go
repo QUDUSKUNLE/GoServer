@@ -1,14 +1,14 @@
 package main
 
 import (
+	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	"log"
 	"net/http"
 	"os"
 	"server/controllers"
 	"server/middlewares"
 	"server/models"
-	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
 
 func init() {

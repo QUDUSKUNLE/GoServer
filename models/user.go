@@ -1,27 +1,27 @@
 package models
 
 import (
-	"html"
-	"time"
 	"errors"
-	"strings"
-	"gorm.io/gorm"
 	"github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
+	"html"
+	"strings"
+	"time"
 )
 
 type User struct {
-	ID        	uuid.UUID 	`gorm:"type:uuid;primary_key" json:"UserID"`
-	Username  	string    	`gorm:"size:255;unique" json:"Username"`
-	Password  	string    	`gorm:"size:255;" json:"-"`
-	Profile     Profile
- 	CreatedAt 	time.Time 	`json:"CreatedAt"`
-	UpdatedAt 	time.Time 	`json:"UpdatedAt"`
+	ID        uuid.UUID `gorm:"type:uuid;primary_key" json:"UserID"`
+	Username  string    `gorm:"size:255;unique" json:"Username"`
+	Password  string    `gorm:"size:255;" json:"-"`
+	Profile   Profile
+	CreatedAt time.Time `json:"CreatedAt"`
+	UpdatedAt time.Time `json:"UpdatedAt"`
 }
 
 type UserInput struct {
-	Username 		string 			`json:"username" binding:"required"`
-	Password 		string 			`json:"password" binding:"required"`
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
 }
 
 func (user *User) Save() (*User, error) {

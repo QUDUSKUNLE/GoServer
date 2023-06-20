@@ -1,32 +1,32 @@
 package models
 
 import (
-	"time"
-	"gorm.io/gorm"
 	"github.com/satori/go.uuid"
+	"gorm.io/gorm"
+	"time"
 )
 
 type Stock struct {
-	ID uuid.UUID `gorm:"type:uuid;primaryKey" json:"StockID"`
-	Type string `gorm:"size:10;not null;" json:"Type"`
-	Cost float32 `gorm:"not null" json:"-"`
-	Price float32 `gorm:"not null" json:"Price"`
-	Province string `gorm:"not null;unique" json:"Province"`
-	Unit int `gorm:"not null" json:"-"`
-	Slot int `gorm:"not null" json:"Slot"`
-	Description string `gorm:"size:255;not null" json:"Description"`
-	CreatedAt time.Time `json:"CreatedAt"`
-  UpdatedAt time.Time `json:"UpdatedAt"`
+	ID          uuid.UUID `gorm:"type:uuid;primaryKey" json:"StockID"`
+	Type        string    `gorm:"size:10;not null;" json:"Type"`
+	Cost        float32   `gorm:"not null" json:"-"`
+	Price       float32   `gorm:"not null" json:"Price"`
+	Province    string    `gorm:"not null;unique" json:"Province"`
+	Unit        int       `gorm:"not null" json:"-"`
+	Slot        int       `gorm:"not null" json:"Slot"`
+	Description string    `gorm:"size:255;not null" json:"Description"`
+	CreatedAt   time.Time `json:"CreatedAt"`
+	UpdatedAt   time.Time `json:"UpdatedAt"`
 }
 
 type CreateStockInput struct {
-	Type string `json:"Type" binding:"required"`
-	Description string `json:"Description" binding:"required"`
-	Province string `json:"Province" binding:"required"`
-	Cost float32 `json:"Cost" binding:"required"`
-	Price float32 `json:"Price"`
-	Unit int `json:"Unit" binding:"required"`
-	Slot int `json:"Slot"`
+	Type        string  `json:"Type" binding:"required"`
+	Description string  `json:"Description" binding:"required"`
+	Province    string  `json:"Province" binding:"required"`
+	Cost        float32 `json:"Cost" binding:"required"`
+	Price       float32 `json:"Price"`
+	Unit        int     `json:"Unit" binding:"required"`
+	Slot        int     `json:"Slot"`
 }
 
 func (stock *Stock) BeforeSave(scope *gorm.DB) error {
@@ -34,7 +34,7 @@ func (stock *Stock) BeforeSave(scope *gorm.DB) error {
 	return nil
 }
 
- func (stock *Stock) Save() (*Stock, error) {
+func (stock *Stock) Save() (*Stock, error) {
 	if err := DB.Create(&stock).Error; err != nil {
 		return &Stock{}, err
 	}

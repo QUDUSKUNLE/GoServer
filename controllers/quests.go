@@ -72,5 +72,5 @@ func DeleteQuest(context *gin.Context) {
 		context.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}
-	context.JSON(http.StatusNoContent, gin.H{ "data": "Deleted successfully"})
+	context.JSON(http.StatusNoContent, gin.H{"data": "Deleted successfully"})
 }

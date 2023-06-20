@@ -2,18 +2,17 @@ package controllers
 
 import (
 	"encoding/json"
+	"github.com/stretchr/testify/assert"
 	"net/http"
 	"server/models"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestAddQuest(t *testing.T) {
 	quest := models.Quest{
-		Title: "Arrow of God",
+		Title:       "Arrow of God",
 		Description: "Okay",
-		Reward: 12,
+		Reward:      12,
 	}
 
 	writer := makeRequest("POST", "/api/quests", quest, true, "quduskunle", "test")
@@ -47,9 +46,9 @@ func TestGetQuest(t *testing.T) {
 
 func TestPatchQuest(t *testing.T) {
 	quest := models.Quest{
-		Title: "Arrow of Name",
+		Title:       "Arrow of Name",
 		Description: "Okay",
-		Reward: 12,
+		Reward:      12,
 	}
 	writer := makeRequest("PATCH", "/api/quests/1", quest, true, "quduskunle", "test")
 	var response map[string]models.Quest

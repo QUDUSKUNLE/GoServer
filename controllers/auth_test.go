@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"server/models"
 	"encoding/json"
 	"net/http"
+	"server/models"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

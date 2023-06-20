@@ -35,6 +35,6 @@ func ConnectDatabase() {
 		&Product{},
 		&Address{},
 		&Profile{},
-)
+	)
 	DB = database
 }

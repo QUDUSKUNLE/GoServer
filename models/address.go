@@ -1,29 +1,29 @@
 package models
 
 import (
-	"time"
+	"github.com/satori/go.uuid"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
-	"github.com/satori/go.uuid"
+	"time"
 )
 
 type Address struct {
-	ID 						uuid.UUID 	`gorm:"type:uuid;primary_key" json:"AddressID"`
-	StreetNo 			int 				`gorm:"not null" sql:"unique:idx_streetno_streetname" json:"StreetNo"`
-	StreetName 		string  		`gorm:"not null" sql:"unique:idx_streetno_streetname" json:"StreetName"`
-	Province 			string  		`gorm:"not null" json:"Province"`
-	State 				string  		`gorm:"not null" json:"State"`
-	ProfileID 		uuid.UUID
-	CreatedAt 		time.Time 	`json:"CreatedAt"`
-  UpdatedAt 		time.Time 	`json:"UpdatedAt"`
+	ID         uuid.UUID `gorm:"type:uuid;primary_key" json:"AddressID"`
+	StreetNo   int       `gorm:"not null" sql:"unique:idx_streetno_streetname" json:"StreetNo"`
+	StreetName string    `gorm:"not null" sql:"unique:idx_streetno_streetname" json:"StreetName"`
+	Province   string    `gorm:"not null" json:"Province"`
+	State      string    `gorm:"not null" json:"State"`
+	ProfileID  uuid.UUID
+	CreatedAt  time.Time `json:"CreatedAt"`
+	UpdatedAt  time.Time `json:"UpdatedAt"`
 }
 
 type AddressInput struct {
-	StreetNo 			int 				`json:"StreetNo" binding:"required,gte=0,lte=1000"`
-	StreetName 		string  		`json:"StreetName" binding:"required,max=50"`
-	Province 			string  		`json:"Province" binding:"required,max=50"`
-	State 				string  		`json:"State" binding:"required,max=50"`
-	UserID 				uuid.UUID   `json:"UserID"`
+	StreetNo   int       `json:"StreetNo" binding:"required,gte=0,lte=1000"`
+	StreetName string    `json:"StreetName" binding:"required,max=50"`
+	Province   string    `json:"Province" binding:"required,max=50"`
+	State      string    `json:"State" binding:"required,max=50"`
+	UserID     uuid.UUID `json:"UserID"`
 }
 
 func (address *Address) BeforeSave(scope *gorm.DB) error {
