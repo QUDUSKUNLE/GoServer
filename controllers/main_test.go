@@ -34,9 +34,7 @@ func setupDB() {
 
 func tearDownDB() {
 	migrator := models.DB.Migrator()
-	migrator.DropTable(&models.User{})
-	migrator.DropTable(&models.Quest{})
-	migrator.DropTable(&models.Album{})
+	migrator.DropTable(&models.User{}, &models.Quest{}, &models.Album{})
 }
 
 func apiRouter() *gin.Engine {
