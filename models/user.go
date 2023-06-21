@@ -12,7 +12,7 @@ import (
 
 type User struct {
 	ID        uuid.UUID `gorm:"type:uuid;primary_key" json:"UserID"`
-	Username  string    `gorm:"size:255;unique" json:"Username"`
+	Email  		string    `gorm:"size:255;unique" json:"Email"`
 	Password  string    `gorm:"size:255;" json:"-"`
 	Role      string    `gorm:"type:string;default:customer" json:"Role"`
 	CreatedAt time.Time `json:"CreatedAt"`
@@ -20,7 +20,7 @@ type User struct {
 }
 
 type UserInput struct {
-	Username string `json:"username" binding:"required"`
+	Email string `json:"email" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
 
@@ -30,7 +30,7 @@ func (user *User) BeforeSave(tx *gorm.DB) error {
 		return err
 	}
 	user.Password = string(passwordHash)
-	user.Username = html.EscapeString(strings.TrimSpace(user.Username))
+	user.Email = html.EscapeString(strings.TrimSpace(user.Email))
 	user.ID = uuid.NewV4()
 	return nil
 }
@@ -49,8 +49,8 @@ func (user *User) ValidatePassword(password string) error {
 	return nil
 }
 
-func (user *User) FindUserByUsername(username string) (*User, error) {
-	if err := DB.Where(&User{Username: username}).First(&user).Error; err != nil {
+func (user *User) FindUserByEmail(email string) (*User, error) {
+	if err := DB.Where(&User{Email: email}).First(&user).Error; err != nil {
 		return user, errors.New("incorrect log in credentials")
 	}
 	return user, nil

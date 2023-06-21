@@ -41,6 +41,11 @@ func (order *Order) BeforeSave(scope *gorm.DB) error {
 	return nil
 }
 
+func (order *Order) BeforeCreate(scope *gorm.DB) error {
+	// order.ID = uuid.NewV4()
+	return nil
+}
+
 func (order *Order) Save() (*Order, error) {
 	if err := DB.Create(&order).Error; err != nil {
 		return &Order{}, err

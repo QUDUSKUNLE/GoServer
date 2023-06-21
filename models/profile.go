@@ -2,7 +2,6 @@ package models
 
 import (
 	"time"
-
 	"github.com/satori/go.uuid"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -10,8 +9,7 @@ import (
 
 type Profile struct {
 	ID        uuid.UUID `gorm:"type:uuid;primary_key" json:"ProfileID"`
-	Email     string    `gorm:"size:50;unique" sql:"unique:idx_email_firstname" json:"Email"`
-	FirstName string    `gorm:"size:50;not null" sql:"unique:idx_email_firstname" json:"FirstName"`
+	FirstName string    `gorm:"size:50;not null" json:"FirstName"`
 	LastName  string    `gorm:"size:50;not null" json:"LastName"`
 	UserID    uuid.UUID `gorm:"foreignKey:ID" json:"-"`
 	User      User      `gorm:"belongs_to:user;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"User"`
@@ -21,7 +19,6 @@ type Profile struct {
 }
 
 type ProfileInput struct {
-	Email     string    `json:"Email" binding:"required"`
 	FirstName string    `json:"FirstName" binding:"required"`
 	LastName  string    `json:"LastName" binding:"required"`
 	UserID    uuid.UUID `json:"UserID"`

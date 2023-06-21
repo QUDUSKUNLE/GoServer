@@ -30,12 +30,12 @@ func main() {
 	})
 
 	// PublicRoutes Endpoints
-	publicRoutes := router.Group("/auth")
-	publicRoutes.POST("/register", controllers.Register)
-	publicRoutes.POST("/login", controllers.Login)
+	publicRoutes := router.Group("/v1")
+	publicRoutes.POST("/users/register", controllers.Register)
+	publicRoutes.POST("/users/login", controllers.Login)
 
 	// ProtectedRoutes Endpoints
-	protectedRoutes := router.Group("/api")
+	protectedRoutes := router.Group("/v1")
 	protectedRoutes.Use(middlewares.JWTAuthMiddleware())
 
 	// Quest Endpoints
@@ -56,8 +56,8 @@ func main() {
 	protectedRoutes.GET("/stocks", controllers.GetStocks)
 	protectedRoutes.POST("/stocks", controllers.AddStock)
 	protectedRoutes.GET("/stocks/:id", middlewares.UUidMiddleware(), controllers.GetStock)
-	protectedRoutes.PATCH("/stocks/:id", middlewares.UUidMiddleware(), controllers.UpdateAlbum)
-	protectedRoutes.DELETE("/stocks/:id", middlewares.UUidMiddleware(), controllers.DeleteAlbum)
+	protectedRoutes.PATCH("/stocks/:id", middlewares.UUidMiddleware(), controllers.UpdateStock)
+	protectedRoutes.DELETE("/stocks/:id", middlewares.UUidMiddleware(), controllers.DeleteStock)
 
 	// Order Endpoints
 	protectedRoutes.POST("/orders", controllers.AddOrder)
