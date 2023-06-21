@@ -1,10 +1,10 @@
 package models
 
 import (
-	"time"
 	"github.com/satori/go.uuid"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+	"time"
 )
 
 type Profile struct {

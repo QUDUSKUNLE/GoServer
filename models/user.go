@@ -12,7 +12,7 @@ import (
 
 type User struct {
 	ID        uuid.UUID `gorm:"type:uuid;primary_key" json:"UserID"`
-	Email  		string    `gorm:"size:255;unique" json:"Email"`
+	Email     string    `gorm:"size:255;unique" json:"Email"`
 	Password  string    `gorm:"size:255;" json:"-"`
 	Role      string    `gorm:"type:string;default:customer" json:"Role"`
 	CreatedAt time.Time `json:"CreatedAt"`
@@ -20,7 +20,7 @@ type User struct {
 }
 
 type UserInput struct {
-	Email string `json:"email" binding:"required"`
+	Email    string `json:"email" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
 

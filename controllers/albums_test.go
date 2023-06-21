@@ -11,10 +11,10 @@ import (
 
 func NewUser() *httptest.ResponseRecorder {
 	user := models.UserInput{
-		Email: "quduskunle@gmail.co",
+		Email:    "quduskunle@gmail.co",
 		Password: "test",
 	}
-	writer := makeRequest("POST", "/auth/register", user, false, "", "")
+	writer := makeRequest("POST", "/v1/users/register", user, false, "", "")
 	return writer
 }
 
@@ -26,7 +26,7 @@ func TestAddAlbum(t *testing.T) {
 	}
 	NewUser()
 
-	writer := makeRequest("POST", "/api/albums", album, true, "quduskunle@gmail.co", "test")
+	writer := makeRequest("POST", "/v1/albums", album, true, "quduskunle@gmail.co", "test")
 	var response map[string]models.Album
 	json.Unmarshal(writer.Body.Bytes(), &response)
 	data, exists := response["data"]
@@ -38,7 +38,7 @@ func TestAddAlbum(t *testing.T) {
 }
 
 func TestGetAlbums(t *testing.T) {
-	writer := makeRequest("GET", "/api/albums", nil, true, "quduskunle@gmail.co", "test")
+	writer := makeRequest("GET", "/v1/albums", nil, true, "quduskunle@gmail.co", "test")
 	var response map[string][]models.Album
 	json.Unmarshal(writer.Body.Bytes(), &response)
 	_, exists := response["data"]
@@ -47,7 +47,7 @@ func TestGetAlbums(t *testing.T) {
 }
 
 func TestGetAlbum(t *testing.T) {
-	writer := makeRequest("GET", "/api/albums/1", nil, true, "quduskunle@gmail.co", "test")
+	writer := makeRequest("GET", "/v1/albums/1", nil, true, "quduskunle@gmail.co", "test")
 	var response map[string]models.Album
 	json.Unmarshal(writer.Body.Bytes(), &response)
 	_, exists := response["data"]
@@ -61,7 +61,7 @@ func TestPatchAlbum(t *testing.T) {
 		Artist: "Okay",
 		Price:  12,
 	}
-	writer := makeRequest("PATCH", "/api/albums/1", quest, true, "quduskunle@gmail.co", "test")
+	writer := makeRequest("PATCH", "/v1/albums/1", quest, true, "quduskunle@gmail.co", "test")
 	var response map[string]models.Album
 	json.Unmarshal(writer.Body.Bytes(), &response)
 	_, exists := response["data"]
@@ -70,7 +70,7 @@ func TestPatchAlbum(t *testing.T) {
 }
 
 func TestDeleteAlbum(t *testing.T) {
-	writer := makeRequest("DELETE", "/api/albums/1", nil, true, "quduskunle@gmail.co", "test")
+	writer := makeRequest("DELETE", "/v1/albums/1", nil, true, "quduskunle@gmail.co", "test")
 	var response map[string]models.Album
 	json.Unmarshal(writer.Body.Bytes(), &response)
 	_, exists := response["data"]

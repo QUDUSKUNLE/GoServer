@@ -41,6 +41,11 @@ type UpdateStockInput struct {
 	Slot        int     `json:"Slot"`
 }
 
+type UpdateSlotInput struct {
+	StockID      string     `json:"SlotID"`
+	Slot        int     `json:"Slot"`
+}
+
 func (stock *Stock) BeforeSave(scope *gorm.DB) error {
 	stock.ID = uuid.NewV4()
 	return nil
@@ -51,6 +56,13 @@ func (stock *Stock) Save() (*Stock, error) {
 		return &Stock{}, err
 	}
 	return stock, nil
+}
+
+func (stock *Stock) BeforeUpdate(tx *gorm.DB) error {
+  if stock.Slot == stock.Unit {
+    return errors.New("out of stock")
+  }
+  return nil
 }
 
 func (stock *Stock) FindAll() []Stock {
@@ -84,6 +96,16 @@ func (stock *Stock) Update(updateStock UpdateStockInput, id string) (*Stock, err
 		return &Stock{}, err
 	}
 	if err := DB.Model(&stock).Updates(updateStock).Error; err != nil {
+		return &Stock{}, err
+	}
+	return stock, nil
+}
+
+func (stock *Stock) UpdateSlot(updateStock UpdateSlotInput) (*Stock, error) {
+	if err := DB.Where("id = ?", updateStock.StockID).First(&stock).Error; err != nil {
+		return &Stock{}, err
+	}
+	if err := DB.Model(&stock).Update("slot", gorm.Expr("slot + ?", updateStock.Slot)).Error; err != nil {
 		return &Stock{}, err
 	}
 	return stock, nil

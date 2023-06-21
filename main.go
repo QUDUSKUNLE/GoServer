@@ -78,7 +78,6 @@ func main() {
 	protectedRoutes.GET("/profiles", controllers.GetProfiles)
 	protectedRoutes.GET("/profiles/:id", middlewares.UUidMiddleware(), controllers.GetProfile)
 	protectedRoutes.PATCH("/profiles/:id", middlewares.UUidMiddleware(), controllers.PatchProfile)
-	protectedRoutes.DELETE("/profiles/:id", middlewares.UUidMiddleware(), controllers.DeleteProfile)
 
 	models.ConnectDatabase()
 	if err := router.Run("localhost:" + port); err != nil {

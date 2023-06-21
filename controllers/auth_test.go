@@ -11,20 +11,20 @@ import (
 
 func TestRegister(t *testing.T) {
 	newUser := models.UserInput{
-		Email: "quduskunle",
+		Email:    "quduskunle",
 		Password: "test",
 	}
-	writer := makeRequest("POST", "/auth/register", newUser, false, "", "")
+	writer := makeRequest("POST", "/v1/users/register", newUser, false, "", "")
 	assert.Equal(t, http.StatusCreated, writer.Code)
 }
 
 func TestLogin(t *testing.T) {
 	user := models.UserInput{
-		Email: "quduskunle",
+		Email:    "quduskunle",
 		Password: "test",
 	}
 
-	writer := makeRequest("POST", "/auth/login", user, false, "", "")
+	writer := makeRequest("POST", "/v1/users/login", user, false, "", "")
 	assert.Equal(t, http.StatusOK, writer.Code)
 	var response map[string]string
 	json.Unmarshal(writer.Body.Bytes(), &response)

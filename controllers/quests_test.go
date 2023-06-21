@@ -15,7 +15,7 @@ func TestAddQuest(t *testing.T) {
 		Reward:      12,
 	}
 
-	writer := makeRequest("POST", "/api/quests", quest, true, "quduskunle", "test")
+	writer := makeRequest("POST", "/v1/quests", quest, true, "quduskunle", "test")
 	var response map[string]models.Quest
 	json.Unmarshal(writer.Body.Bytes(), &response)
 	data, exists := response["data"]
@@ -27,7 +27,7 @@ func TestAddQuest(t *testing.T) {
 }
 
 func TestGetQuests(t *testing.T) {
-	writer := makeRequest("GET", "/api/quests", nil, true, "quduskunle", "test")
+	writer := makeRequest("GET", "/v1/quests", nil, true, "quduskunle", "test")
 	var response map[string][]models.Quest
 	json.Unmarshal(writer.Body.Bytes(), &response)
 	_, exists := response["data"]
@@ -36,7 +36,7 @@ func TestGetQuests(t *testing.T) {
 }
 
 func TestGetQuest(t *testing.T) {
-	writer := makeRequest("GET", "/api/quests/1", nil, true, "quduskunle", "test")
+	writer := makeRequest("GET", "/v1/quests/1", nil, true, "quduskunle", "test")
 	var response map[string]models.Quest
 	json.Unmarshal(writer.Body.Bytes(), &response)
 	_, exists := response["data"]
@@ -50,7 +50,7 @@ func TestPatchQuest(t *testing.T) {
 		Description: "Okay",
 		Reward:      12,
 	}
-	writer := makeRequest("PATCH", "/api/quests/1", quest, true, "quduskunle", "test")
+	writer := makeRequest("PATCH", "/v1/quests/1", quest, true, "quduskunle", "test")
 	var response map[string]models.Quest
 	json.Unmarshal(writer.Body.Bytes(), &response)
 	_, exists := response["data"]
@@ -59,7 +59,7 @@ func TestPatchQuest(t *testing.T) {
 }
 
 func TestDeleteQuest(t *testing.T) {
-	writer := makeRequest("DELETE", "/api/quests/1", nil, true, "quduskunle", "test")
+	writer := makeRequest("DELETE", "/v1/quests/1", nil, true, "quduskunle", "test")
 	var response map[string]interface{}
 	json.Unmarshal(writer.Body.Bytes(), &response)
 	_, exists := response["data"]

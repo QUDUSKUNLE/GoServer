@@ -18,10 +18,10 @@ type Order struct {
 	ID            uuid.UUID `gorm:"type:uuid;primary_key" json:"OrderID"`
 	TotalQuantity int       `gorm:"not null" json:"TotalQuantity"`
 	Products      []Product `gorm:"many2many:order_products;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"Products"`
-	UserID        uuid.UUID `gorm:"foreignKey:ID"`
+	UserID        uuid.UUID `gorm:"foreignKey:ID" json:"-"`
 	User          User      `gorm:"belongs_to:user" json:"User"`
-	AddressID     uuid.UUID `gorm:"foreignKey:ID"`
-	Address       Address   `gorm:"belongs_to:address" json:"Address"`
+	AddressID     uuid.UUID `gorm:"foreignKey:ID" json:"-"`
+	Address       Address   `gorm:"belongs_to:address" json:"ShippingAddress"`
 	CreatedAt     time.Time `json:"CreatedAt"`
 	UpdatedAt     time.Time `json:"UpdatedAt"`
 }
@@ -33,7 +33,7 @@ type OrderRequest struct {
 
 type OrderInputs struct {
 	Products  []*OrderRequest `json:"Products" binding:"required"`
-	AddressID uuid.UUID       `json:"AddressID" binding:"required"`
+	AddressID uuid.UUID      `json:"AddressID" binding:"required"`
 }
 
 func (order *Order) BeforeSave(scope *gorm.DB) error {

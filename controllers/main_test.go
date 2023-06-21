@@ -39,11 +39,11 @@ func tearDownDB() {
 func apiRouter() *gin.Engine {
 	router := gin.Default()
 
-	publicRouters := router.Group("/auth")
-	publicRouters.POST("/register", Register)
-	publicRouters.POST("/login", Login)
+	publicRouters := router.Group("/v1")
+	publicRouters.POST("/users/register", Register)
+	publicRouters.POST("/users/login", Login)
 
-	protectedRouters := router.Group("/api")
+	protectedRouters := router.Group("/v1")
 	protectedRouters.Use(middlewares.JWTAuthMiddleware())
 	protectedRouters.POST("/quests", AddQuest)
 	protectedRouters.GET("/quests", GetQuests)
@@ -73,7 +73,7 @@ func makeRequest(method, url string, body interface{}, isAuthenticated bool, use
 
 func bearerToken(username, password string) string {
 	user := models.UserInput{
-		Email: username,
+		Email:    username,
 		Password: password,
 	}
 

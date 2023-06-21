@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"os"
 	"net/http"
 	"server/helpers"
 	"server/middlewares"
@@ -49,6 +50,11 @@ func GetProfile(context *gin.Context) {
 }
 
 func GetProfiles(context *gin.Context) {
+	var role string = context.Query("role")
+	if role == "" || role != os.Getenv("ROLE") {
+		context.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
 	var profile models.Profile
 	result := profile.FindProfiles()
 	context.JSON(http.StatusOK, gin.H{"data": result})
@@ -56,8 +62,4 @@ func GetProfiles(context *gin.Context) {
 
 func PatchProfile(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"data": "Patch a Profile"})
-}
-
-func DeleteProfile(context *gin.Context) {
-	context.JSON(http.StatusOK, gin.H{"data": "Delete a Profile"})
 }

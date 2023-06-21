@@ -18,7 +18,7 @@ func Register(context *gin.Context) {
 	}
 
 	user := models.User{
-		Email: userInput.Email,
+		Email:    userInput.Email,
 		Password: userInput.Password,
 	}
 	savedUser, err := user.Save()

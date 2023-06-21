@@ -17,8 +17,7 @@ type Product struct {
 
 type ProductInput struct {
 	Quantity int   `json:"Quantity" binding:"required"`
-	Stock    Stock `json:"Stock" binding:"required"`
-	StockID  uuid.UUID
+	StockID  string `json:"StockID" binding:"required"`
 }
 
 func (product *Product) BeforeSave(scope *gorm.DB) error {

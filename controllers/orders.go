@@ -10,10 +10,8 @@ import (
 )
 
 func AddOrder(context *gin.Context) {
-	var stocks []models.Stock
+	// var stocks []models.Stock
 	var products []models.Product
-	var productInput models.ProductInput
-	var stockIDs []string
 	user, err := helpers.CurrentUser(context)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": middlewares.CompileErrors(err)})
@@ -32,30 +30,23 @@ func AddOrder(context *gin.Context) {
 		return
 	}
 
-	var totalQuantity int
+	if (orderInput.AddressID).String() == "" {
+		context.JSON(http.StatusBadRequest, gin.H{"error": "order address id is required"})
+		return
+	}
+
+	totalQuantity := 0
 	var stock models.Stock
-	orderedProducts := make(map[string]models.ProductInput)
 	if len(orderInput.Products) >= 1 {
 		for _, product := range orderInput.Products {
-			stockIDs = append(stockIDs, (product.StockID).String())
-			var productInput = models.ProductInput{
+			var stockID = product.StockID
+			product := models.Product{
 				Quantity: product.Quantity,
 				StockID:  product.StockID,
 			}
-			orderedProducts[(product.StockID).String()] = productInput
-		}
-		stocks = stock.FindIn(stockIDs)
-
-		if len(stocks) >= 1 {
-			for _, stock := range stocks {
-				productInput = orderedProducts[(stock.ID).String()]
-				product := models.Product{
-					Quantity: productInput.Quantity,
-					StockID:  stock.ID,
-				}
-				products = append(products, product)
-				totalQuantity += productInput.Quantity
-			}
+			products = append(products, product)
+			totalQuantity += product.Quantity
+			stock.UpdateSlot(models.UpdateSlotInput{StockID: stockID.String(), Slot: product.Quantity })
 		}
 		order := models.Order{
 			TotalQuantity: totalQuantity,
@@ -65,7 +56,7 @@ func AddOrder(context *gin.Context) {
 		}
 		_, err := order.Save()
 		if err != nil {
-			context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			context.JSON(http.StatusBadRequest, gin.H{"error": "Error making order"})
 			return
 		}
 		context.JSON(http.StatusCreated, gin.H{"data": "Order created successfully."})
