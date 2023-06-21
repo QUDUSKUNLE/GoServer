@@ -34,6 +34,11 @@ func AddOrder(context *gin.Context) {
 		context.JSON(http.StatusBadRequest, gin.H{"error": "order address id is required"})
 		return
 	}
+	userProfile, err := helpers.UserProfile(user.ID.String())
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": middlewares.CompileErrors(err)})
+		return
+	}
 
 	totalQuantity := 0
 	var stock models.Stock
@@ -52,7 +57,7 @@ func AddOrder(context *gin.Context) {
 			TotalQuantity: totalQuantity,
 			Products:      products,
 			AddressID:     orderInput.AddressID,
-			UserID:        user.ID,
+			ProfileID:     userProfile.ID,
 		}
 		_, err := order.Save()
 		if err != nil {

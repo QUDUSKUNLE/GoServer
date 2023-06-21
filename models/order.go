@@ -18,8 +18,8 @@ type Order struct {
 	ID            uuid.UUID `gorm:"type:uuid;primary_key" json:"OrderID"`
 	TotalQuantity int       `gorm:"not null" json:"TotalQuantity"`
 	Products      []Product `gorm:"many2many:order_products;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"Products"`
-	UserID        uuid.UUID `gorm:"foreignKey:ID" json:"-"`
-	User          User      `gorm:"belongs_to:user" json:"User"`
+	ProfileID        uuid.UUID `gorm:"foreignKey:ID" json:"-"`
+	Profile          Profile      `gorm:"belongs_to:user" json:"UserProfile"`
 	AddressID     uuid.UUID `gorm:"foreignKey:ID" json:"-"`
 	Address       Address   `gorm:"belongs_to:address" json:"ShippingAddress"`
 	CreatedAt     time.Time `json:"CreatedAt"`
@@ -38,11 +38,6 @@ type OrderInputs struct {
 
 func (order *Order) BeforeSave(scope *gorm.DB) error {
 	order.ID = uuid.NewV4()
-	return nil
-}
-
-func (order *Order) BeforeCreate(scope *gorm.DB) error {
-	// order.ID = uuid.NewV4()
 	return nil
 }
 

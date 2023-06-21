@@ -74,6 +74,15 @@ func CurrentUser(context *gin.Context) (models.User, error) {
 	return user, nil
 }
 
+func UserProfile(userId string) (models.Profile, error) {
+	profile := models.Profile{}
+	user, err := profile.FindProfileByUserID(userId)
+	if err != nil {
+		return models.Profile{}, err
+	}
+	return *user, nil
+}
+
 func ValidateUUID(uu string) bool {
 	if _, err := uuid.Parse(uu); err != nil {
 		return false
