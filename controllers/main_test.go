@@ -73,7 +73,7 @@ func makeRequest(method, url string, body interface{}, isAuthenticated bool, use
 
 func bearerToken(username, password string) string {
 	user := models.UserInput{
-		Username: username,
+		Email: username,
 		Password: password,
 	}
 

@@ -58,10 +58,10 @@ func AddOrder(context *gin.Context) {
 			}
 		}
 		order := models.Order{
-			TotalQuantity:   totalQuantity,
-			Products:        products,
-			AddressID: orderInput.AddressID,
-			UserID:          user.ID,
+			TotalQuantity: totalQuantity,
+			Products:      products,
+			AddressID:     orderInput.AddressID,
+			UserID:        user.ID,
 		}
 		_, err := order.Save()
 		if err != nil {

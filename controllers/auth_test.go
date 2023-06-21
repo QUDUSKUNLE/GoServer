@@ -11,7 +11,7 @@ import (
 
 func TestRegister(t *testing.T) {
 	newUser := models.UserInput{
-		Username: "quduskunle",
+		Email: "quduskunle",
 		Password: "test",
 	}
 	writer := makeRequest("POST", "/auth/register", newUser, false, "", "")
@@ -20,7 +20,7 @@ func TestRegister(t *testing.T) {
 
 func TestLogin(t *testing.T) {
 	user := models.UserInput{
-		Username: "quduskunle",
+		Email: "quduskunle",
 		Password: "test",
 	}
 

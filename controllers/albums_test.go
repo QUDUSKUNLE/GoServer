@@ -11,7 +11,7 @@ import (
 
 func NewUser() *httptest.ResponseRecorder {
 	user := models.UserInput{
-		Username: "quduskunle@gmail.co",
+		Email: "quduskunle@gmail.co",
 		Password: "test",
 	}
 	writer := makeRequest("POST", "/auth/register", user, false, "", "")

@@ -18,7 +18,7 @@ func Register(context *gin.Context) {
 	}
 
 	user := models.User{
-		Username: userInput.Username,
+		Email: userInput.Email,
 		Password: userInput.Password,
 	}
 	savedUser, err := user.Save()
@@ -43,7 +43,7 @@ func Login(context *gin.Context) {
 		return
 	}
 	var user models.User
-	_, err := user.FindUserByUsername(loginInput.Username)
+	_, err := user.FindUserByEmail(loginInput.Email)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": middlewares.CompileErrors(err)})
 		return

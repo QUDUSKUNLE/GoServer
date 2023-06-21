@@ -5,6 +5,7 @@ import (
 	"server/helpers"
 	"server/middlewares"
 	"server/models"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,20 +19,14 @@ func AddProfile(context *gin.Context) {
 		return
 	}
 
-	if err := middlewares.VaidateEmail(profileInput.Email); err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "invalid email address"})
-		return
-	}
-
 	user, err := helpers.CurrentUser(context)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": middlewares.CompileErrors(err)})
 		return
 	}
 	profile = models.Profile{
-		Email:     profileInput.Email,
-		FirstName: profileInput.FirstName,
-		LastName:  profileInput.LastName,
+		FirstName: strings.TrimSpace(profileInput.FirstName),
+		LastName:  strings.TrimSpace(profileInput.LastName),
 		UserID:    user.ID,
 	}
 
