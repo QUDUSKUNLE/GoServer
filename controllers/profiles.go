@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"os"
 	"net/http"
+	"os"
 	"server/helpers"
 	"server/middlewares"
 	"server/models"

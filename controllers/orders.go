@@ -51,7 +51,7 @@ func AddOrder(context *gin.Context) {
 			}
 			products = append(products, product)
 			totalQuantity += product.Quantity
-			stock.UpdateSlot(models.UpdateSlotInput{StockID: stockID.String(), Slot: product.Quantity })
+			stock.UpdateSlot(models.UpdateSlotInput{StockID: stockID, Slot: product.Quantity})
 		}
 		order := models.Order{
 			TotalQuantity: totalQuantity,

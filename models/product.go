@@ -16,7 +16,7 @@ type Product struct {
 }
 
 type ProductInput struct {
-	Quantity int   `json:"Quantity" binding:"required"`
+	Quantity int    `json:"Quantity" binding:"required"`
 	StockID  string `json:"StockID" binding:"required"`
 }
 
