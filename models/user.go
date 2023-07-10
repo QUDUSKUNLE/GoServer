@@ -57,7 +57,7 @@ func (user *User) FindUserByEmail(email string) (*User, error) {
 }
 
 func FindUserByID(ID string) (User, error) {
-	var user User
+	user := User{}
 	if err := DB.Where("ID = ?", ID).First(&user).Error; err != nil {
 		return User{}, err
 	}

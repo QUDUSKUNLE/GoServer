@@ -39,7 +39,7 @@ func (address *Address) Save() error {
 }
 
 func (address *Address) FindAddresses() []Address {
-	var addresses []Address
+	addresses := []Address{}
 	DB.Preload(clause.Associations).Find(&addresses)
 	return addresses
 }

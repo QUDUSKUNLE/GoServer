@@ -60,13 +60,13 @@ func (stock *Stock) Save() error {
 }
 
 func (stock *Stock) FindAll() []Stock {
-	var stocks []Stock
+	stocks := []Stock{}
 	DB.Find(&stocks)
 	return stocks
 }
 
 func (stock *Stock) FindIn(IDs []string) []Stock {
-	var stocks []Stock
+	stocks := []Stock{}
 	DB.Where(IDs).Find(&stocks)
 	return stocks
 }

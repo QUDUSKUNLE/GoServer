@@ -49,7 +49,7 @@ func (order *Order) Save() error {
 }
 
 func (order *Order) FindAll() []Order {
-	var orders []Order
+	orders := []Order{}
 	DB.Preload(clause.Associations).Preload("Products.Stock").Find(&orders)
 	return orders
 }

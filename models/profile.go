@@ -37,7 +37,7 @@ func (profile *Profile) Save() error {
 }
 
 func (profile *Profile) FindProfiles() []Profile {
-	var profiles []Profile
+	profiles := []Profile{}
 	DB.Preload(clause.Associations).Find(&profiles)
 	return profiles
 }

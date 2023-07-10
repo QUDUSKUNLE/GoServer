@@ -45,7 +45,7 @@ func (album *Album) Update(updateAlbum UpdateAlbumInput, id string) (*Album, err
 }
 
 func (album *Album) FindAll() []Album {
-	var albums []Album
+	albums := []Album{}
 	DB.Find(&albums)
 	return albums
 }

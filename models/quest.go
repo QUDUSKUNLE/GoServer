@@ -34,7 +34,7 @@ func (quest *Quest) Save() (*Quest, error) {
 }
 
 func (quest *Quest) GetQuests() []Quest {
-	var quests []Quest
+	quests := []Quest{}
 	DB.Find(&quests)
 	return quests
 }
