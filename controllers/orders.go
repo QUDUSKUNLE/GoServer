@@ -11,7 +11,7 @@ import (
 
 func AddOrder(context *gin.Context) {
 	// var stocks []models.Stock
-	var products []models.Product
+	products := []models.Product{}
 	user, err := helpers.CurrentUser(context)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": middlewares.CompileErrors(err)})
@@ -41,10 +41,10 @@ func AddOrder(context *gin.Context) {
 	}
 
 	totalQuantity := 0
-	var stock models.Stock
+	stock := models.Stock{}
 	if len(orderInput.Products) >= 1 {
 		for _, product := range orderInput.Products {
-			var stockID = product.StockID
+			stockID := product.StockID
 			product := models.Product{
 				Quantity: product.Quantity,
 				StockID:  product.StockID,
@@ -71,13 +71,13 @@ func AddOrder(context *gin.Context) {
 }
 
 func GetOrders(context *gin.Context) {
-	var order models.Order
+	order := models.Order{}
 	result := order.FindAll()
 	context.JSON(http.StatusOK, gin.H{"data": result})
 }
 
 func GetOrder(context *gin.Context) {
-	var order models.Order
+	order := models.Order{}
 	result, err := order.FindOrderByID(context.Param("id"))
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
