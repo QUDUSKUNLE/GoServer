@@ -10,51 +10,47 @@ import (
 )
 
 func Register(context *gin.Context) {
-	var userInput models.UserInput
+	userInputModel := models.UserInput{}
 
-	if err := context.ShouldBindJSON(&userInput); err != nil {
+	if err := context.ShouldBindJSON(&userInputModel); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": middlewares.CompileErrors(err)})
 		return
 	}
 
-	user := models.User{
-		Email:    userInput.Email,
-		Password: userInput.Password,
+	userModel := models.User{
+		Email:    userInputModel.Email,
+		Password: userInputModel.Password,
 	}
-	savedUser, err := user.Save()
-	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+
+	if err := userModel.Save(); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": middlewares.CompileErrors(err) })
 		return
 	}
 
-	token, err := helpers.GenerateJWT(*savedUser)
-	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": middlewares.CompileErrors(err)})
-		return
-	}
-	context.JSON(http.StatusCreated, gin.H{"data": savedUser, "jwt": token})
+	context.JSON(http.StatusCreated, gin.H{"data": "User created successfully"})
 }
 
 func Login(context *gin.Context) {
-	var loginInput models.UserInput
+	loginInputModel := models.UserInput{}
 
-	if err := context.ShouldBindJSON(&loginInput); err != nil {
+	if err := context.ShouldBindJSON(&loginInputModel); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": middlewares.CompileErrors(err)})
 		return
 	}
-	var user models.User
-	_, err := user.FindUserByEmail(loginInput.Email)
+
+	userModel := models.User{}
+	_, err := userModel.FindUserByEmail(loginInputModel.Email)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": middlewares.CompileErrors(err)})
 		return
 	}
 
-	if err := user.ValidatePassword(loginInput.Password); err != nil {
+	if err := userModel.ValidatePassword(loginInputModel.Password); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": middlewares.CompileErrors(err)})
 		return
 	}
 
-	jwt, err := helpers.GenerateJWT(user)
+	jwt, err := helpers.GenerateJWT(userModel)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": middlewares.CompileErrors(err)})
 		return
