@@ -6,24 +6,24 @@ import (
 )
 
 type Quest struct {
-	ID          uint      `gorm:"primary_key" json:"ID" `
-	Title       string    `gorm:"size:255;not null;unique" json:"Title"`
-	Description string    `gorm:"size:255;not null" json:"Description"`
-	Reward      int       `gorm:"not null" json:"Reward"`
-	CreatedAt   time.Time `json:"CreatedAt"`
-	UpdatedAt   time.Time `json:"UpdatedAt"`
+	ID          uint      `gorm:"primary_key" json:"questID" `
+	Title       string    `gorm:"size:255;not null;unique" json:"title"`
+	Description string    `gorm:"size:255;not null" json:"description"`
+	Reward      int       `gorm:"not null" json:"reward"`
+	CreatedAt   time.Time `json:"createdAt"`
+	UpdatedAt   time.Time `json:"updatedAt"`
 }
 
 type CreateQuestInput struct {
-	Title       string `json:"Title" binding:"required"`
-	Description string `json:"Description" binding:"required"`
-	Reward      int    `json:"Reward" binding:"required"`
+	Title       string `json:"title" binding:"required"`
+	Description string `json:"description" binding:"required"`
+	Reward      int    `json:"reward" binding:"required"`
 }
 
 type UpdateQuestInput struct {
-	Title       string `json:"Title"`
-	Description string `json:"Description"`
-	Reward      int    `json:"Reward"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	Reward      int    `json:"reward"`
 }
 
 func (quest *Quest) Save() (*Quest, error) {

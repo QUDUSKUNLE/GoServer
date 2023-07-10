@@ -11,17 +11,17 @@ import (
 )
 
 type User struct {
-	ID        uuid.UUID `gorm:"type:uuid;primary_key" json:"UserID"`
-	Email     string    `gorm:"size:255;unique" json:"Email"`
+	ID        uuid.UUID `gorm:"type:uuid;primary_key" json:"userID"`
+	Email     string    `gorm:"size:255;unique" json:"email"`
 	Password  string    `gorm:"size:255;" json:"-"`
-	Role      string    `gorm:"type:string;default:customer" json:"Role"`
-	CreatedAt time.Time `json:"CreatedAt"`
-	UpdatedAt time.Time `json:"UpdatedAt"`
+	Role      string    `gorm:"type:string;default:customer" json:"role"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
 
 type UserInput struct {
-	Email    string `json:"email" binding:"required"`
-	Password string `json:"password" binding:"required"`
+	Email    string `json:"Email" binding:"required,email,lte=100"`
+	Password string `json:"Password" binding:"required,gte=8,lte=20"`
 }
 
 func (user *User) BeforeSave(tx *gorm.DB) error {
@@ -35,11 +35,11 @@ func (user *User) BeforeSave(tx *gorm.DB) error {
 	return nil
 }
 
-func (user *User) Save() (*User, error) {
+func (user *User) Save() error {
 	if err := DB.Create(&user).Error; err != nil {
-		return &User{}, err
+		return err
 	}
-	return user, nil
+	return nil
 }
 
 func (user *User) ValidatePassword(password string) error {

@@ -9,42 +9,42 @@ import (
 )
 
 type Stock struct {
-	ID           uuid.UUID `gorm:"type:uuid;primaryKey" json:"StockID"`
-	Type         string    `gorm:"size:10;index:idx_type_province,unique" json:"Type"`
-	Description  string    `gorm:"size:255;not null" json:"Description"`
-	Availability bool      `gorm:"type:bool;default:true" json:"Availability"`
+	ID           uuid.UUID `gorm:"type:uuid;primaryKey" json:"stockID"`
+	Type         string    `gorm:"size:10;index:idx_type_province,unique" json:"type"`
+	Description  string    `gorm:"size:255;not null" json:"description"`
+	Availability bool      `gorm:"type:bool;default:true" json:"availability"`
 	Cost         float32   `gorm:"not null" json:"-"`
-	Price        float32   `gorm:"not null" json:"Price"`
-	Province     string    `gorm:"size:15;index:idx_type_province,unique" json:"Province"`
+	Price        float32   `gorm:"not null" json:"price"`
+	Province     string    `gorm:"size:15;index:idx_type_province,unique" json:"province"`
 	Unit         int       `gorm:"not null" json:"-"`
-	Slot         int       `gorm:"not null" json:"Slot"`
-	CreatedAt    time.Time `json:"CreatedAt"`
-	UpdatedAt    time.Time `json:"UpdatedAt"`
+	Slot         int       `gorm:"not null" json:"slot"`
+	CreatedAt    time.Time `json:"createdAt"`
+	UpdatedAt    time.Time `json:"updatedAt"`
 }
 
 type CreateStockInput struct {
-	Type        string  `json:"Type" binding:"required"`
-	Description string  `json:"Description" binding:"required"`
-	Province    string  `json:"Province" binding:"required"`
-	Cost        float32 `json:"Cost" binding:"required"`
-	Price       float32 `json:"Price"`
-	Unit        int     `json:"Unit" binding:"required"`
-	Slot        int     `json:"Slot"`
+	Type        string  `json:"type" binding:"required"`
+	Description string  `json:"description" binding:"required"`
+	Province    string  `json:"province" binding:"required"`
+	Cost        float32 `json:"cost" binding:"required"`
+	Price       float32 `json:"price"`
+	Unit        int     `json:"unit" binding:"required"`
+	Slot        int     `json:"slot"`
 }
 
 type UpdateStockInput struct {
-	Type        string  `json:"Type"`
-	Description string  `json:"Description"`
-	Province    string  `json:"Province"`
-	Cost        float32 `json:"Cost"`
-	Price       float32 `json:"Price"`
-	Unit        int     `json:"Unit"`
-	Slot        int     `json:"Slot"`
+	Type        string  `json:"type"`
+	Description string  `json:"description"`
+	Province    string  `json:"province"`
+	Cost        float32 `json:"cost"`
+	Price       float32 `json:"price"`
+	Unit        int     `json:"unit"`
+	Slot        int     `json:"slot"`
 }
 
 type UpdateSlotInput struct {
-	StockID uuid.UUID `json:"SlotID"`
-	Slot    int       `json:"Slot"`
+	StockID uuid.UUID `json:"slotID"`
+	Slot    int       `json:"slot"`
 }
 
 func (stock *Stock) BeforeSave(scope *gorm.DB) error {

@@ -8,20 +8,20 @@ import (
 )
 
 type Profile struct {
-	ID        uuid.UUID `gorm:"type:uuid;primary_key" json:"ProfileID"`
-	FirstName string    `gorm:"size:50;not null" json:"FirstName"`
-	LastName  string    `gorm:"size:50;not null" json:"LastName"`
+	ID        uuid.UUID `gorm:"type:uuid;primary_key" json:"profileID"`
+	FirstName string    `gorm:"size:50;not null" json:"firstName"`
+	LastName  string    `gorm:"size:50;not null" json:"lastName"`
 	UserID    uuid.UUID `gorm:"foreignKey:ID" json:"-"`
-	User      User      `gorm:"belongs_to:user;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"User"`
-	Addresses []Address `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"Addresses"`
-	CreatedAt time.Time `json:"CreatedAt"`
-	UpdatedAt time.Time `json:"UpdatedAt"`
+	User      User      `gorm:"belongs_to:user;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"user"`
+	Addresses []Address `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"addresses"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
 
 type ProfileInput struct {
-	FirstName string    `json:"FirstName" binding:"required"`
-	LastName  string    `json:"LastName" binding:"required"`
-	UserID    uuid.UUID `json:"UserID"`
+	FirstName string    `json:"firstName" binding:"required"`
+	LastName  string    `json:"lastName" binding:"required"`
+	UserID    uuid.UUID `json:"userID"`
 }
 
 func (profile *Profile) BeforeSave(scope *gorm.DB) error {
@@ -29,11 +29,11 @@ func (profile *Profile) BeforeSave(scope *gorm.DB) error {
 	return nil
 }
 
-func (profile *Profile) Save() (*Profile, error) {
+func (profile *Profile) Save() error {
 	if err := DB.Create(&profile).Error; err != nil {
-		return &Profile{}, err
+		return err
 	}
-	return profile, nil
+	return nil
 }
 
 func (profile *Profile) FindProfiles() []Profile {
