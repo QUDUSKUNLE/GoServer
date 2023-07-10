@@ -8,32 +8,32 @@ import (
 )
 
 type ShippingAddress struct {
-	StreetNo   int    `json:"StreetNo" binding:"required,gte=0,lte=1000"`
-	StreetName string `json:"StreetName" binding:"required,max=50"`
-	Province   string `json:"Province" binding:"required,max=50"`
-	State      string `json:"State" binding:"required,max=50"`
+	StreetNo   int    `json:"streetNo" binding:"required,gte=0,lte=1000"`
+	StreetName string `json:"streetName" binding:"required,max=50"`
+	Province   string `json:"province" binding:"required,max=50"`
+	State      string `json:"state" binding:"required,max=50"`
 }
 
 type Order struct {
-	ID            uuid.UUID `gorm:"type:uuid;primary_key" json:"OrderID"`
-	TotalQuantity int       `gorm:"not null" json:"TotalQuantity"`
-	Products      []Product `gorm:"many2many:order_products;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"Products"`
+	ID            uuid.UUID `gorm:"type:uuid;primary_key" json:"orderID"`
+	TotalQuantity int       `gorm:"not null" json:"totalQuantity"`
+	Products      []Product `gorm:"many2many:order_products;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"products"`
 	ProfileID     uuid.UUID `gorm:"foreignKey:ID" json:"-"`
-	Profile       Profile   `gorm:"belongs_to:user" json:"UserProfile"`
+	Profile       Profile   `gorm:"belongs_to:user" json:"userProfile"`
 	AddressID     uuid.UUID `gorm:"foreignKey:ID" json:"-"`
-	Address       Address   `gorm:"belongs_to:address" json:"ShippingAddress"`
-	CreatedAt     time.Time `json:"CreatedAt"`
-	UpdatedAt     time.Time `json:"UpdatedAt"`
+	Address       Address   `gorm:"belongs_to:address" json:"shippingAddress"`
+	CreatedAt     time.Time `json:"createdAt"`
+	UpdatedAt     time.Time `json:"updatedAt"`
 }
 
 type OrderRequest struct {
-	Quantity int       `json:"Quantity" binding:"required,gte=1,lte=100"`
-	StockID  uuid.UUID `json:"StockID" binding:"required"`
+	Quantity int       `json:"quantity" binding:"required,gte=1,lte=100"`
+	StockID  uuid.UUID `json:"stockID" binding:"required"`
 }
 
 type OrderInputs struct {
-	Products  []*OrderRequest `json:"Products" binding:"required"`
-	AddressID uuid.UUID       `json:"AddressID" binding:"required"`
+	Products  []*OrderRequest `json:"products" binding:"required"`
+	AddressID uuid.UUID       `json:"addressID" binding:"required"`
 }
 
 func (order *Order) BeforeSave(scope *gorm.DB) error {
@@ -41,11 +41,11 @@ func (order *Order) BeforeSave(scope *gorm.DB) error {
 	return nil
 }
 
-func (order *Order) Save() (*Order, error) {
+func (order *Order) Save() error {
 	if err := DB.Create(&order).Error; err != nil {
-		return &Order{}, err
+		return err
 	}
-	return order, nil
+	return nil
 }
 
 func (order *Order) FindAll() []Order {
