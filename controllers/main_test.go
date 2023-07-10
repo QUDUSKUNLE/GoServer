@@ -33,7 +33,16 @@ func setupDB() {
 
 func tearDownDB() {
 	migrator := models.DB.Migrator()
-	migrator.DropTable(&models.User{}, &models.Quest{}, &models.Album{})
+	migrator.DropTable(
+		&models.User{},
+		&models.Stock{},
+		&models.Profile{},
+		&models.Address{},
+		&models.Order{},
+		&models.Product{},
+		&models.Album{},
+		&models.Quest{},
+	)
 }
 
 func apiRouter() *gin.Engine {
@@ -77,7 +86,7 @@ func bearerToken(username, password string) string {
 		Password: password,
 	}
 
-	writer := makeRequest("POST", "/auth/login", user, false, "", "")
+	writer := makeRequest("POST", "/v1/users/login", user, false, "", "")
 	var response map[string]string
 	json.Unmarshal(writer.Body.Bytes(), &response)
 	return response["token"]

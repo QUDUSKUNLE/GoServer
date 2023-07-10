@@ -20,12 +20,11 @@ func AddAlbum(context *gin.Context) {
 		Price:  albumInputModel.Price,
 	}
 
-	savedAlbumModel, err := albumModel.Save()
-	if err != nil {
+	if err := albumModel.Save(); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	context.JSON(http.StatusCreated, gin.H{"data": savedAlbumModel})
+	context.JSON(http.StatusCreated, gin.H{"data": "Album created successfully"})
 }
 
 func GetAlbums(context *gin.Context) {

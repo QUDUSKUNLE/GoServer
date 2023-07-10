@@ -27,11 +27,11 @@ type UpdateAlbumInput struct {
 	Price  float64 `json:"Price"`
 }
 
-func (album *Album) Save() (*Album, error) {
+func (album *Album) Save() error {
 	if err := DB.Create(&album).Error; err != nil {
-		return &Album{}, err
+		return err
 	}
-	return album, nil
+	return nil
 }
 
 func (album *Album) Update(updateAlbum UpdateAlbumInput, id string) (*Album, error) {

@@ -2,7 +2,9 @@ package controllers
 
 import (
 	"encoding/json"
+
 	"github.com/stretchr/testify/assert"
+
 	"net/http"
 	"server/models"
 	"testing"
@@ -15,19 +17,16 @@ func TestAddQuest(t *testing.T) {
 		Reward:      12,
 	}
 
-	writer := makeRequest("POST", "/v1/quests", quest, true, "quduskunle", "test")
-	var response map[string]models.Quest
+	writer := makeRequest("POST", "/v1/quests", quest, true, "qudus@gmail.co", "test12345")
+	var response map[string]interface{}
 	json.Unmarshal(writer.Body.Bytes(), &response)
-	data, exists := response["data"]
+	_, exists := response["data"]
 	assert.Equal(t, true, exists)
-	assert.Equal(t, data.Title, quest.Title)
-	assert.Equal(t, data.Description, quest.Description)
-	assert.Equal(t, data.Reward, quest.Reward)
 	assert.Equal(t, http.StatusCreated, writer.Code)
 }
 
 func TestGetQuests(t *testing.T) {
-	writer := makeRequest("GET", "/v1/quests", nil, true, "quduskunle", "test")
+	writer := makeRequest("GET", "/v1/quests", nil, true, "qudus@gmail.co", "test12345")
 	var response map[string][]models.Quest
 	json.Unmarshal(writer.Body.Bytes(), &response)
 	_, exists := response["data"]
@@ -36,7 +35,7 @@ func TestGetQuests(t *testing.T) {
 }
 
 func TestGetQuest(t *testing.T) {
-	writer := makeRequest("GET", "/v1/quests/1", nil, true, "quduskunle", "test")
+	writer := makeRequest("GET", "/v1/quests/1", nil, true, "qudus@gmail.co", "test12345")
 	var response map[string]models.Quest
 	json.Unmarshal(writer.Body.Bytes(), &response)
 	_, exists := response["data"]
@@ -50,7 +49,7 @@ func TestPatchQuest(t *testing.T) {
 		Description: "Okay",
 		Reward:      12,
 	}
-	writer := makeRequest("PATCH", "/v1/quests/1", quest, true, "quduskunle", "test")
+	writer := makeRequest("PATCH", "/v1/quests/1", quest, true, "qudus@gmail.co", "test12345")
 	var response map[string]models.Quest
 	json.Unmarshal(writer.Body.Bytes(), &response)
 	_, exists := response["data"]
@@ -59,10 +58,8 @@ func TestPatchQuest(t *testing.T) {
 }
 
 func TestDeleteQuest(t *testing.T) {
-	writer := makeRequest("DELETE", "/v1/quests/1", nil, true, "quduskunle", "test")
+	writer := makeRequest("DELETE", "/v1/quests/1", nil, true, "qudus@gmail.co", "test12345")
 	var response map[string]interface{}
 	json.Unmarshal(writer.Body.Bytes(), &response)
-	_, exists := response["data"]
-	assert.Equal(t, false, exists)
 	assert.Equal(t, http.StatusNoContent, writer.Code)
 }

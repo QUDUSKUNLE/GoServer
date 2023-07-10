@@ -52,11 +52,11 @@ func (stock *Stock) BeforeSave(scope *gorm.DB) error {
 	return nil
 }
 
-func (stock *Stock) Save() (*Stock, error) {
+func (stock *Stock) Save() error {
 	if err := DB.Create(&stock).Error; err != nil {
-		return &Stock{}, err
+		return err
 	}
-	return stock, nil
+	return nil
 }
 
 func (stock *Stock) FindAll() []Stock {

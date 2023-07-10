@@ -18,7 +18,7 @@ func AddStock(context *gin.Context) {
 		stockInputModel.Price = (stockInputModel.Cost / float32(stockInputModel.Unit))
 	}
 
-	stock := models.Stock{
+	stockModel := models.Stock{
 		Type:        stockInputModel.Type,
 		Description: stockInputModel.Description,
 		Cost:        stockInputModel.Cost,
@@ -28,12 +28,11 @@ func AddStock(context *gin.Context) {
 		Slot:        stockInputModel.Slot,
 	}
 
-	savedStock, err := stock.Save()
-	if err != nil {
+	if err := stockModel.Save(); err != nil {
 		context.JSON(http.StatusConflict, gin.H{"error": err.Error()})
 		return
 	}
-	context.JSON(http.StatusCreated, gin.H{"data": savedStock})
+	context.JSON(http.StatusCreated, gin.H{"data": stockModel})
 }
 
 func GetStocks(context *gin.Context) {

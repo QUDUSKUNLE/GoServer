@@ -21,7 +21,7 @@ type User struct {
 
 type UserInput struct {
 	Email    string `json:"Email" binding:"required,email,lte=100"`
-	Password string `json:"Password" binding:"required,gte=8,lte=20"`
+	Password string `json:"Password" binding:"required,gte=6,lte=20"`
 }
 
 func (user *User) BeforeSave(tx *gorm.DB) error {
