@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"server/helpers"
 	"server/middlewares"
@@ -14,7 +13,6 @@ func Register(context *gin.Context) {
 	userInputModel := models.UserInput{}
 
 	if err := context.ShouldBindJSON(&userInputModel); err != nil {
-		fmt.Println(err.Error(), ">>>>>>>>>>>>&&&&")
 		context.JSON(http.StatusBadRequest, gin.H{"error": middlewares.CompileErrors(err)})
 		return
 	}
