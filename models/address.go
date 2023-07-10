@@ -8,22 +8,22 @@ import (
 )
 
 type Address struct {
-	ID         uuid.UUID `gorm:"type:uuid;primary_key" json:"AddressID"`
-	StreetNo   int       `gorm:"not null" sql:"unique:idx_streetno_streetname" json:"StreetNo"`
-	StreetName string    `gorm:"not null" sql:"unique:idx_streetno_streetname" json:"StreetName"`
-	Province   string    `gorm:"not null" json:"Province"`
-	State      string    `gorm:"not null" json:"State"`
+	ID         uuid.UUID `gorm:"type:uuid;primary_key" json:"addressID"`
+	StreetNo   int       `gorm:"not null" sql:"unique:idx_streetno_streetname" json:"streetNo"`
+	StreetName string    `gorm:"not null" sql:"unique:idx_streetno_streetname" json:"streetName"`
+	Province   string    `gorm:"not null" json:"province"`
+	State      string    `gorm:"not null" json:"state"`
 	ProfileID  uuid.UUID
-	CreatedAt  time.Time `json:"CreatedAt"`
-	UpdatedAt  time.Time `json:"UpdatedAt"`
+	CreatedAt  time.Time `json:"createdAt"`
+	UpdatedAt  time.Time `json:"updatedAt"`
 }
 
 type AddressInput struct {
-	StreetNo   int       `json:"StreetNo" binding:"required,gte=0,lte=1000"`
-	StreetName string    `json:"StreetName" binding:"required,max=50"`
-	Province   string    `json:"Province" binding:"required,max=50"`
-	State      string    `json:"State" binding:"required,max=50"`
-	UserID     uuid.UUID `json:"UserID"`
+	StreetNo   int       `json:"streetNo" binding:"required,gte=0,lte=1000"`
+	StreetName string    `json:"streetName" binding:"required,max=50"`
+	Province   string    `json:"province" binding:"required,max=50"`
+	State      string    `json:"state" binding:"required,max=50"`
+	UserID     uuid.UUID `json:"userID"`
 }
 
 func (address *Address) BeforeSave(scope *gorm.DB) error {
@@ -31,11 +31,11 @@ func (address *Address) BeforeSave(scope *gorm.DB) error {
 	return nil
 }
 
-func (address *Address) Save() (*Address, error) {
+func (address *Address) Save() error {
 	if err := DB.Create(&address).Error; err != nil {
-		return &Address{}, err
+		return err
 	}
-	return address, nil
+	return nil
 }
 
 func (address *Address) FindAddresses() []Address {
