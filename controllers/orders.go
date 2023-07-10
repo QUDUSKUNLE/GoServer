@@ -30,14 +30,15 @@ func AddOrder(context *gin.Context) {
 		return
 	}
 
-	if (orderInputModel.AddressID).String() == "" {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "order address id is required"})
+	addressModel := models.Address{}
+	if _, err := addressModel.FindAddress(orderInputModel.AddressID.String()); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": "Address record not found."})
 		return
 	}
 
 	userProfile, err := helpers.UserProfile(user.ID.String())
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": middlewares.CompileErrors(err)})
+		context.JSON(http.StatusBadRequest, gin.H{"error": "User`s profile not found."})
 		return
 	}
 

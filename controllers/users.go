@@ -47,8 +47,7 @@ func Login(context *gin.Context) {
 	}
 
 	userModel := models.User{}
-	_, err := userModel.FindUserByEmail(loginInputModel.Email)
-	if err != nil {
+	if _, err := userModel.FindUserByEmail(loginInputModel.Email); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": middlewares.CompileErrors(err)})
 		return
 	}

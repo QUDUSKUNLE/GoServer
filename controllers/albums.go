@@ -62,11 +62,9 @@ func UpdateAlbum(context *gin.Context) {
 func DeleteAlbum(context *gin.Context) {
 	// Get model if exist
 	albumModel := models.Album{}
-
-	result, err := albumModel.Delete(context.Param("id"))
-	if err != nil {
+	if _, err := albumModel.Delete(context.Param("id")); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}
-	context.JSON(http.StatusOK, gin.H{"data": result})
+	context.JSON(http.StatusOK, gin.H{"data": "Album deleted successfully"})
 }

@@ -67,8 +67,7 @@ func UpdateQuest(context *gin.Context) {
 func DeleteQuest(context *gin.Context) {
 	// Get model if exist
 	quest := models.Quest{}
-	_, err := quest.DeleteQuest(context.Param("id"))
-	if err != nil {
+	if _, err := quest.DeleteQuest(context.Param("id")); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}

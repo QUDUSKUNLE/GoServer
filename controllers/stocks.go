@@ -73,8 +73,7 @@ func UpdateStock(context *gin.Context) {
 
 func DeleteStock(context *gin.Context) {
 	stockModel := models.Stock{}
-	_, err := stockModel.Delete(context.Param("id"))
-	if err != nil {
+	if _, err := stockModel.Delete(context.Param("id")); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
