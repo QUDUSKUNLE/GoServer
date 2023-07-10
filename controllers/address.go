@@ -9,9 +9,9 @@ import (
 )
 
 func AddAddress(context *gin.Context) {
-	var addressInput models.AddressInput
-	var profile models.Profile
-	if err := context.ShouldBindJSON(&addressInput); err != nil {
+	addressInputModel := models.AddressInput{}
+	
+	if err := context.ShouldBindJSON(&addressInputModel); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": middlewares.CompileErrors(err)})
 		return
 	}
@@ -21,20 +21,24 @@ func AddAddress(context *gin.Context) {
 		context.JSON(http.StatusBadRequest, gin.H{"error": middlewares.CompileErrors(err)})
 		return
 	}
-	findProfile, err := profile.FindProfileByUserID((user.ID).String())
+
+	profileModel := models.Profile{}
+
+	findProfile, err := profileModel.FindProfileByUserID((user.ID).String())
 	if err != nil {
 		context.JSON(http.StatusNotFound, gin.H{"error": "Profile record not found"})
 		return
 	}
-	address := models.Address{
-		StreetNo:   addressInput.StreetNo,
-		StreetName: addressInput.StreetName,
-		Province:   addressInput.Province,
-		State:      addressInput.State,
+
+	addressModel := models.Address{
+		StreetNo:   addressInputModel.StreetNo,
+		StreetName: addressInputModel.StreetName,
+		Province:   addressInputModel.Province,
+		State:      addressInputModel.State,
 		ProfileID:  findProfile.ID,
 	}
-	_, err = address.Save()
-	if err != nil {
+
+	if err := addressModel.Save(); err != nil {
 		context.JSON(http.StatusConflict, gin.H{"error": err.Error()})
 		return
 	}
@@ -46,9 +50,9 @@ func GetAddress(context *gin.Context) {
 }
 
 func GetAddresses(context *gin.Context) {
-	var address models.Address
-	result := address.FindAddresses()
-	context.JSON(http.StatusOK, gin.H{"data": result})
+	addressModel := models.Address{}
+	addresses := addressModel.FindAddresses()
+	context.JSON(http.StatusOK, gin.H{"data": addresses})
 }
 
 func PatchAddress(context *gin.Context) {
