@@ -3,6 +3,9 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	docs "server/docs"
+  swaggerfiles "github.com/swaggo/files"
+  ginSwagger "github.com/swaggo/gin-swagger"
 	"log"
 	"net/http"
 	"os"
@@ -30,6 +33,7 @@ func main() {
 	})
 
 	// PublicRoutes Endpoints
+	docs.SwaggerInfo.BasePath = "v1"
 	publicRoutes := router.Group("/v1")
 	publicRoutes.POST("/users/register", controllers.Register)
 	publicRoutes.POST("/users/login", controllers.Login)
@@ -80,6 +84,11 @@ func main() {
 	protectedRoutes.PATCH("/profiles/:id", middlewares.UUidMiddleware(), controllers.PatchProfile)
 
 	models.ConnectDatabase()
+	ginSwagger.WrapHandler(
+		swaggerfiles.Handler,
+		ginSwagger.URL("http://localhost:8000/swagger/doc.json"),
+		ginSwagger.DefaultModelsExpandDepth(-1),
+	)
 	if err := router.Run("localhost:" + port); err != nil {
 		return
 	}
