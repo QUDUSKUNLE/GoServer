@@ -8,24 +8,24 @@ import (
 )
 
 func AddStock(context *gin.Context) {
-	var stockInput models.CreateStockInput
-	if err := context.ShouldBindJSON(&stockInput); err != nil {
+	stockInputModel := models.CreateStockInput{}
+	if err := context.ShouldBindJSON(&stockInputModel); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	if stockInput.Price == 0 && stockInput.Cost > 0 && stockInput.Unit > 0 {
-		stockInput.Price = (stockInput.Cost / float32(stockInput.Unit))
+	if stockInputModel.Price == 0 && stockInputModel.Cost > 0 && stockInputModel.Unit > 0 {
+		stockInputModel.Price = (stockInputModel.Cost / float32(stockInputModel.Unit))
 	}
 
 	stock := models.Stock{
-		Type:        stockInput.Type,
-		Description: stockInput.Description,
-		Cost:        stockInput.Cost,
-		Province:    stockInput.Province,
-		Price:       stockInput.Price,
-		Unit:        stockInput.Unit,
-		Slot:        stockInput.Slot,
+		Type:        stockInputModel.Type,
+		Description: stockInputModel.Description,
+		Cost:        stockInputModel.Cost,
+		Province:    stockInputModel.Province,
+		Price:       stockInputModel.Price,
+		Unit:        stockInputModel.Unit,
+		Slot:        stockInputModel.Slot,
 	}
 
 	savedStock, err := stock.Save()
@@ -37,14 +37,14 @@ func AddStock(context *gin.Context) {
 }
 
 func GetStocks(context *gin.Context) {
-	var stock models.Stock
-	result := stock.FindAll()
-	context.JSON(http.StatusOK, gin.H{"data": result})
+	stockModel := models.Stock{}
+	stocks := stockModel.FindAll()
+	context.JSON(http.StatusOK, gin.H{"data": stocks})
 }
 
 func GetStock(context *gin.Context) {
-	var stock models.Stock
-	result, err := stock.FindStockByID(context.Param("id"))
+	stockModel := models.Stock{}
+	result, err := stockModel.FindStockByID(context.Param("id"))
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
 		return
@@ -53,18 +53,18 @@ func GetStock(context *gin.Context) {
 }
 
 func UpdateStock(context *gin.Context) {
-	var updateStockInput models.UpdateStockInput
-	if err := context.ShouldBindJSON(&updateStockInput); err != nil {
+	updateStockInputModel := models.UpdateStockInput{}
+	if err := context.ShouldBindJSON(&updateStockInputModel); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	if updateStockInput.Price == 0 && updateStockInput.Cost > 0 && updateStockInput.Unit > 0 {
-		updateStockInput.Price = (updateStockInput.Cost / float32(updateStockInput.Unit))
+	if updateStockInputModel.Price == 0 && updateStockInputModel.Cost > 0 && updateStockInputModel.Unit > 0 {
+		updateStockInputModel.Price = (updateStockInputModel.Cost / float32(updateStockInputModel.Unit))
 	}
 
-	var stock models.Stock
-	updatedStock, err := stock.Update(updateStockInput, context.Param("id"))
+	stockModel := models.Stock{}
+	updatedStock, err := stockModel.Update(updateStockInputModel, context.Param("id"))
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -73,8 +73,8 @@ func UpdateStock(context *gin.Context) {
 }
 
 func DeleteStock(context *gin.Context) {
-	var stock models.Stock
-	_, err := stock.Delete(context.Param("id"))
+	stockModel := models.Stock{}
+	_, err := stockModel.Delete(context.Param("id"))
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
