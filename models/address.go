@@ -5,6 +5,7 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"time"
+	"errors"
 )
 
 type Address struct {
@@ -18,7 +19,15 @@ type Address struct {
 	UpdatedAt  time.Time `json:"updatedAt"`
 }
 
-type AddressInput struct {
+type AddressModel struct {
+	StreetNo   int       `json:"streetNo" binding:"required,gte=0,lte=1000"`
+	StreetName string    `json:"streetName" binding:"required,max=50"`
+	Province   string    `json:"province" binding:"required,max=50"`
+	State      string    `json:"state" binding:"required,max=50"`
+	UserID     uuid.UUID `json:"userID"`
+}
+
+type UpdateAddressModel struct {
 	StreetNo   int       `json:"streetNo" binding:"required,gte=0,lte=1000"`
 	StreetName string    `json:"streetName" binding:"required,max=50"`
 	Province   string    `json:"province" binding:"required,max=50"`
@@ -49,4 +58,12 @@ func (address *Address) FindAddress(ID string) (*Address, error) {
 		return &Address{}, err
 	}
 	return address, nil
+}
+
+func (address *Address) Delete(ID string) (bool, error) {
+	if err := DB.Where("id = ?", ID).First(&address).Error; err != nil {
+		return false, errors.New("record not found")
+	}
+	DB.Delete(&address)
+	return true, nil
 }

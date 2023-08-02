@@ -9,9 +9,9 @@ import (
 )
 
 func AddAddress(context *gin.Context) {
-	addressInputModel := models.AddressInput{}
+	addressInput := models.AddressModel{}
 	
-	if err := context.ShouldBindJSON(&addressInputModel); err != nil {
+	if err := context.ShouldBindJSON(&addressInput); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": middlewares.CompileErrors(err)})
 		return
 	}
@@ -31,10 +31,10 @@ func AddAddress(context *gin.Context) {
 	}
 
 	addressModel := models.Address{
-		StreetNo:   addressInputModel.StreetNo,
-		StreetName: addressInputModel.StreetName,
-		Province:   addressInputModel.Province,
-		State:      addressInputModel.State,
+		StreetNo:   addressInput.StreetNo,
+		StreetName: addressInput.StreetName,
+		Province:   addressInput.Province,
+		State:      addressInput.State,
 		ProfileID:  findProfile.ID,
 	}
 
@@ -60,5 +60,10 @@ func PatchAddress(context *gin.Context) {
 }
 
 func DeleteAddress(context *gin.Context) {
-	context.JSON(http.StatusOK, gin.H{"data": "Delete an Address"})
+	addressModel := models.Address{}
+	if _, err := addressModel.Delete(context.Param("id")); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	context.JSON(http.StatusOK, gin.H{"data": "Deleted an address successfully"})
 }
