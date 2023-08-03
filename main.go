@@ -1,22 +1,24 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
-	"log"
 	"flag"
+	"log"
 	"net/http"
 	"os"
 	"server/controllers"
 	"server/middlewares"
 	"server/models"
+
+	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	"server/internal/adapters/handlers"
 	"server/internal/adapters/repository"
+	"server/internal/core/services"
 )
 
 var (
 	repo = flag.String("db", "postgres", "Database for storing messages")
-	hand handlers.HTTPHandler
+	svc *services.ServicesHandler
 )
 
 func init() {
@@ -32,13 +34,14 @@ func main() {
 	switch *repo {
 	case "redis":
 	default:
-		repository.NewPostgresDatabase(
+		store := repository.NewPostgresDatabase(
 			os.Getenv("HOST"),
 			os.Getenv("DB_PORT"),
 			os.Getenv("DB_USER"),
 			os.Getenv("DB_PASSWORD"),
 			os.Getenv("DB_NAME"),
 		)
+		svc = services.NewServicesHandler(*store)
 	}
 	InitializeRoutes()
 }
@@ -47,7 +50,7 @@ func InitializeRoutes() {
 	port := os.Getenv("PORT")
 	router := gin.Default()
 
-	handler := handlers.NewHTTPHandlers(hand)
+	handler := handlers.NewHTTPHandlers(*svc)
 	router.GET("/", func(context *gin.Context) {
 		context.JSON(http.StatusOK, gin.H{"mesage": "Welcome to e-Commerce HalalMeat"})
 	})

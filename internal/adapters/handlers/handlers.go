@@ -1,15 +1,15 @@
 package handlers
 
 import (
-	"server/internal/core/services"
+	services "server/internal/core/services"
 )
 
 type HTTPHandler struct {
-	user  services.UserService
+	svc  services.ServicesHandler
 }
 
-func NewHTTPHandlers(services HTTPHandler) *HTTPHandler {
+func NewHTTPHandlers(services services.ServicesHandler) *HTTPHandler {
 	return &HTTPHandler{
-		user: services.user,
+		svc: services,
 	}
 }

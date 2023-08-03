@@ -13,3 +13,12 @@ func (repo *PostgresRepository) SaveUser(user domain.User) error {
 	}
 	return nil
 }
+
+func (repo *PostgresRepository) ReadUser(UserID string) (*domain.User, error) {
+	user := &domain.User{}
+	req := repo.db.First(&user, "id = ?", UserID)
+	if req.RowsAffected == 0 {
+		return nil, errors.New("user not found")
+	}
+	return user, nil
+}
