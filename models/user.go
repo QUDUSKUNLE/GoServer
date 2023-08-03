@@ -2,12 +2,13 @@ package models
 
 import (
 	"errors"
-	"github.com/satori/go.uuid"
-	"golang.org/x/crypto/bcrypt"
-	"gorm.io/gorm"
 	"html"
 	"strings"
 	"time"
+
+	uuid "github.com/satori/go.uuid"
+	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 type User struct {
@@ -19,7 +20,7 @@ type User struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
-type UserInput struct {
+type UserInputDto struct {
 	Email    string `json:"Email" binding:"required,email,lte=100"`
 	Password string `json:"Password" binding:"required,gte=6,lte=20"`
 }

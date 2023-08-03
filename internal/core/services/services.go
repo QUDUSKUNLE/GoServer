@@ -8,7 +8,7 @@ type ServicesHandler struct {
 	repository repository.PostgresRepository
 }
 
-func NewServicesHandler(service repository.PostgresRepository) *ServicesHandler {
+func ServicesAdapter(service repository.PostgresRepository) *ServicesHandler {
 	return &ServicesHandler{
 		repository: service,
 	}

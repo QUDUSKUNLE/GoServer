@@ -34,14 +34,14 @@ func main() {
 	switch *repo {
 	case "redis":
 	default:
-		store := repository.NewPostgresDatabase(
+		store := repository.PostgresDatabaseAdapter(
 			os.Getenv("HOST"),
 			os.Getenv("DB_PORT"),
 			os.Getenv("DB_USER"),
 			os.Getenv("DB_PASSWORD"),
 			os.Getenv("DB_NAME"),
 		)
-		svc = services.NewServicesHandler(*store)
+		svc = services.ServicesAdapter(*store)
 	}
 	InitializeRoutes()
 }
@@ -50,13 +50,14 @@ func InitializeRoutes() {
 	port := os.Getenv("PORT")
 	router := gin.Default()
 
-	handler := handlers.NewHTTPHandlers(*svc)
+	handler := handlers.HTTPAdapter(*svc)
 	router.GET("/", func(context *gin.Context) {
 		context.JSON(http.StatusOK, gin.H{"mesage": "Welcome to e-Commerce HalalMeat"})
 	})
 	
 	publicRoutes := router.Group("/v1")
 	publicRoutes.POST("/users", handler.SaveUser)
+	publicRoutes.GET("/users", handler.ReadUsers)
 	publicRoutes.POST("/users/register", controllers.Register)
 	publicRoutes.POST("/users/login", controllers.Login)
 

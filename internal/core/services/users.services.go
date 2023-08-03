@@ -11,3 +11,7 @@ func (servicesHandler *ServicesHandler) SaveUser(user domain.User) error {
 func (servicesHandler *ServicesHandler) ReadUser(UserID string) (*domain.User, error) {
 	return servicesHandler.repository.ReadUser(UserID)
 }
+
+func (servicesHandler *ServicesHandler) ReadUsers() ([]*domain.User, error) {
+	return servicesHandler.repository.ReadUsers()
+}

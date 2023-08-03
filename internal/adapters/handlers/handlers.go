@@ -8,7 +8,7 @@ type HTTPHandler struct {
 	svc  services.ServicesHandler
 }
 
-func NewHTTPHandlers(services services.ServicesHandler) *HTTPHandler {
+func HTTPAdapter(services services.ServicesHandler) *HTTPHandler {
 	return &HTTPHandler{
 		svc: services,
 	}

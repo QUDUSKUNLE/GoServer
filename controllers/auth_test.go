@@ -10,7 +10,7 @@ import (
 )
 
 func TestRegister(t *testing.T) {
-	newUser := models.UserInput{
+	newUser := models.UserInputDto{
 		Email:    "qudus@gmail.com",
 		Password: "test12345&",
 	}
@@ -25,7 +25,7 @@ func TestRegister(t *testing.T) {
 }
 
 func TestLogin(t *testing.T) {
-	user := models.UserInput{
+	user := models.UserInputDto{
 		Email:    "qudus@gmail.com",
 		Password: "test12345&",
 	}

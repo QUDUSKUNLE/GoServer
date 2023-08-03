@@ -2,15 +2,16 @@ package controllers
 
 import (
 	"encoding/json"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"server/models"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func NewUser() *httptest.ResponseRecorder {
-	user := models.UserInput{
+	user := models.UserInputDto{
 		Email:    "qudus@gmail.co",
 		Password: "test12345",
 	}

@@ -3,8 +3,6 @@ package controllers
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 	"log"
 	"net/http"
 	"net/http/httptest"
@@ -12,6 +10,9 @@ import (
 	"server/middlewares"
 	"server/models"
 	"testing"
+
+	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func TestMain(m *testing.M) {
@@ -81,7 +82,7 @@ func makeRequest(method, url string, body interface{}, isAuthenticated bool, use
 }
 
 func bearerToken(username, password string) string {
-	user := models.UserInput{
+	user := models.UserInputDto{
 		Email:    username,
 		Password: password,
 	}

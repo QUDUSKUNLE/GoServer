@@ -22,3 +22,12 @@ func (repo *PostgresRepository) ReadUser(UserID string) (*domain.User, error) {
 	}
 	return user, nil
 }
+
+func (repo *PostgresRepository) ReadUsers() ([]*domain.User, error) {
+	var users []*domain.User
+	req := repo.db.Find(&users)
+	if req.Error != nil {
+		return nil, errors.New("no user found")
+	}
+	return users, nil
+}

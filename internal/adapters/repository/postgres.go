@@ -11,7 +11,7 @@ type PostgresRepository struct {
 	db *gorm.DB
 }
 
-func NewPostgresDatabase(host, port, user, password, dbname string) *PostgresRepository {
+func PostgresDatabaseAdapter(host, port, user, password, dbname string) *PostgresRepository {
 	conn := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=disable",
 		host,
 		port,

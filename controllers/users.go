@@ -18,7 +18,7 @@ import (
 // @Success 200 {string} Helloworld
 // @Router /users/register [post]
 func Register(context *gin.Context) {
-	userInputModel := models.UserInput{}
+	userInputModel := models.UserInputDto{}
 
 	if err := context.ShouldBindJSON(&userInputModel); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": middlewares.CompileErrors(err)})
@@ -39,7 +39,7 @@ func Register(context *gin.Context) {
 }
 
 func Login(context *gin.Context) {
-	loginInputModel := models.UserInput{}
+	loginInputModel := models.UserInputDto{}
 
 	if err := context.ShouldBindJSON(&loginInputModel); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": middlewares.CompileErrors(err)})
