@@ -18,7 +18,7 @@ func (repo *PostgresRepository) ReadAddress(AddressID string) (*domain.Address, 
 	address := &domain.Address{}
 	req := repo.db.First(&address, "id = ?", AddressID)
 	if req.RowsAffected == 0 {
-		return nil, errors.New("user not found")
+		return nil, errors.New("address not found")
 	}
 	return address, nil
 }
@@ -27,7 +27,7 @@ func (repo *PostgresRepository) ReadAddresses() ([]*domain.Address, error) {
 	var addresses []*domain.Address
 	req := repo.db.Find(&addresses)
 	if req.Error != nil {
-		return nil, errors.New("no user found")
+		return nil, errors.New("no address found")
 	}
 	return addresses, nil
 }

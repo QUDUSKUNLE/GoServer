@@ -2,32 +2,18 @@ package services
 
 
 import (
-	ports "server/internal/core/ports"
 	domain "server/internal/core/domain"
 )
 
-type AddressService struct {
-	addressRepository ports.AddressRepository
+
+func (servicesHandler *ServicesHandler) SaveAddress(address *domain.Address) error {
+	return servicesHandler.repository.SaveAddress(address)
 }
 
-func NewAddressService(repo ports.AddressRepository) *AddressService {
-	return &AddressService{
-		addressRepository: repo,
-	}
+func (servicesHandler *ServicesHandler) ReadAddress(AddressID string) (*domain.Address, error) {
+	return servicesHandler.repository.ReadAddress(AddressID)
 }
 
-func (u *AddressService) SaveAddress(address domain.Address) error {
-	return u.addressRepository.SaveAddress(address)
-}
-
-func (u *AddressService) ReadAddress(AddressID string) (*domain.Address, error) {
-	return u.addressRepository.ReadAddress(AddressID)
-}
-
-func (u *AddressService) ReadAddresses() ([]*domain.Address, error) {
-	return u.addressRepository.ReadAddresses()
-}
-
-func (u *AddressService) DeleteAddress(AddressID string) (bool, error) {
-	return u.addressRepository.DeleteAddress(AddressID)
+func (servicesHandler *ServicesHandler) ReadAddresses() ([]*domain.Address, error) {
+	return servicesHandler.repository.ReadAddresses()
 }
