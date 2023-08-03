@@ -1,4 +1,4 @@
-package database
+package repository
 
 import (
 	"fmt"
@@ -7,11 +7,11 @@ import (
 	domain "server/internal/core/domain"
 )
 
-type PostgresDatabase struct {
+type PostgresRepository struct {
 	db *gorm.DB
 }
 
-func NewPostgresDatabase(host, port, user, password, dbname string) *PostgresDatabase {
+func NewPostgresDatabase(host, port, user, password, dbname string) *PostgresRepository {
 	conn := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=disable",
 		host,
 		port,
@@ -26,7 +26,7 @@ func NewPostgresDatabase(host, port, user, password, dbname string) *PostgresDat
 		fmt.Println("Successfully connected to the database.")
 	}
 	db.AutoMigrate(&domain.Address{}, &domain.User{})
-	return &PostgresDatabase{
+	return &PostgresRepository{
 		db: db,
 	}
 }

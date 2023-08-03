@@ -3,15 +3,20 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	docs "server/docs"
-  swaggerfiles "github.com/swaggo/files"
-  ginSwagger "github.com/swaggo/gin-swagger"
 	"log"
+	"flag"
 	"net/http"
 	"os"
 	"server/controllers"
 	"server/middlewares"
 	"server/models"
+	"server/internal/adapters/handlers"
+	"server/internal/adapters/repository"
+)
+
+var (
+	repo = flag.String("db", "postgres", "Database for storing messages")
+	hand handlers.HTTPHandler
 )
 
 func init() {
@@ -22,19 +27,33 @@ func init() {
 }
 
 func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8000"
+	flag.Parse()
+
+	switch *repo {
+	case "redis":
+	default:
+		repository.NewPostgresDatabase(
+			os.Getenv("HOST"),
+			os.Getenv("DB_PORT"),
+			os.Getenv("DB_USER"),
+			os.Getenv("DB_PASSWORD"),
+			os.Getenv("DB_NAME"),
+		)
 	}
+	InitializeRoutes()
+}
+
+func InitializeRoutes() {
+	port := os.Getenv("PORT")
 	router := gin.Default()
 
+	handler := handlers.NewHTTPHandlers(hand)
 	router.GET("/", func(context *gin.Context) {
 		context.JSON(http.StatusOK, gin.H{"mesage": "Welcome to e-Commerce HalalMeat"})
 	})
-
-	// PublicRoutes Endpoints
-	docs.SwaggerInfo.BasePath = "v1"
+	
 	publicRoutes := router.Group("/v1")
+	publicRoutes.POST("/users", handler.SaveUser)
 	publicRoutes.POST("/users/register", controllers.Register)
 	publicRoutes.POST("/users/login", controllers.Login)
 
@@ -84,11 +103,6 @@ func main() {
 	protectedRoutes.PATCH("/profiles/:id", middlewares.UUidMiddleware(), controllers.PatchProfile)
 
 	models.ConnectDatabase()
-	ginSwagger.WrapHandler(
-		swaggerfiles.Handler,
-		ginSwagger.URL("http://localhost:8000/swagger/doc.json"),
-		ginSwagger.DefaultModelsExpandDepth(-1),
-	)
 	if err := router.Run("localhost:" + port); err != nil {
 		return
 	}
