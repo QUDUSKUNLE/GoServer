@@ -99,7 +99,7 @@ func InitializeRoutes() {
 	protectedRoutes.DELETE("/addresses/:id", middlewares.UUidMiddleware(), controllers.DeleteAddress)
 
 	// Profile Endpoints
-	protectedRoutes.POST("/profiles", controllers.AddProfile)
+	protectedRoutes.POST("/profiles", httpHandler.SaveProfile)
 	protectedRoutes.GET("/profiles", controllers.GetProfiles)
 	protectedRoutes.GET("/profiles/:id", middlewares.UUidMiddleware(), controllers.GetProfile)
 	protectedRoutes.PATCH("/profiles/:id", middlewares.UUidMiddleware(), controllers.PatchProfile)

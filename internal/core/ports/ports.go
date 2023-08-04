@@ -13,6 +13,11 @@ type ServerServiceExternalPorts interface {
 	SaveAddress(address domain.Address) error
 	ReadAddress(AddressID string) (*domain.Address, error)
 	ReadAddresses() ([]*domain.Address, error)
+
+	SaveProfile(profile domain.Profile) error
+	ReadProfile(ProfileID string) (*domain.Profile, error)
+	ReadProfiles() ([]*domain.Profile, error)
+	ReadProfileByUserID(UserID string) (*domain.Profile, error)
 }
 
 type ServerRepositoryExternalPorts interface {
@@ -24,5 +29,10 @@ type ServerRepositoryExternalPorts interface {
 	SaveAddress(address domain.Address) error
 	ReadAddress(AddressID string) (*domain.Address, error)
 	ReadAddresses() ([]*domain.Address, error)
+
+	SaveProfile(profile domain.Profile) error
+	ReadProfile(ProfileID string) (*domain.Profile, error)
+	ReadProfiles() ([]*domain.Profile, error)
+	ReadProfileByUserID(UserID string) (*domain.Profile, error)
 }
 
