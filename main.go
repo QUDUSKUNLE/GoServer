@@ -42,7 +42,6 @@ func main() {
 			os.Getenv("DB_NAME"),
 		)
 		svc = services.ExternalServicesAdapter(store)
-		svc = services.InternalServicesAdapter(store)
 	}
 	InitializeRoutes()
 } 

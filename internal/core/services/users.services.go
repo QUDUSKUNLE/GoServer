@@ -16,6 +16,6 @@ func (externalServiceHandler *ServicesHandler) ReadUsers() ([]*domain.User, erro
 	return externalServiceHandler.External.ReadUsers()
 }
 
-func (internalServiceHandler *ServicesHandler) ReadUserByEmail(Email string) (*domain.User, error) {
-	return internalServiceHandler.Internal.ReadUserByEmail(Email)
+func (externalServiceHandler *ServicesHandler) ReadUserByEmail(Email string) (*domain.User, error) {
+	return externalServiceHandler.External.ReadUserByEmail(Email)
 }

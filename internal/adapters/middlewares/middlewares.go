@@ -2,24 +2,23 @@ package middlewares
 
 import (
 	"net/http"
-	"server/internal/adapters/helpers"
-
 	"github.com/gin-gonic/gin"
+	"server/internal/adapters/helpers"
 )
 
 func JWTAuthMiddleware() gin.HandlerFunc {
-	return func(context *gin.Context) {
-		if err := helpers.ValidateJWT(context); err != nil {
-			context.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
-			context.Abort()
+	return func(ctx *gin.Context) {
+		token, err := helpers.ExtractToken(ctx)
+		if err != nil {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+			ctx.Abort()
 			return
 		}
-		// _, err := helpers.CurrentUser(context)
-		// if err != nil {
-		// 	context.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized request."})
-		// 	context.Abort()
-		// 	return
-		// }
-		context.Next()
+		if _, err := helpers.ValidateJWToken(token); err != nil {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+			ctx.Abort()
+			return
+		}
+		ctx.Next()
 	}
 }

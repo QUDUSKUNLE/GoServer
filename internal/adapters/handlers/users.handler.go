@@ -47,10 +47,27 @@ func (service *HTTPHandler) Login(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error() })
 		return 
 	}
-	jwt, err := helpers.GenerateJWT(*user)
+	jwt, err := helpers.GenerateJWToken(*user)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": helpers.CompileErrors(err) })
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{"token": jwt})
+}
+
+func (service *HTTPHandler) CurrentUser(ctx *gin.Context) (domain.User, error) {
+	token, err := helpers.ExtractToken(ctx)
+	if err != nil {
+		return domain.User{}, err
+	}
+	claim, err := helpers.ValidateJWToken(token);
+	if err != nil {
+		return domain.User{}, err
+	}
+	UserID := claim["id"].(string)
+	user, err := service.ExternalServicesAdapter.ReadUser(UserID)
+	if err != nil {
+		return domain.User{}, err
+	}
+	return *user, nil
 }
