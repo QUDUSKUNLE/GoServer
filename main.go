@@ -57,10 +57,9 @@ func InitializeRoutes() {
 	})
 	
 	publicRoutes := router.Group("/v1")
-	publicRoutes.POST("/users", handler.SaveUser)
+	publicRoutes.POST("/users/register", handler.SaveUser)
+	publicRoutes.POST("/users/login", handler.Login)
 	publicRoutes.GET("/users", handler.ReadUsers)
-	publicRoutes.POST("/users/register", controllers.Register)
-	publicRoutes.POST("/users/login", controllers.Login)
 
 	// ProtectedRoutes Endpoints
 	protectedRoutes := router.Group("/v1")

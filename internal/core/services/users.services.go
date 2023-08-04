@@ -15,3 +15,7 @@ func (servicesHandler *ServicesHandler) ReadUser(UserID string) (*domain.User, e
 func (servicesHandler *ServicesHandler) ReadUsers() ([]*domain.User, error) {
 	return servicesHandler.repo.ReadUsers()
 }
+
+func (servicesHandler *ServicesHandler) ReadUserByEmail(Email string) (*domain.User, error) {
+	return servicesHandler.repo.ReadUserByEmail(Email)
+}

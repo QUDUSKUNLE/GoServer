@@ -31,3 +31,12 @@ func (repo *PostgresRepository) ReadUsers() ([]*domain.User, error) {
 	}
 	return users, nil
 }
+
+func (repo *PostgresRepository) ReadUserByEmail(Email string) (*domain.User, error) {
+	user := &domain.User{}
+	req := repo.db.Where(&domain.User{Email: Email}).First(&user)
+	if req.RowsAffected == 0 {
+		return nil, errors.New("no user found")
+	}
+	return user, nil
+}
