@@ -22,3 +22,13 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 		ctx.Next()
 	}
 }
+
+func UUidMiddleware() gin.HandlerFunc {
+	return func(context *gin.Context) {
+		if !helpers.ValidateUUID(context.Param("id")) {
+			context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "invalid id credential"})
+			return
+		}
+		context.Next()
+	}
+}

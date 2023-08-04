@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"strings"
 	"errors"
+	"github.com/google/uuid"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 	"server/internal/core/domain"
@@ -74,18 +75,9 @@ func CompileErrors(err error) []ErrorMessage {
 	return result
 }
 
-// func CurrentUser(context *gin.Context) (domain.User, error) {
-// 	err := ValidateJWT(context)
-// 	if err != nil {
-// 		return domain.User{}, err
-// 	}
-// 	token, _ := getToken(context)
-// 	claims, _ := token.Claims.(jwt.MapClaims)
-// 	userId := claims["id"].(string)
-
-// 	user, err := domain.User.FindUserByID(userId)
-// 	if err != nil {
-// 		return domain.User{}, err
-// 	}
-// 	return user, nil
-// }
+func ValidateUUID(uu string) bool {
+	if _, err := uuid.Parse(uu); err != nil {
+		return false
+	}
+	return true
+}

@@ -6,12 +6,12 @@ import (
 	"net/http"
 	"os"
 	"server/controllers"
-	"server/middlewares"
 	"server/models"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"server/internal/adapters/handlers"
+	"server/internal/adapters/middlewares"
 	"server/internal/adapters/repository"
 	"server/internal/core/services"
 )
@@ -100,9 +100,9 @@ func InitializeRoutes() {
 
 	// Profile Endpoints
 	protectedRoutes.POST("/profiles", httpHandler.SaveProfile)
-	protectedRoutes.GET("/profiles", controllers.GetProfiles)
-	protectedRoutes.GET("/profiles/:id", middlewares.UUidMiddleware(), controllers.GetProfile)
-	protectedRoutes.PATCH("/profiles/:id", middlewares.UUidMiddleware(), controllers.PatchProfile)
+	protectedRoutes.GET("/profiles", httpHandler.ReadProfiles)
+	protectedRoutes.GET("/profiles/:id", middlewares.UUidMiddleware(), httpHandler.ReadProfile)
+	protectedRoutes.PATCH("/profiles/:id", middlewares.UUidMiddleware(), httpHandler.PatchProfile)
 
 	models.ConnectDatabase()
 	if err := router.Run("localhost:" + port); err != nil {
