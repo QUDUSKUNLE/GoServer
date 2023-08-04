@@ -1,15 +1,15 @@
 package services
 
 import (
-	repository "server/internal/adapters/repository"
+	ports "server/internal/core/ports"
 )
 
 type ServicesHandler struct {
-	repository repository.PostgresRepository
+	repo ports.ServerRepository
 }
 
-func ServicesAdapter(service repository.PostgresRepository) *ServicesHandler {
+func ServicesAdapter(repo ports.ServerRepository) *ServicesHandler {
 	return &ServicesHandler{
-		repository: service,
+		repo: repo,
 	}
 }

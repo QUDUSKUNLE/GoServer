@@ -5,13 +5,13 @@ import (
 )
 
 func (servicesHandler *ServicesHandler) SaveUser(user domain.User) error {
-	return servicesHandler.repository.SaveUser(user)
+	return servicesHandler.repo.SaveUser(user)
 }
 
 func (servicesHandler *ServicesHandler) ReadUser(UserID string) (*domain.User, error) {
-	return servicesHandler.repository.ReadUser(UserID)
+	return servicesHandler.repo.ReadUser(UserID)
 }
 
 func (servicesHandler *ServicesHandler) ReadUsers() ([]*domain.User, error) {
-	return servicesHandler.repository.ReadUsers()
+	return servicesHandler.repo.ReadUsers()
 }

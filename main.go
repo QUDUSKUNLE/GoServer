@@ -18,6 +18,7 @@ import (
 
 var (
 	repo = flag.String("db", "postgres", "Database for storing messages")
+	httpHandler    *handlers.HTTPHandler
 	svc *services.ServicesHandler
 )
 
@@ -41,7 +42,7 @@ func main() {
 			os.Getenv("DB_PASSWORD"),
 			os.Getenv("DB_NAME"),
 		)
-		svc = services.ServicesAdapter(*store)
+		svc = services.ServicesAdapter(store)
 	}
 	InitializeRoutes()
 }

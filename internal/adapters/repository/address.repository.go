@@ -6,7 +6,7 @@ import (
 	domain "server/internal/core/domain"
 )
 
-func (repo *PostgresRepository) SaveAddress(address *domain.Address) error {
+func (repo *PostgresRepository) SaveAddress(address domain.Address) error {
 	req := repo.db.Create(&address)
 	if req.RowsAffected == 0 {
 		return errors.New(fmt.Sprintf("error creating address: %v", req.Error))
