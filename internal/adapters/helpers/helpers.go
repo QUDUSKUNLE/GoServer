@@ -85,3 +85,19 @@ func CompileErrors(err error) []ErrorMessage {
 	}
 	return result
 }
+
+// func CurrentUser(context *gin.Context) (domain.User, error) {
+// 	err := ValidateJWT(context)
+// 	if err != nil {
+// 		return domain.User{}, err
+// 	}
+// 	token, _ := getToken(context)
+// 	claims, _ := token.Claims.(jwt.MapClaims)
+// 	userId := claims["id"].(string)
+
+// 	user, err := domain.User.FindUserByID(userId)
+// 	if err != nil {
+// 		return domain.User{}, err
+// 	}
+// 	return user, nil
+// }

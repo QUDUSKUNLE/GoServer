@@ -6,14 +6,14 @@ import (
 )
 
 
-func (servicesHandler *ServicesHandler) SaveAddress(address domain.Address) error {
-	return servicesHandler.repo.SaveAddress(address)
+func (externalServiceHandler *ServicesHandler) SaveAddress(address domain.Address) error {
+	return externalServiceHandler.External.SaveAddress(address)
 }
 
-func (servicesHandler *ServicesHandler) ReadAddress(AddressID string) (*domain.Address, error) {
-	return servicesHandler.repo.ReadAddress(AddressID)
+func (externalServiceHandler *ServicesHandler) ReadAddress(AddressID string) (*domain.Address, error) {
+	return externalServiceHandler.External.ReadAddress(AddressID)
 }
 
-func (servicesHandler *ServicesHandler) ReadAddresses() ([]*domain.Address, error) {
-	return servicesHandler.repo.ReadAddresses()
+func (externalServiceHandler *ServicesHandler) ReadAddresses() ([]*domain.Address, error) {
+	return externalServiceHandler.External.ReadAddresses()
 }

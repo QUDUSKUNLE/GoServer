@@ -18,7 +18,6 @@ import (
 
 var (
 	repo = flag.String("db", "postgres", "Database for storing messages")
-	httpHandler    *handlers.HTTPHandler
 	svc *services.ServicesHandler
 )
 
@@ -42,24 +41,24 @@ func main() {
 			os.Getenv("DB_PASSWORD"),
 			os.Getenv("DB_NAME"),
 		)
-		svc = services.ServicesAdapter(store)
+		svc = services.ExternalServicesAdapter(store)
+		svc = services.InternalServicesAdapter(store)
 	}
 	InitializeRoutes()
-}
+} 
 
 func InitializeRoutes() {
 	port := os.Getenv("PORT")
 	router := gin.Default()
 
-	handler := handlers.HTTPAdapter(*svc)
+	httpHandler := handlers.HTTPAdapter(*svc)
 	router.GET("/", func(context *gin.Context) {
 		context.JSON(http.StatusOK, gin.H{"mesage": "Welcome to e-Commerce HalalMeat"})
 	})
 	
 	publicRoutes := router.Group("/v1")
-	publicRoutes.POST("/users/register", handler.SaveUser)
-	publicRoutes.POST("/users/login", handler.Login)
-	publicRoutes.GET("/users", handler.ReadUsers)
+	publicRoutes.POST("/users/register", httpHandler.SaveUser)
+	publicRoutes.POST("/users/login", httpHandler.Login)
 
 	// ProtectedRoutes Endpoints
 	protectedRoutes := router.Group("/v1")

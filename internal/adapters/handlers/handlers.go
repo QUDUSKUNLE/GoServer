@@ -5,11 +5,13 @@ import (
 )
 
 type HTTPHandler struct {
-	svc  services.ServicesHandler
+	ExternalServicesAdapter  services.ServicesHandler
+	InternalServicesAdapter  services.ServicesHandler
 }
 
 func HTTPAdapter(services services.ServicesHandler) *HTTPHandler {
 	return &HTTPHandler{
-		svc: services,
+		ExternalServicesAdapter: services,
+		InternalServicesAdapter: services,
 	}
 }

@@ -8,12 +8,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// External Interractions
 func (service *HTTPHandler) SaveUser(ctx *gin.Context) {
 	user := domain.UserInputDto{}
 	if err := ctx.ShouldBindJSON(&user); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": helpers.CompileErrors(err) })
 	}
-	if err := service.svc.SaveUser(
+	if err := service.ExternalServicesAdapter.SaveUser(
 		domain.User{ Email: user.Email, Password: user.Password },
 	); err != nil {
 		ctx.JSON(http.StatusConflict, gin.H{"error": err.Error() })
@@ -23,7 +24,7 @@ func (service *HTTPHandler) SaveUser(ctx *gin.Context) {
 }
 
 func (service *HTTPHandler) ReadUsers(ctx *gin.Context) {
-	result, err := service.svc.ReadUsers()
+	result, err := service.ExternalServicesAdapter.ReadUsers()
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{ "error": helpers.CompileErrors(err)})
 		return
@@ -37,7 +38,7 @@ func (service *HTTPHandler) Login(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": helpers.CompileErrors(err) })
 		return
 	}
-	user, err := service.svc.ReadUserByEmail(login.Email)
+	user, err := service.InternalServicesAdapter.ReadUserByEmail(login.Email)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": helpers.CompileErrors(err)})
 		return
