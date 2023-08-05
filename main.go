@@ -5,13 +5,10 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"server/controllers"
-	"server/models"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"server/internal/adapters/handlers"
-	"server/internal/adapters/middlewares"
 	"server/internal/adapters/repository"
 	"server/internal/core/services"
 )
@@ -61,50 +58,21 @@ func InitializeRoutes() {
 
 	// ProtectedRoutes Endpoints
 	protectedRoutes := router.Group("/v1")
-	protectedRoutes.Use(middlewares.JWTAuthMiddleware())
-
-	// Quest Endpoints
-	protectedRoutes.GET("/quests", controllers.GetQuests)
-	protectedRoutes.POST("/quests", controllers.AddQuest)
-	protectedRoutes.GET("/quests/:id", middlewares.UUidMiddleware(), controllers.GetQuest)
-	protectedRoutes.PATCH("/quests/:id", middlewares.UUidMiddleware(), controllers.UpdateQuest)
-	protectedRoutes.DELETE("/quests/:id", middlewares.UUidMiddleware(), controllers.DeleteQuest)
-
-	// Album Endpoints
-	protectedRoutes.GET("/albums", controllers.GetAlbums)
-	protectedRoutes.POST("/albums", controllers.AddAlbum)
-	protectedRoutes.GET("/albums/:id", middlewares.UUidMiddleware(), controllers.GetAlbum)
-	protectedRoutes.PATCH("/albums/:id", middlewares.UUidMiddleware(), controllers.UpdateAlbum)
-	protectedRoutes.DELETE("/albums/:id", middlewares.UUidMiddleware(), controllers.DeleteAlbum)
-
-	// Stock Endpoints
-	protectedRoutes.GET("/stocks", controllers.GetStocks)
-	protectedRoutes.POST("/stocks", controllers.AddStock)
-	protectedRoutes.GET("/stocks/:id", middlewares.UUidMiddleware(), controllers.GetStock)
-	protectedRoutes.PATCH("/stocks/:id", middlewares.UUidMiddleware(), controllers.UpdateStock)
-	protectedRoutes.DELETE("/stocks/:id", middlewares.UUidMiddleware(), controllers.DeleteStock)
-
-	// Order Endpoints
-	protectedRoutes.POST("/orders", controllers.AddOrder)
-	protectedRoutes.GET("/orders", controllers.GetOrders)
-	protectedRoutes.GET("/orders/:id", middlewares.UUidMiddleware(), controllers.GetOrder)
-	protectedRoutes.PATCH("/orders/:id", middlewares.UUidMiddleware(), controllers.PatchOrder)
-	protectedRoutes.DELETE("/orders/:id", middlewares.UUidMiddleware(), controllers.DeleteOrder)
+	protectedRoutes.Use(httpHandler.JWTAuthMiddleware())
 
 	// Address Endpoints
 	protectedRoutes.POST("/addresses", httpHandler.SaveAddress)
 	protectedRoutes.GET("/addresses", httpHandler.ReadAddresses)
-	protectedRoutes.GET("/addresses/:id", middlewares.UUidMiddleware(), httpHandler.ReadAddress)
-	protectedRoutes.PATCH("/addresses/:id", middlewares.UUidMiddleware(), httpHandler.PatchAddress)
-	protectedRoutes.DELETE("/addresses/:id", middlewares.UUidMiddleware(), httpHandler.DeleteAddress)
+	protectedRoutes.GET("/addresses/:id", httpHandler.UUidMiddleware(), httpHandler.ReadAddress)
+	protectedRoutes.PATCH("/addresses/:id", httpHandler.UUidMiddleware(), httpHandler.PatchAddress)
+	protectedRoutes.DELETE("/addresses/:id", httpHandler.UUidMiddleware(), httpHandler.DeleteAddress)
 
 	// Profile Endpoints
 	protectedRoutes.POST("/profiles", httpHandler.SaveProfile)
 	protectedRoutes.GET("/profiles", httpHandler.ReadProfiles)
-	protectedRoutes.GET("/profiles/:id", middlewares.UUidMiddleware(), httpHandler.ReadProfile)
-	protectedRoutes.PATCH("/profiles/:id", middlewares.UUidMiddleware(), httpHandler.PatchProfile)
+	protectedRoutes.GET("/profiles/:id", httpHandler.UUidMiddleware(), httpHandler.ReadProfile)
+	protectedRoutes.PATCH("/profiles/:id", httpHandler.UUidMiddleware(), httpHandler.PatchProfile)
 
-	models.ConnectDatabase()
 	if err := router.Run("localhost:" + port); err != nil {
 		return
 	}
