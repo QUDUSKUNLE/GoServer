@@ -2,7 +2,7 @@ package domain
 
 import (
 	"github.com/satori/go.uuid"
-	"gorm.io/gorm"
+	"time"
 )
 
 type Profile struct {
@@ -12,15 +12,12 @@ type Profile struct {
 	UserID    uuid.UUID `gorm:"foreignKey:ID" json:"-"`
 	User      User      `gorm:"belongs_to:user;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"user"`
 	Addresses []Address `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"addresses"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
 
 type ProfileInputDto struct {
 	FirstName string    `json:"firstName" binding:"required"`
 	LastName  string    `json:"lastName" binding:"required"`
 	UserID    uuid.UUID `json:"userID"`
-}
-
-func (profile *Profile) BeforeSave(scope *gorm.DB) error {
-	profile.ID = uuid.NewV4()
-	return nil
 }

@@ -5,7 +5,6 @@ import (
 	"os"
 	"strings"
 	"server/internal/core/domain"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -29,7 +28,7 @@ func (service *HTTPHandler) SaveProfile(ctx *gin.Context) {
 		ctx.JSON(http.StatusConflict, gin.H{"error": err.Error()})
 		return
 	}
-	ctx.JSON(http.StatusCreated, gin.H{"data": "Profile created successfully"})
+	ctx.JSON(http.StatusCreated, gin.H{"data": "Profile created successfully.", "status": true})
 }
 
 func (service *HTTPHandler) ReadProfile(ctx *gin.Context) {	

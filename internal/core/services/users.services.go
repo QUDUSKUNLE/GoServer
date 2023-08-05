@@ -1,10 +1,24 @@
 package services
 
 import (
+	"html"
+	"strings"
+	"github.com/satori/go.uuid"
+	"golang.org/x/crypto/bcrypt"
 	domain "server/internal/core/domain"
 )
 
 func (externalServiceHandler *ServicesHandler) SaveUser(user domain.User) error {
+	user.ID = uuid.NewV4()
+	hashedPassword, err := bcrypt.GenerateFromPassword(
+		[]byte(user.Password),
+		bcrypt.DefaultCost,
+	)
+	if err != nil {
+		return err
+	}
+	user.Password = string(hashedPassword)
+	user.Email = html.EscapeString(strings.TrimSpace(user.Email))
 	return externalServiceHandler.External.SaveUser(user)
 }
 
