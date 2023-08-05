@@ -9,7 +9,7 @@ import (
 )
 
 func (service *HTTPHandler) SaveProfile(ctx *gin.Context) {
-	profileDto := domain.ProfileInputDto{}
+	profileDto := domain.ProfileDto{}
 	if err := ctx.ShouldBindJSON(&profileDto); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error() })
 		return
@@ -23,7 +23,7 @@ func (service *HTTPHandler) SaveProfile(ctx *gin.Context) {
 		domain.Profile{
 			FirstName: strings.TrimSpace(profileDto.FirstName),
 			LastName:  strings.TrimSpace(profileDto.LastName),
-			UserID:    user.ID,
+			User:    &user,
 		}); err != nil {
 		ctx.JSON(http.StatusConflict, gin.H{"error": err.Error()})
 		return

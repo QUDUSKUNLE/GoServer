@@ -16,7 +16,7 @@ type User struct {
 	UpdatedAt time.Time `json:"UpdatedAt"`
 }
 
-type UserInputDto struct {
+type UserDto struct {
 	Email    string `json:"Email" binding:"required,email,lte=100"`
 	Password string `json:"Password" binding:"required,gte=6,lte=20"`
 }
