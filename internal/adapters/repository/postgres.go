@@ -25,7 +25,7 @@ func PostgresDatabaseAdapter(host, port, user, password, dbname string) *Postgre
 	} else {
 		fmt.Println("Successfully connected to the database.")
 	}
-	db.AutoMigrate(&domain.Address{}, &domain.User{})
+	db.AutoMigrate(&domain.User{}, &domain.Profile{}, &domain.Address{})
 	return &PostgresRepository{
 		db: db,
 	}

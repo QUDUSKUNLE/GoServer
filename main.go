@@ -6,19 +6,18 @@ import (
 	"net/http"
 	"os"
 	"server/controllers"
-	"server/middlewares"
 	"server/models"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"server/internal/adapters/handlers"
+	"server/internal/adapters/middlewares"
 	"server/internal/adapters/repository"
 	"server/internal/core/services"
 )
 
 var (
 	repo = flag.String("db", "postgres", "Database for storing messages")
-	httpHandler    *handlers.HTTPHandler
 	svc *services.ServicesHandler
 )
 
@@ -42,24 +41,23 @@ func main() {
 			os.Getenv("DB_PASSWORD"),
 			os.Getenv("DB_NAME"),
 		)
-		svc = services.ServicesAdapter(store)
+		svc = services.ExternalServicesAdapter(store)
 	}
 	InitializeRoutes()
-}
+} 
 
 func InitializeRoutes() {
 	port := os.Getenv("PORT")
 	router := gin.Default()
 
-	handler := handlers.HTTPAdapter(*svc)
+	httpHandler := handlers.HTTPAdapter(*svc)
 	router.GET("/", func(context *gin.Context) {
 		context.JSON(http.StatusOK, gin.H{"mesage": "Welcome to e-Commerce HalalMeat"})
 	})
 	
 	publicRoutes := router.Group("/v1")
-	publicRoutes.POST("/users/register", handler.SaveUser)
-	publicRoutes.POST("/users/login", handler.Login)
-	publicRoutes.GET("/users", handler.ReadUsers)
+	publicRoutes.POST("/users/register", httpHandler.SaveUser)
+	publicRoutes.POST("/users/login", httpHandler.Login)
 
 	// ProtectedRoutes Endpoints
 	protectedRoutes := router.Group("/v1")
@@ -101,10 +99,10 @@ func InitializeRoutes() {
 	protectedRoutes.DELETE("/addresses/:id", middlewares.UUidMiddleware(), controllers.DeleteAddress)
 
 	// Profile Endpoints
-	protectedRoutes.POST("/profiles", controllers.AddProfile)
-	protectedRoutes.GET("/profiles", controllers.GetProfiles)
-	protectedRoutes.GET("/profiles/:id", middlewares.UUidMiddleware(), controllers.GetProfile)
-	protectedRoutes.PATCH("/profiles/:id", middlewares.UUidMiddleware(), controllers.PatchProfile)
+	protectedRoutes.POST("/profiles", httpHandler.SaveProfile)
+	protectedRoutes.GET("/profiles", httpHandler.ReadProfiles)
+	protectedRoutes.GET("/profiles/:id", middlewares.UUidMiddleware(), httpHandler.ReadProfile)
+	protectedRoutes.PATCH("/profiles/:id", middlewares.UUidMiddleware(), httpHandler.PatchProfile)
 
 	models.ConnectDatabase()
 	if err := router.Run("localhost:" + port); err != nil {

@@ -5,11 +5,11 @@ import (
 )
 
 type ServicesHandler struct {
-	repo ports.ServerRepository
+	External ports.ServerRepositoryExternalPorts
 }
 
-func ServicesAdapter(repo ports.ServerRepository) *ServicesHandler {
+func ExternalServicesAdapter(repo ports.ServerRepositoryExternalPorts) *ServicesHandler {
 	return &ServicesHandler{
-		repo: repo,
+		External: repo,
 	}
 }
