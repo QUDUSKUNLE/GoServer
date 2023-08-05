@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"time"
 	"errors"
 	"github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -11,6 +12,8 @@ type User struct {
 	Email     string    `gorm:"size:255;unique" json:"Email"`
 	Password  string    `gorm:"size:255;" json:"-"`
 	Role      string    `gorm:"type:string;default:customer" json:"Role"`
+	CreatedAt time.Time `json:"CreatedAt"`
+	UpdatedAt time.Time `json:"UpdatedAt"`
 }
 
 type UserInputDto struct {

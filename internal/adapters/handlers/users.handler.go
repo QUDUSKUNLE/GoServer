@@ -17,7 +17,7 @@ func (service *HTTPHandler) SaveUser(ctx *gin.Context) {
 	if err := service.ExternalServicesAdapter.SaveUser(
 		domain.User{ Email: user.Email, Password: user.Password },
 	); err != nil {
-		ctx.JSON(http.StatusConflict, gin.H{"error": err.Error() })
+		ctx.JSON(http.StatusConflict, gin.H{"error": err.Error(), "status": false})
 		return 
 	}
 	ctx.JSON(http.StatusCreated, gin.H{"data": "User created successfully", "status": true})
@@ -26,7 +26,7 @@ func (service *HTTPHandler) SaveUser(ctx *gin.Context) {
 func (service *HTTPHandler) ReadUsers(ctx *gin.Context) {
 	result, err := service.ExternalServicesAdapter.ReadUsers()
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{ "error": helpers.CompileErrors(err), "status": false})
+		ctx.JSON(http.StatusInternalServerError, gin.H{ "error": err.Error(), "status": false})
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{"data": result })
@@ -40,7 +40,7 @@ func (service *HTTPHandler) Login(ctx *gin.Context) {
 	}
 	user, err := service.InternalServicesAdapter.ReadUserByEmail(login.Email)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": helpers.CompileErrors(err), "status": false})
+		ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error(), "status": false})
 		return
 	}
 	if err := user.ValidatePassword(login.Password); err != nil {
