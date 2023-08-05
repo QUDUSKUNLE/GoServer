@@ -71,3 +71,20 @@ func (service *HTTPHandler) CurrentUser(ctx *gin.Context) (domain.User, error) {
 	}
 	return *user, nil
 }
+
+func (service *HTTPHandler) CurrentUser(ctx *gin.Context) (domain.User, error) {
+	token, err := helpers.ExtractToken(ctx)
+	if err != nil {
+		return domain.User{}, err
+	}
+	claim, err := helpers.ValidateJWToken(token);
+	if err != nil {
+		return domain.User{}, err
+	}
+	UserID := claim["id"].(string)
+	user, err := service.ExternalServicesAdapter.ReadUser(UserID)
+	if err != nil {
+		return domain.User{}, err
+	}
+	return *user, nil
+}
