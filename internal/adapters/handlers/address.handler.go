@@ -2,9 +2,7 @@ package handlers
 
 import (
 	"net/http"
-	"server/internal/adapters/helpers"
 	"server/internal/core/domain"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,7 +10,7 @@ import (
 func (service *HTTPHandler) SaveAddress(ctx *gin.Context) {
 	address := domain.AddressDto{}
 	if err := ctx.ShouldBindJSON(&address); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": helpers.CompileErrors(err) })
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": service.CompileErrors(err) })
 		return
 	}
 	user, err := service.CurrentUser(ctx)

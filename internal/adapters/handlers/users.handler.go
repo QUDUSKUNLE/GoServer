@@ -2,9 +2,7 @@ package handlers
 
 import (
 	"net/http"
-	"server/internal/adapters/helpers"
 	"server/internal/core/domain"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,7 +10,7 @@ import (
 func (service *HTTPHandler) SaveUser(ctx *gin.Context) {
 	user := domain.UserDto{}
 	if err := ctx.ShouldBindJSON(&user); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": helpers.CompileErrors(err) })
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": service.CompileErrors(err) })
 	}
 	if err := service.ExternalServicesAdapter.SaveUser(
 		domain.User{ Email: user.Email, Password: user.Password },
@@ -35,7 +33,7 @@ func (service *HTTPHandler) ReadUsers(ctx *gin.Context) {
 func (service *HTTPHandler) Login(ctx *gin.Context) {
 	login := domain.UserDto{}
 	if err := ctx.ShouldBindJSON(&login); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": helpers.CompileErrors(err), "status": false })
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": service.CompileErrors(err), "status": false })
 		return
 	}
 	user, err := service.InternalServicesAdapter.ReadUserByEmail(login.Email)
@@ -47,20 +45,20 @@ func (service *HTTPHandler) Login(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error(), "status": false })
 		return 
 	}
-	jwt, err := helpers.GenerateJWToken(*user)
+	jwt, err := service.GenerateJWToken(*user)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": helpers.CompileErrors(err), "status": false })
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": service.CompileErrors(err), "status": false })
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{"token": jwt, "status": true })
 }
 
 func (service *HTTPHandler) CurrentUser(ctx *gin.Context) (domain.User, error) {
-	token, err := helpers.ExtractToken(ctx)
+	token, err := service.ExtractToken(ctx)
 	if err != nil {
 		return domain.User{}, err
 	}
-	claim, err := helpers.ValidateJWToken(token);
+	claim, err := service.ValidateJWToken(token);
 	if err != nil {
 		return domain.User{}, err
 	}
