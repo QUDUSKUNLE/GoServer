@@ -2,25 +2,22 @@ package domain
 
 import (
 	"github.com/satori/go.uuid"
-	"gorm.io/gorm"
+	"time"
 )
 
 type Profile struct {
-	ID        uuid.UUID `gorm:"type:uuid;primary_key" json:"profileID"`
-	FirstName string    `gorm:"size:50;not null" json:"firstName"`
-	LastName  string    `gorm:"size:50;not null" json:"lastName"`
+	ID        uuid.UUID `gorm:"type:uuid;primary_key" json:"ProfileID"`
+	FirstName string    `gorm:"size:50;index:idx_full_name" json:"FirstName"`
+	LastName  string    `gorm:"size:50;index:idx_full_name" json:"LastName"`
 	UserID    uuid.UUID `gorm:"foreignKey:ID" json:"-"`
-	User      User      `gorm:"belongs_to:user;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"user"`
-	Addresses []Address `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"addresses"`
+	User      User      `gorm:"belongs_to:user;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"User"`
+	Addresses []Address `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"Addresses"`
+	CreatedAt time.Time `json:"CreatedAt"`
+	UpdatedAt time.Time `json:"UpdatedAt"`
 }
 
 type ProfileInputDto struct {
-	FirstName string    `json:"firstName" binding:"required"`
-	LastName  string    `json:"lastName" binding:"required"`
-	UserID    uuid.UUID `json:"userID"`
-}
-
-func (profile *Profile) BeforeSave(scope *gorm.DB) error {
-	profile.ID = uuid.NewV4()
-	return nil
+	FirstName string    `json:"FirstName" binding:"required"`
+	LastName  string    `json:"LastName" binding:"required"`
+	UserID    uuid.UUID `json:"UserID"`
 }

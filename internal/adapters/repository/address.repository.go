@@ -1,33 +1,26 @@
 package repository
 
 import (
-	"fmt"
-	"errors"
 	domain "server/internal/core/domain"
 )
 
 func (repo *PostgresRepository) SaveAddress(address domain.Address) error {
-	req := repo.db.Create(&address)
-	if req.RowsAffected == 0 {
-		return errors.New(fmt.Sprintf("error creating address: %v", req.Error))
+	if err := repo.db.Create(&address).Error; err != nil {
+		return err
 	}
 	return nil
 }
 
 func (repo *PostgresRepository) ReadAddress(AddressID string) (*domain.Address, error) {
 	address := &domain.Address{}
-	req := repo.db.First(&address, "id = ?", AddressID)
-	if req.RowsAffected == 0 {
-		return nil, errors.New("address not found")
+	if err := repo.db.First(&address, "id = ?", AddressID).Error; err != nil {
+		return &domain.Address{}, err
 	}
 	return address, nil
 }
 
 func (repo *PostgresRepository) ReadAddresses() ([]*domain.Address, error) {
 	var addresses []*domain.Address
-	req := repo.db.Find(&addresses)
-	if req.Error != nil {
-		return nil, errors.New("no address found")
-	}
+	repo.db.Find(&addresses)
 	return addresses, nil
 }
