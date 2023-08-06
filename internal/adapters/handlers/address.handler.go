@@ -14,7 +14,7 @@ func (service *HTTPHandler) SaveAddress(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": compileErrors(err) })
 		return
 	}
-	UserID, fal := ctx.Get("user")
+	UserID, fal := ctx.Get("UserID")
 	if !fal {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized", "status": false })
 		return
