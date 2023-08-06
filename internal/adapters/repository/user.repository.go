@@ -13,7 +13,7 @@ func (repo *PostgresRepository) SaveUser(user domain.User) error {
 
 func (repo *PostgresRepository) ReadUser(UserID string) (*domain.User, error) {
 	user := &domain.User{}
-	if err := repo.db.Where("id = ?", UserID).First(&user).Error; err != nil {
+	if err := repo.db.Where("ID = ?", UserID).First(&user).Error; err != nil {
 		return &domain.User{}, err
 	}
 	return user, nil

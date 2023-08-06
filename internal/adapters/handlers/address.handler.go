@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 	"server/internal/core/domain"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,7 +19,7 @@ func (service *HTTPHandler) SaveAddress(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized", "status": false })
 		return
 	}
-	profile, err := service.ServicesAdapter.ReadProfile(((user.(*domain.User)).ID).String())
+	profile, err := service.ServicesAdapter.ReadProfileByUserID(((user.(*domain.User)).ID).String())
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{"error": "Profile record not found", "status": false})
 		return
@@ -35,7 +36,7 @@ func (service *HTTPHandler) SaveAddress(ctx *gin.Context) {
 		ctx.JSON(http.StatusConflict, gin.H{"error": err.Error()})
 		return
 	}
-	ctx.JSON(http.StatusCreated, gin.H{"data": "User created successfully", "status": true})
+	ctx.JSON(http.StatusCreated, gin.H{"data": "Address created successfully", "status": true})
 }
 
 func (service *HTTPHandler) ReadAddress(ctx *gin.Context) {

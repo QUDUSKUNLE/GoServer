@@ -14,7 +14,7 @@ func (repo *PostgresRepository) SaveProfile(profile domain.Profile) error {
 
 func (repo *PostgresRepository) ReadProfile(ProfileID string) (*domain.Profile, error) {
 	profile := &domain.Profile{}
-	if err := repo.db.Preload(clause.Associations).Where("id = ?", ProfileID).First(&profile).Error; err != nil {
+	if err := repo.db.Preload(clause.Associations).Where("ID = ?", ProfileID).First(&profile).Error; err != nil {
 		return &domain.Profile{}, err
 	}
 	return profile, nil
