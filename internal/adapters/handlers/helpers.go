@@ -13,7 +13,7 @@ type ErrorMessage struct {
 
 var privateKey = []byte(os.Getenv("JWT_PRIVATE_KEY"))
 
-func (service *HTTPHandler) SetErrorMessage(message validator.FieldError) string {
+func setErrorMessage(message validator.FieldError) string {
 	switch message.Tag() {
 	case "required":
 		return "This field is required"
@@ -25,12 +25,12 @@ func (service *HTTPHandler) SetErrorMessage(message validator.FieldError) string
 	return "unknown"
 }
 
-func (service *HTTPHandler) CompileErrors(err error) []ErrorMessage {
+func compileErrors(err error) []ErrorMessage {
 	var ve validator.ValidationErrors
 	var result []ErrorMessage
 	if errors.As(err, &ve) {
 		for _, fe := range ve {
-			result = append(result, ErrorMessage{fe.Field(), service.SetErrorMessage(fe)})
+			result = append(result, ErrorMessage{fe.Field(), setErrorMessage(fe)})
 		}
 	}
 	return result

@@ -10,7 +10,7 @@ import (
 func (service *HTTPHandler) SaveUser(ctx *gin.Context) {
 	user := domain.UserDto{}
 	if err := ctx.ShouldBindJSON(&user); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": service.CompileErrors(err) })
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": compileErrors(err) })
 	}
 	if err := service.ServicesAdapter.SaveUser(
 		domain.User{ Email: user.Email, Password: user.Password },
@@ -33,12 +33,12 @@ func (service *HTTPHandler) ReadUsers(ctx *gin.Context) {
 func (service *HTTPHandler) Login(ctx *gin.Context) {
 	login := domain.UserDto{}
 	if err := ctx.ShouldBindJSON(&login); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": service.CompileErrors(err), "status": false })
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": compileErrors(err), "status": false })
 		return
 	}
 	jwt, err := service.ServicesAdapter.Login(login)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": service.CompileErrors(err), "status": false })
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": compileErrors(err), "status": false })
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{"token": jwt, "status": true })

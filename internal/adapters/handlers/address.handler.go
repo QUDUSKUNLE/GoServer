@@ -11,7 +11,7 @@ import (
 func (service *HTTPHandler) SaveAddress(ctx *gin.Context) {
 	address := domain.AddressDto{}
 	if err := ctx.ShouldBindJSON(&address); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": service.CompileErrors(err) })
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": compileErrors(err) })
 		return
 	}
 	UserID, fal := ctx.Get("user")
