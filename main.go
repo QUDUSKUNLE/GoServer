@@ -58,20 +58,20 @@ func InitializeRoutes() {
 
 	// ProtectedRoutes Endpoints
 	protectedRoutes := router.Group("/v1")
-	protectedRoutes.Use(httpHandler.JWTAuthMiddleware())
+	protectedRoutes.Use(httpHandler.JWTAuthentication())
 
 	// Address Endpoints
 	protectedRoutes.POST("/addresses", httpHandler.SaveAddress)
 	protectedRoutes.GET("/addresses", httpHandler.ReadAddresses)
-	protectedRoutes.GET("/addresses/:id", httpHandler.UUidMiddleware(), httpHandler.ReadAddress)
-	protectedRoutes.PATCH("/addresses/:id", httpHandler.UUidMiddleware(), httpHandler.PatchAddress)
-	protectedRoutes.DELETE("/addresses/:id", httpHandler.UUidMiddleware(), httpHandler.DeleteAddress)
+	protectedRoutes.GET("/addresses/:id", httpHandler.UUIDMiddleware(), httpHandler.ReadAddress)
+	protectedRoutes.PATCH("/addresses/:id", httpHandler.UUIDMiddleware(), httpHandler.PatchAddress)
+	protectedRoutes.DELETE("/addresses/:id", httpHandler.UUIDMiddleware(), httpHandler.DeleteAddress)
 
 	// Profile Endpoints
 	protectedRoutes.POST("/profiles", httpHandler.SaveProfile)
 	protectedRoutes.GET("/profiles", httpHandler.ReadProfiles)
-	protectedRoutes.GET("/profiles/:id", httpHandler.UUidMiddleware(), httpHandler.ReadProfile)
-	protectedRoutes.PATCH("/profiles/:id", httpHandler.UUidMiddleware(), httpHandler.PatchProfile)
+	protectedRoutes.GET("/profiles/:id", httpHandler.UUIDMiddleware(), httpHandler.ReadProfile)
+	protectedRoutes.PATCH("/profiles/:id", httpHandler.UUIDMiddleware(), httpHandler.PatchProfile)
 
 	if err := router.Run("localhost:" + port); err != nil {
 		return

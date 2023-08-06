@@ -13,19 +13,18 @@ func (service *HTTPHandler) SaveAddress(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": service.CompileErrors(err) })
 		return
 	}
-	user, err := service.CurrentUser(ctx)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error() })
+	user, fal := ctx.Get("user")
+	if !fal {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized", "status": false })
 		return
 	}
-
-	profile, err := service.ExternalServicesAdapter.ReadProfile((user.ID).String())
+	profile, err := service.ServicesAdapter.ReadProfile(((user.(*domain.User)).ID).String())
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{"error": "Profile record not found", "status": false})
 		return
 	}
 
-	if err := service.ExternalServicesAdapter.SaveAddress(
+	if err := service.ServicesAdapter.SaveAddress(
 		domain.Address{
 			StreetNo:   address.StreetNo,
 			StreetName: address.StreetName,
@@ -44,7 +43,7 @@ func (service *HTTPHandler) ReadAddress(ctx *gin.Context) {
 }
 
 func (service *HTTPHandler) ReadAddresses(ctx *gin.Context) {
-	addresses, err := service.ExternalServicesAdapter.ReadAddresses()
+	addresses, err := service.ServicesAdapter.ReadAddresses()
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{ "error": err.Error(), "status": false})
 		return
