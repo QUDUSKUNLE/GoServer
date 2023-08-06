@@ -14,12 +14,12 @@ func (service *HTTPHandler) SaveAddress(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": service.CompileErrors(err) })
 		return
 	}
-	user, fal := ctx.Get("user")
+	UserID, fal := ctx.Get("user")
 	if !fal {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized", "status": false })
 		return
 	}
-	profile, err := service.ServicesAdapter.ReadProfileByUserID(((user.(*domain.User)).ID).String())
+	profile, err := service.ServicesAdapter.ReadProfileByUserID(UserID.(string))
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{"error": "Profile record not found", "status": false})
 		return

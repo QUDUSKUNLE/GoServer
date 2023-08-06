@@ -25,13 +25,7 @@ func (service *HTTPHandler) JWTAuthentication() gin.HandlerFunc {
 			return
 		}
 		UserID := cla["id"].(string)
-		user, err := service.ServicesAdapter.ReadUser(UserID)
-		if err != nil {
-			ctx.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
-			ctx.Abort()
-			return
-		}
-		ctx.Set("user", user)
+		ctx.Set("UserID", UserID)
 		ctx.Next()
 	}
 }
