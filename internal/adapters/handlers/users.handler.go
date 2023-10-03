@@ -23,15 +23,6 @@ func (service *HTTPHandler) SaveUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, gin.H{"data": "User created successfully.", "status": true})
 }
 
-func (service *HTTPHandler) ReadUsers(ctx *gin.Context) {
-	result, err := service.ServicesAdapter.ReadUsers()
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{ "error": err.Error(), "status": false})
-		return
-	}
-	ctx.JSON(http.StatusOK, gin.H{"data": result })
-}
-
 func (service *HTTPHandler) Login(ctx *gin.Context) {
 	login := domain.UserDto{}
 	if err := ctx.ShouldBindJSON(&login); err != nil {
