@@ -10,7 +10,6 @@ type Profile struct {
 	FirstName string    `gorm:"size:50;index:idx_full_name" json:"FirstName"`
 	LastName  string    `gorm:"size:50;index:idx_full_name" json:"LastName"`
 	UserID    *uuid.UUID `gorm:"foreignKey:ID" json:"-"`
-	User      *User     `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"User"`
 	Addresses []Address `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"Addresses"`
 	CreatedAt time.Time `json:"CreatedAt"`
 	UpdatedAt time.Time `json:"UpdatedAt"`

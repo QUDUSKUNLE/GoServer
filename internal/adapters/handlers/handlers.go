@@ -8,8 +8,8 @@ type HTTPHandler struct {
 	ServicesAdapter  services.ServicesHandler
 }
 
-func HTTPAdapter(services services.ServicesHandler) *HTTPHandler {
+func HTTPAdapter(serviceHandlers services.ServicesHandler) *HTTPHandler {
 	return &HTTPHandler{
-		ServicesAdapter: services,
+		ServicesAdapter: serviceHandlers,
 	}
 }

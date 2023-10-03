@@ -4,7 +4,7 @@ import (
 	domain "server/internal/core/domain"
 )
 
-type ServerServiceExternalPorts interface {
+type ServerServicePorts interface {
 	SaveUser(user domain.User) error
 	ReadUser(UserID string) (*domain.User, error)
 	ReadUsers() ([]*domain.User, error)
@@ -20,7 +20,7 @@ type ServerServiceExternalPorts interface {
 	ReadProfileByUserID(UserID string) (*domain.Profile, error)
 }
 
-type ServerRepositoryExternalPorts interface {
+type ServerRepositoryPorts interface {
 	SaveUser(user domain.User) error
 	ReadUser(UserID string) (*domain.User, error)
 	ReadUsers() ([]*domain.User, error)

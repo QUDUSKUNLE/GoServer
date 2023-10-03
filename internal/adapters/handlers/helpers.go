@@ -26,11 +26,11 @@ func setErrorMessage(message validator.FieldError) string {
 }
 
 func compileErrors(err error) []ErrorMessage {
-	var ve validator.ValidationErrors
+	var validatorError validator.ValidationErrors
 	var result []ErrorMessage
-	if errors.As(err, &ve) {
-		for _, fe := range ve {
-			result = append(result, ErrorMessage{fe.Field(), setErrorMessage(fe)})
+	if errors.As(err, &validatorError) {
+		for _, fieldError := range validatorError {
+			result = append(result, ErrorMessage{fieldError.Field(), setErrorMessage(fieldError)})
 		}
 	}
 	return result

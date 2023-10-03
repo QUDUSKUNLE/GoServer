@@ -1,7 +1,6 @@
 package services
 
 import (
-	"os"
 	"strconv"
 	"time"
 	"html"
@@ -11,8 +10,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	domain "server/internal/core/domain"
 )
-
-var privateKey = []byte(os.Getenv("JWT_PRIVATE_KEY"))
 
 func (externalServiceHandler *ServicesHandler) SaveUser(user domain.User) error {
 	user.ID = uuid.NewV4()
@@ -25,23 +22,23 @@ func (externalServiceHandler *ServicesHandler) SaveUser(user domain.User) error 
 	}
 	user.Password = string(hashedPassword)
 	user.Email = html.EscapeString(strings.TrimSpace(user.Email))
-	return externalServiceHandler.External.SaveUser(user)
+	return externalServiceHandler.Internal.SaveUser(user)
 }
 
 func (externalServiceHandler *ServicesHandler) ReadUser(UserID string) (*domain.User, error) {
-	return externalServiceHandler.External.ReadUser(UserID)
+	return externalServiceHandler.Internal.ReadUser(UserID)
 }
 
 func (externalServiceHandler *ServicesHandler) ReadUsers() ([]*domain.User, error) {
-	return externalServiceHandler.External.ReadUsers()
+	return externalServiceHandler.Internal.ReadUsers()
 }
 
 func (externalServiceHandler *ServicesHandler) ReadUserByEmail(Email string) (*domain.User, error) {
-	return externalServiceHandler.External.ReadUserByEmail(Email)
+	return externalServiceHandler.Internal.ReadUserByEmail(Email)
 }
 
 func (externalServiceHandler *ServicesHandler) Login(user domain.UserDto) (string, error) {
-	userByEmail, err := externalServiceHandler.External.ReadUserByEmail(user.Email)
+	userByEmail, err := externalServiceHandler.Internal.ReadUserByEmail(user.Email)
 	if err != nil {
 		return "", err
 	}
@@ -52,7 +49,7 @@ func (externalServiceHandler *ServicesHandler) Login(user domain.UserDto) (strin
 }
 
 func (externalServiceHandler *ServicesHandler) generateJWToken(user *domain.User) (string, error) {
-	tokenTTL, _ := strconv.Atoi(os.Getenv("TOKEN_TTL"))
+	tokenTTL, _ := strconv.Atoi(tokenKey)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"id":  user.ID,
 		"iat": time.Now().Unix(),

@@ -7,13 +7,13 @@ import (
 
 func (externalServiceHandler *ServicesHandler) SaveAddress(address domain.Address) error {
 	address.ID = uuid.NewV4()
-	return externalServiceHandler.External.SaveAddress(address)
+	return externalServiceHandler.Internal.SaveAddress(address)
 }
 
 func (externalServiceHandler *ServicesHandler) ReadAddress(AddressID string) (*domain.Address, error) {
-	return externalServiceHandler.External.ReadAddress(AddressID)
+	return externalServiceHandler.Internal.ReadAddress(AddressID)
 }
 
 func (externalServiceHandler *ServicesHandler) ReadAddresses() ([]*domain.Address, error) {
-	return externalServiceHandler.External.ReadAddresses()
+	return externalServiceHandler.Internal.ReadAddresses()
 }

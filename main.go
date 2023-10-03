@@ -8,9 +8,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	"server/internal/adapters/handlers"
-	"server/internal/adapters/repository"
-	"server/internal/core/services"
+	handlers "server/internal/adapters/handlers"
+	repository "server/internal/adapters/repository"
+	services "server/internal/core/services"
 )
 
 var (
@@ -38,7 +38,7 @@ func main() {
 			os.Getenv("DB_PASSWORD"),
 			os.Getenv("DB_NAME"),
 		)
-		svc = services.ExternalServicesAdapter(store)
+		svc = services.ServicesAdapter(store)
 	}
 	InitializeRoutes()
 } 
