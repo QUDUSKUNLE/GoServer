@@ -3,6 +3,7 @@ package services
 import (
 	"strconv"
 	"time"
+	"fmt"
 	"html"
 	"strings"
 	"github.com/satori/go.uuid"
@@ -39,7 +40,9 @@ func (externalServiceHandler *ServicesHandler) ReadUserByEmail(Email string) (*d
 
 func (externalServiceHandler *ServicesHandler) Login(user domain.UserDto) (string, error) {
 	userByEmail, err := externalServiceHandler.Internal.ReadUserByEmail(user.Email)
+	fmt.Println(userByEmail, err, "@@@@@@@")
 	if err != nil {
+		fmt.Println(err)
 		return "", err
 	}
 	if err := userByEmail.ValidatePassword(user.Password); err != nil {

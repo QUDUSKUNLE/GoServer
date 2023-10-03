@@ -3,7 +3,9 @@ package handlers
 import (
 	"net/http"
 	"server/internal/core/domain"
+
 	"github.com/gin-gonic/gin"
+	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
 )
 
 // External Interractions
@@ -33,13 +35,17 @@ func (service *HTTPHandler) ReadUsers(ctx *gin.Context) {
 func (service *HTTPHandler) Login(ctx *gin.Context) {
 	login := domain.UserDto{}
 	if err := ctx.ShouldBindJSON(&login); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": compileErrors(err), "status": false })
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error(), "status": false })
 		return
 	}
 	jwt, err := service.ServicesAdapter.Login(login)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": compileErrors(err), "status": false })
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "Email/Password is incorrect.", "status": false })
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{"token": jwt, "status": true })
+}
+
+func (service *HTTPHandler) Telementry(ctx *gin.Context) {
+	otelgin.HTML(ctx, http.StatusOK, indexTempl, gin.H{"data": "Telementry"})
 }

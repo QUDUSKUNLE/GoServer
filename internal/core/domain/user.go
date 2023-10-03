@@ -8,13 +8,13 @@ import (
 )
 
 type User struct {
-	ID        uuid.UUID `gorm:"type:uuid;primary_key" json:"UserID"`
+	ID        uuid.UUID `gorm:"type:uuid;primaryKey" json:"UserID"`
 	Email     string    `gorm:"size:255;unique" json:"Email"`
 	Password  string    `gorm:"size:255;" json:"-"`
 	Role      string    `gorm:"type:string;default:customer" json:"Role"`
 	Profile   Profile
-	CreatedAt time.Time `json:"CreatedAt"`
-	UpdatedAt time.Time `json:"UpdatedAt"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 type UserDto struct {

@@ -4,6 +4,8 @@ import (
 	services "server/internal/core/services"
 )
 
+const indexTempl = "index"
+
 type HTTPHandler struct {
 	ServicesAdapter  services.ServicesHandler
 }
