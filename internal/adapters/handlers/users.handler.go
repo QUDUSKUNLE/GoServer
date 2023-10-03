@@ -17,10 +17,10 @@ func (service *HTTPHandler) SaveUser(ctx *gin.Context) {
 	if err := service.ServicesAdapter.SaveUser(
 		domain.User{ Email: user.Email, Password: user.Password },
 	); err != nil {
-		ctx.JSON(http.StatusConflict, gin.H{"error": err.Error(), "status": false})
+		ctx.JSON(http.StatusConflict, gin.H{"error": "User`s already exists.", "status": false})
 		return 
 	}
-	ctx.JSON(http.StatusCreated, gin.H{"data": "User created successfully", "status": true})
+	ctx.JSON(http.StatusCreated, gin.H{"data": "User created successfully.", "status": true})
 }
 
 func (service *HTTPHandler) ReadUsers(ctx *gin.Context) {
