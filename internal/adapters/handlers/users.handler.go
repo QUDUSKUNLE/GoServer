@@ -40,7 +40,7 @@ func (service *HTTPHandler) Login(ctx *gin.Context) {
 	}
 	jwt, err := service.ServicesAdapter.Login(login)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound, gin.H{"error": "Email/Password is incorrect.", "status": false })
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Email/Password is incorrect.", "status": false })
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{"token": jwt, "status": true })
