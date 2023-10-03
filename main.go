@@ -1,17 +1,21 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
-	docs "server/docs"
-  swaggerfiles "github.com/swaggo/files"
-  ginSwagger "github.com/swaggo/gin-swagger"
+	"flag"
 	"log"
 	"net/http"
 	"os"
-	"server/controllers"
-	"server/middlewares"
-	"server/models"
+
+	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
+	handlers "server/internal/adapters/handlers"
+	repository "server/internal/adapters/repository"
+	services "server/internal/core/services"
+)
+
+var (
+	repo = flag.String("db", "postgres", "Database for storing messages")
+	svc *services.ServicesHandler
 )
 
 func init() {
@@ -22,73 +26,53 @@ func init() {
 }
 
 func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8000"
+	flag.Parse()
+
+	switch *repo {
+	case "redis":
+	default:
+		store := repository.PostgresDatabaseAdapter(
+			os.Getenv("HOST"),
+			os.Getenv("DB_PORT"),
+			os.Getenv("DB_USER"),
+			os.Getenv("DB_PASSWORD"),
+			os.Getenv("DB_NAME"),
+		)
+		svc = services.ServicesAdapter(store)
 	}
+	InitializeRoutes()
+} 
+
+func InitializeRoutes() {
+	port := os.Getenv("PORT")
 	router := gin.Default()
 
+	httpHandler := handlers.HTTPAdapter(*svc)
 	router.GET("/", func(context *gin.Context) {
 		context.JSON(http.StatusOK, gin.H{"mesage": "Welcome to e-Commerce HalalMeat"})
 	})
-
-	// PublicRoutes Endpoints
-	docs.SwaggerInfo.BasePath = "v1"
+	
 	publicRoutes := router.Group("/v1")
-	publicRoutes.POST("/users/register", controllers.Register)
-	publicRoutes.POST("/users/login", controllers.Login)
+	publicRoutes.POST("/users/register", httpHandler.SaveUser)
+	publicRoutes.POST("/users/login", httpHandler.Login)
 
 	// ProtectedRoutes Endpoints
 	protectedRoutes := router.Group("/v1")
-	protectedRoutes.Use(middlewares.JWTAuthMiddleware())
-
-	// Quest Endpoints
-	protectedRoutes.GET("/quests", controllers.GetQuests)
-	protectedRoutes.POST("/quests", controllers.AddQuest)
-	protectedRoutes.GET("/quests/:id", middlewares.UUidMiddleware(), controllers.GetQuest)
-	protectedRoutes.PATCH("/quests/:id", middlewares.UUidMiddleware(), controllers.UpdateQuest)
-	protectedRoutes.DELETE("/quests/:id", middlewares.UUidMiddleware(), controllers.DeleteQuest)
-
-	// Album Endpoints
-	protectedRoutes.GET("/albums", controllers.GetAlbums)
-	protectedRoutes.POST("/albums", controllers.AddAlbum)
-	protectedRoutes.GET("/albums/:id", middlewares.UUidMiddleware(), controllers.GetAlbum)
-	protectedRoutes.PATCH("/albums/:id", middlewares.UUidMiddleware(), controllers.UpdateAlbum)
-	protectedRoutes.DELETE("/albums/:id", middlewares.UUidMiddleware(), controllers.DeleteAlbum)
-
-	// Stock Endpoints
-	protectedRoutes.GET("/stocks", controllers.GetStocks)
-	protectedRoutes.POST("/stocks", controllers.AddStock)
-	protectedRoutes.GET("/stocks/:id", middlewares.UUidMiddleware(), controllers.GetStock)
-	protectedRoutes.PATCH("/stocks/:id", middlewares.UUidMiddleware(), controllers.UpdateStock)
-	protectedRoutes.DELETE("/stocks/:id", middlewares.UUidMiddleware(), controllers.DeleteStock)
-
-	// Order Endpoints
-	protectedRoutes.POST("/orders", controllers.AddOrder)
-	protectedRoutes.GET("/orders", controllers.GetOrders)
-	protectedRoutes.GET("/orders/:id", middlewares.UUidMiddleware(), controllers.GetOrder)
-	protectedRoutes.PATCH("/orders/:id", middlewares.UUidMiddleware(), controllers.PatchOrder)
-	protectedRoutes.DELETE("/orders/:id", middlewares.UUidMiddleware(), controllers.DeleteOrder)
+	protectedRoutes.Use(httpHandler.JWTAuthentication())
 
 	// Address Endpoints
-	protectedRoutes.POST("/addresses", controllers.AddAddress)
-	protectedRoutes.GET("/addresses", controllers.GetAddresses)
-	protectedRoutes.GET("/addresses/:id", middlewares.UUidMiddleware(), controllers.GetAddress)
-	protectedRoutes.PATCH("/addresses/:id", middlewares.UUidMiddleware(), controllers.PatchAddress)
-	protectedRoutes.DELETE("/addresses/:id", middlewares.UUidMiddleware(), controllers.DeleteAddress)
+	protectedRoutes.POST("/addresses", httpHandler.SaveAddress)
+	protectedRoutes.GET("/addresses", httpHandler.ReadAddresses)
+	protectedRoutes.GET("/addresses/:id", httpHandler.UUIDMiddleware(), httpHandler.ReadAddress)
+	protectedRoutes.PATCH("/addresses/:id", httpHandler.UUIDMiddleware(), httpHandler.PatchAddress)
+	protectedRoutes.DELETE("/addresses/:id", httpHandler.UUIDMiddleware(), httpHandler.DeleteAddress)
 
 	// Profile Endpoints
-	protectedRoutes.POST("/profiles", controllers.AddProfile)
-	protectedRoutes.GET("/profiles", controllers.GetProfiles)
-	protectedRoutes.GET("/profiles/:id", middlewares.UUidMiddleware(), controllers.GetProfile)
-	protectedRoutes.PATCH("/profiles/:id", middlewares.UUidMiddleware(), controllers.PatchProfile)
+	protectedRoutes.POST("/profiles", httpHandler.SaveProfile)
+	protectedRoutes.GET("/profiles", httpHandler.ReadProfiles)
+	protectedRoutes.GET("/profiles/:id", httpHandler.UUIDMiddleware(), httpHandler.ReadProfile)
+	protectedRoutes.PATCH("/profiles/:id", httpHandler.UUIDMiddleware(), httpHandler.PatchProfile)
 
-	models.ConnectDatabase()
-	ginSwagger.WrapHandler(
-		swaggerfiles.Handler,
-		ginSwagger.URL("http://localhost:8000/swagger/doc.json"),
-		ginSwagger.DefaultModelsExpandDepth(-1),
-	)
 	if err := router.Run("localhost:" + port); err != nil {
 		return
 	}
