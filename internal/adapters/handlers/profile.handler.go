@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"github.com/satori/go.uuid"
+	"github.com/google/uuid"
 	"server/internal/core/domain"
 	"github.com/gin-gonic/gin"
 )
@@ -20,16 +20,12 @@ func (service *HTTPHandler) SaveProfile(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized", "status": false })
 		return
 	}
-	result, err := uuid.FromString(UserID.(string))
-	if err != nil {
-		ctx.JSON(http.StatusConflict, gin.H{"error": err.Error(), "status": false})
-		return
-	}
+	result := UserID.(uuid.UUID)
 	if err := service.ServicesAdapter.SaveProfile(
 		domain.Profile{
 			FirstName: strings.TrimSpace(profileDto.FirstName),
 			LastName:  strings.TrimSpace(profileDto.LastName),
-			UserID:   &result,
+			UserID:   result,
 		}); err != nil {
 		ctx.JSON(http.StatusConflict, gin.H{"error": err.Error(), "status": false})
 		return

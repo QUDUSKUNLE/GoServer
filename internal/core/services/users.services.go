@@ -6,14 +6,12 @@ import (
 	"fmt"
 	"html"
 	"strings"
-	"github.com/satori/go.uuid"
 	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
 	domain "server/internal/core/domain"
 )
 
 func (externalServiceHandler *ServicesHandler) SaveUser(user domain.User) error {
-	user.ID = uuid.NewV4()
 	hashedPassword, err := bcrypt.GenerateFromPassword(
 		[]byte(user.Password),
 		bcrypt.DefaultCost,
@@ -40,7 +38,6 @@ func (externalServiceHandler *ServicesHandler) ReadUserByEmail(Email string) (*d
 
 func (externalServiceHandler *ServicesHandler) Login(user domain.UserDto) (string, error) {
 	userByEmail, err := externalServiceHandler.Internal.ReadUserByEmail(user.Email)
-	fmt.Println(userByEmail, err, "@@@@@@@")
 	if err != nil {
 		fmt.Println(err)
 		return "", err

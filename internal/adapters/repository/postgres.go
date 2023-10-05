@@ -1,31 +1,26 @@
 package repository
 
 import (
-	"fmt"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+	"context"
+	"database/sql"
+	"github.com/uptrace/bun"
+	"github.com/uptrace/bun/dialect/pgdialect"
+	"github.com/uptrace/bun/driver/pgdriver"
 	domain "server/internal/core/domain"
 )
 
+var ctx = context.Background()
+
 type PostgresRepository struct {
-	db *gorm.DB
+	db *bun.DB
 }
 
 func PostgresDatabaseAdapter(host, port, user, password, dbname string) *PostgresRepository {
-	conn := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=disable",
-		host,
-		port,
-		user,
-		dbname,
-		password,
-  )
-	db, err := gorm.Open(postgres.Open(conn), &gorm.Config{})
-	if err != nil {
-		panic("Failed to connect to database")
-	} else {
-		fmt.Println("Successfully connected to the database.")
-	}
-	db.AutoMigrate(&domain.User{}, &domain.Profile{}, &domain.Address{})
+	dsn := "postgres://" + user + ":" + password + "@" + host + ":" + port + "/" + dbname + "?sslmode=disable"
+	sqlDatabase := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
+	db := bun.NewDB(sqlDatabase, pgdialect.New())
+
+	db.NewCreateTable().Model((*domain.User)(nil)).IfNotExists().Exec(ctx)
 	return &PostgresRepository{
 		db: db,
 	}

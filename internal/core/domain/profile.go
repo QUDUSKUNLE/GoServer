@@ -1,16 +1,17 @@
 package domain
 
 import (
-	"github.com/satori/go.uuid"
+	"github.com/google/uuid"
 	"time"
 )
 
 type Profile struct {
-	ID        uuid.UUID 	`gorm:"type:uuid;primaryKey" json:"ProfileID"`
-	FirstName string    	`gorm:"size:50;index:idx_full_name" json:"FirstName"`
-	LastName  string    	`gorm:"size:50;index:idx_full_name" json:"LastName"`
-	UserID    *uuid.UUID 	`gorm:"foreignKey:ID" json:"-"`
-	Addresses []Address 	`gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"Addresses"`
+	ID        uuid.UUID 	`bun:"type:uuid,pk" json:"ProfileID"`
+	FirstName string    	`json:"FirstName"`
+	LastName  string    	`json:"LastName"`
+	UserID    uuid.UUID   `bun:"type:uuid"`
+	User      User        `bun:"rel:belongs-to,join:user_id=id"`
+	Addresses []Address 	`json:"Addresses"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }

@@ -2,16 +2,16 @@ package domain
 
 import (
 	"time"
-	"github.com/satori/go.uuid"
+	"github.com/google/uuid"
 )
 
 type Address struct {
-	ID         uuid.UUID `gorm:"type:uuid;primaryKey" json:"AddressID"`
+	ID         uuid.UUID `gorm:"type:uuid;primary_key" json:"AddressID"`
 	StreetNo   int       `gorm:"not null" sql:"unique:idx_streetno_streetname" json:"StreetNo"`
 	StreetName string    `gorm:"not null" sql:"unique:idx_streetno_streetname" json:"StreetName"`
 	Province   string    `gorm:"not null" json:"Province"`
 	State      string    `gorm:"not null" json:"State"`
-	ProfileID  uuid.UUID
+	Profile    Profile
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
