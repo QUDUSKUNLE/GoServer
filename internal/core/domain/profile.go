@@ -12,9 +12,8 @@ type Profile struct {
 	ID        uuid.UUID 	`bun:",pk,type:uuid,default:uuid_generate_v4()" json:"ProfileID"`
 	FirstName string    	`json:"FirstName"`
 	LastName  string    	`json:"LastName"`
-	UserID    uuid.UUID   `bun:"type:uuid"`
-	User      User        `bun:"rel:belongs-to,join:user_id=id"`
-	Addresses []Address 	`json:"Addresses"`
+	UserID    uuid.UUID   `bun:"type:uuid" json:"-"`
+	Addresses []Address 	`json:"-"`
 	CreatedAt time.Time   `bun:",nullzero,notnull,default:current_timestamp"`
 	UpdatedAt time.Time   `bun:",nullzero,notnull,default:current_timestamp"`
 }

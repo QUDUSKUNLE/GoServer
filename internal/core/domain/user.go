@@ -18,6 +18,8 @@ type User struct {
 	Role      string    	`bun:",nullzero,notnull,default:'customer'"`
 	CreatedAt time.Time   `bun:",nullzero,notnull,default:current_timestamp"`
 	UpdatedAt time.Time   `bun:",nullzero,notnull,default:current_timestamp"`
+
+	Profile   *Profile    `bun:"rel:has-one,join:id=user_id"`
 }
 
 type UserDto struct {

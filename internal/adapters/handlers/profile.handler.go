@@ -20,7 +20,7 @@ func (service *HTTPHandler) SaveProfile(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized", "status": false })
 		return
 	}
-	result := UserID.(uuid.UUID)
+	result, _ := uuid.Parse(UserID.(string))
 	if err := service.ServicesAdapter.SaveProfile(
 		domain.Profile{
 			FirstName: strings.TrimSpace(profileDto.FirstName),

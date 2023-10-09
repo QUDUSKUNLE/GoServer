@@ -5,7 +5,7 @@ import (
 )
 
 func (repo *PostgresRepository) SaveProfile(profile domain.Profile) error {
-	_, err := repo.db.NewInsert().Model(profile).Exec(ctx)
+	_, err := repo.db.NewInsert().Model(&profile).Exec(ctx)
 	if err != nil {
 		return err
 	}
@@ -22,7 +22,7 @@ func (repo *PostgresRepository) ReadProfile(ProfileID string) (*domain.Profile, 
 
 func (repo *PostgresRepository) ReadProfiles() ([]*domain.Profile, error) {
 	var profiles []*domain.Profile
-	repo.db.NewSelect().Model(profiles).Limit(20)
+	repo.db.NewSelect().Model(&profiles).Limit(20).Scan(ctx)
 	return profiles, nil
 }
 
