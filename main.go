@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
 	handlers "server/internal/adapters/handlers"
 	repository "server/internal/adapters/repository"
 	services "server/internal/core/services"
@@ -46,6 +47,7 @@ func main() {
 func InitializeRoutes() {
 	port := os.Getenv("PORT")
 	router := gin.Default()
+	router.Use(otelgin.Middleware("go-server"))
 
 	httpHandler := handlers.HTTPAdapter(*svc)
 	router.GET("/", func(context *gin.Context) {

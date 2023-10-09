@@ -1,20 +1,25 @@
 package domain
 
 import (
-	"time"
 	"errors"
-	"github.com/satori/go.uuid"
+	"time"
+
+	"github.com/google/uuid"
+	"github.com/uptrace/bun"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
-	ID        uuid.UUID `gorm:"type:uuid;primary_key" json:"UserID"`
-	Email     string    `gorm:"size:255;unique" json:"Email"`
-	Password  string    `gorm:"size:255;" json:"-"`
-	Role      string    `gorm:"type:string;default:customer" json:"Role"`
-	Profile   Profile
-	CreatedAt time.Time `json:"CreatedAt"`
-	UpdatedAt time.Time `json:"UpdatedAt"`
+	bun.BaseModel 		   `bun:"table:users"`
+
+	ID        uuid.UUID 	`bun:",pk,type:uuid,default:uuid_generate_v4()"`
+	Email     string    	`bun:"email,unique"`
+	Password  string    	`bun:"password"`
+	Role      string    	`bun:",nullzero,notnull,default:'customer'"`
+	CreatedAt time.Time   `bun:",nullzero,notnull,default:current_timestamp"`
+	UpdatedAt time.Time   `bun:",nullzero,notnull,default:current_timestamp"`
+
+	Profile   *Profile    `bun:"rel:has-one,join:id=user_id"`
 }
 
 type UserDto struct {

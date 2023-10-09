@@ -1,18 +1,21 @@
 package domain
 
 import (
-	"github.com/satori/go.uuid"
+	"github.com/google/uuid"
+	"github.com/uptrace/bun"
 	"time"
 )
 
 type Profile struct {
-	ID        uuid.UUID `gorm:"type:uuid;primary_key" json:"ProfileID"`
-	FirstName string    `gorm:"size:50;index:idx_full_name" json:"FirstName"`
-	LastName  string    `gorm:"size:50;index:idx_full_name" json:"LastName"`
-	UserID    *uuid.UUID `gorm:"foreignKey:ID" json:"-"`
-	Addresses []Address `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"Addresses"`
-	CreatedAt time.Time `json:"CreatedAt"`
-	UpdatedAt time.Time `json:"UpdatedAt"`
+	bun.BaseModel 		   `bun:"table:profiles"`
+
+	ID        uuid.UUID 	`bun:",pk,type:uuid,default:uuid_generate_v4()" json:"ProfileID"`
+	FirstName string    	`json:"FirstName"`
+	LastName  string    	`json:"LastName"`
+	UserID    uuid.UUID   `bun:"type:uuid" json:"-"`
+	Addresses []Address 	`json:"-"`
+	CreatedAt time.Time   `bun:",nullzero,notnull,default:current_timestamp"`
+	UpdatedAt time.Time   `bun:",nullzero,notnull,default:current_timestamp"`
 }
 
 type ProfileDto struct {

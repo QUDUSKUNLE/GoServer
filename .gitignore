@@ -3,3 +3,5 @@ tmp
 .env.test
 controllers.test
 coverage.out
+.vscode
+__*

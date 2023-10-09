@@ -1,12 +1,10 @@
 package services
 
 import (
-	"github.com/satori/go.uuid"
 	domain "server/internal/core/domain"
 )
 
 func (externalServiceHandler *ServicesHandler) SaveProfile(profile domain.Profile) error {
-	profile.ID = uuid.NewV4()
 	return externalServiceHandler.Internal.SaveProfile(profile)
 }
 

@@ -31,7 +31,7 @@ func (service *HTTPHandler) SaveAddress(ctx *gin.Context) {
 			StreetName: address.StreetName,
 			Province:   address.Province,
 			State:      address.State,
-			ProfileID:  profile.ID,
+			Profile:  *profile,
 		}); err != nil {
 		ctx.JSON(http.StatusConflict, gin.H{"error": err.Error()})
 		return

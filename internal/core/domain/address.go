@@ -2,7 +2,7 @@ package domain
 
 import (
 	"time"
-	"github.com/satori/go.uuid"
+	"github.com/google/uuid"
 )
 
 type Address struct {
@@ -11,15 +11,15 @@ type Address struct {
 	StreetName string    `gorm:"not null" sql:"unique:idx_streetno_streetname" json:"StreetName"`
 	Province   string    `gorm:"not null" json:"Province"`
 	State      string    `gorm:"not null" json:"State"`
-	ProfileID  uuid.UUID
-	CreatedAt time.Time `json:"CreatedAt"`
-	UpdatedAt time.Time `json:"UpdatedAt"`
+	Profile    Profile
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 type AddressDto struct {
-	StreetNo   int       `json:"streetNo" binding:"required,gte=0,lte=1000"`
-	StreetName string    `json:"streetName" binding:"required,max=50"`
-	Province   string    `json:"province" binding:"required,max=50"`
-	State      string    `json:"state" binding:"required,max=50"`
-	UserID     uuid.UUID `json:"userID"`
+	StreetNo   int       `json:"StreetNo" binding:"required,gte=0,lte=1000"`
+	StreetName string    `json:"StreetName" binding:"required,max=50"`
+	Province   string    `json:"Province" binding:"required,max=50"`
+	State      string    `json:"State" binding:"required,max=50"`
+	UserID     uuid.UUID `json:"UserID"`
 }

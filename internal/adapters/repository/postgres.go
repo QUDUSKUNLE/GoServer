@@ -1,31 +1,34 @@
 package repository
 
 import (
-	"fmt"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+	"context"
+	"database/sql"
 	domain "server/internal/core/domain"
+
+	"github.com/uptrace/bun"
+	"github.com/uptrace/bun/dialect/pgdialect"
+	"github.com/uptrace/bun/driver/pgdriver"
 )
 
+var ctx = context.Background()
+
 type PostgresRepository struct {
-	db *gorm.DB
+	db *bun.DB
 }
 
 func PostgresDatabaseAdapter(host, port, user, password, dbname string) *PostgresRepository {
-	conn := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=disable",
-		host,
-		port,
-		user,
-		dbname,
-		password,
-  )
-	db, err := gorm.Open(postgres.Open(conn), &gorm.Config{})
+	dsn := "postgres://" + user + ":" + password + "@" + host + ":" + port + "/" + dbname + "?sslmode=disable"
+	sqlDatabase := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
+	db := bun.NewDB(sqlDatabase, pgdialect.New())
+
+	_, err := db.NewCreateTable().Model((*domain.User)(nil)).Table("users").IfNotExists().Exec(ctx)
 	if err != nil {
-		panic("Failed to connect to database")
-	} else {
-		fmt.Println("Successfully connected to the database.")
+		panic(err)
 	}
-	db.AutoMigrate(&domain.User{}, &domain.Profile{}, &domain.Address{})
+	_, er := db.NewCreateTable().Model((*domain.Profile)(nil)).Table("profiles").IfNotExists().Exec(ctx)
+	if er != nil {
+		panic(er)
+	}
 	return &PostgresRepository{
 		db: db,
 	}
