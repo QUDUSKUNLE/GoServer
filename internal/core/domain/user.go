@@ -15,9 +15,9 @@ type User struct {
 	ID        uuid.UUID 	`bun:",pk,type:uuid,default:uuid_generate_v4()"`
 	Email     string    	`bun:"email,unique"`
 	Password  string    	`bun:"password"`
-	Role      string    	`bun:"role,default:customer"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	Role      string    	`bun:",nullzero,notnull,default:'customer'"`
+	CreatedAt time.Time   `bun:",nullzero,notnull,default:current_timestamp"`
+	UpdatedAt time.Time   `bun:",nullzero,notnull,default:current_timestamp"`
 }
 
 type UserDto struct {

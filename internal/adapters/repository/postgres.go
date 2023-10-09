@@ -3,10 +3,11 @@ package repository
 import (
 	"context"
 	"database/sql"
+	domain "server/internal/core/domain"
+
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
 	"github.com/uptrace/bun/driver/pgdriver"
-	domain "server/internal/core/domain"
 )
 
 var ctx = context.Background()
@@ -20,7 +21,14 @@ func PostgresDatabaseAdapter(host, port, user, password, dbname string) *Postgre
 	sqlDatabase := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
 	db := bun.NewDB(sqlDatabase, pgdialect.New())
 
-	db.NewCreateTable().Model((*domain.User)(nil)).IfNotExists().Exec(ctx)
+	_, err := db.NewCreateTable().Model((*domain.User)(nil)).Table("users").IfNotExists().Exec(ctx)
+	if err != nil {
+		panic(err)
+	}
+	_, er := db.NewCreateTable().Model((*domain.Profile)(nil)).Table("profiles").IfNotExists().Exec(ctx)
+	if er != nil {
+		panic(er)
+	}
 	return &PostgresRepository{
 		db: db,
 	}
