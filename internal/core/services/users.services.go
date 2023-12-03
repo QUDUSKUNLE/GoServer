@@ -36,7 +36,7 @@ func (externalServiceHandler *ServicesHandler) ReadUserByEmail(Email string) (*d
 	return externalServiceHandler.Internal.ReadUserByEmail(Email)
 }
 
-func (externalServiceHandler *ServicesHandler) Login(user domain.UserDto) (string, error) {
+func (externalServiceHandler *ServicesHandler) Login(user domain.UserDTO) (string, error) {
 	userByEmail, err := externalServiceHandler.Internal.ReadUserByEmail(user.Email)
 	if err != nil {
 		fmt.Println(err)

@@ -4,7 +4,6 @@ import (
 	"errors"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -12,7 +11,7 @@ import (
 type User struct {
 	bun.BaseModel 		   `bun:"table:users"`
 
-	ID        uuid.UUID 	`bun:",pk,type:uuid,default:uuid_generate_v4()"`
+	ID        int	        `bun:",pk"`
 	Email     string    	`bun:"email,unique"`
 	Password  string    	`bun:"password"`
 	Role      string    	`bun:",nullzero,notnull,default:'customer'"`
@@ -22,7 +21,7 @@ type User struct {
 	Profile   *Profile    `bun:"rel:has-one,join:id=user_id"`
 }
 
-type UserDto struct {
+type UserDTO struct {
 	Email    string `json:"Email" binding:"required,email,lte=100"`
 	Password string `json:"Password" binding:"required,gte=6,lte=20"`
 }

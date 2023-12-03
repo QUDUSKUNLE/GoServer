@@ -9,7 +9,7 @@ import (
 
 // External Interractions
 func (service *HTTPHandler) SaveAddress(ctx *gin.Context) {
-	address := domain.AddressDto{}
+	address := domain.AddressDTO{}
 	if err := ctx.ShouldBindJSON(&address); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": compileErrors(err) })
 		return

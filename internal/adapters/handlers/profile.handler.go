@@ -3,14 +3,14 @@ package handlers
 import (
 	"net/http"
 	"os"
-	"strings"
-	"github.com/google/uuid"
 	"server/internal/core/domain"
+	"strings"
+
 	"github.com/gin-gonic/gin"
 )
 
 func (service *HTTPHandler) SaveProfile(ctx *gin.Context) {
-	profileDto := domain.ProfileDto{}
+	profileDto := domain.ProfileDTO{}
 	if err := ctx.ShouldBindJSON(&profileDto); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error(), "status": false })
 		return
@@ -20,12 +20,18 @@ func (service *HTTPHandler) SaveProfile(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized", "status": false })
 		return
 	}
-	result, _ := uuid.Parse(UserID.(string))
+	
+	user, er := service.ServicesAdapter.ReadUser(UserID.(string))
+	if er != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized", "status": false })
+		return
+	}
+
 	if err := service.ServicesAdapter.SaveProfile(
 		domain.Profile{
 			FirstName: strings.TrimSpace(profileDto.FirstName),
 			LastName:  strings.TrimSpace(profileDto.LastName),
-			UserID:   result,
+			UserID: user.ID,
 		}); err != nil {
 		ctx.JSON(http.StatusConflict, gin.H{"error": err.Error(), "status": false})
 		return

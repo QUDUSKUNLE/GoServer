@@ -29,6 +29,7 @@ func PostgresDatabaseAdapter(host, port, user, password, dbname string) *Postgre
 	if er != nil {
 		panic(er)
 	}
+
 	return &PostgresRepository{
 		db: db,
 	}

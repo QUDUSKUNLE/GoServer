@@ -2,6 +2,7 @@ package ports
 
 import (
 	domain "server/internal/core/domain"
+	// response "server/internal/core/model/response"
 )
 
 type ServerServicePorts interface {

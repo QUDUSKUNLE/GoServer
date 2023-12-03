@@ -10,7 +10,7 @@ import (
 
 // External Interractions
 func (service *HTTPHandler) SaveUser(ctx *gin.Context) {
-	user := domain.UserDto{}
+	user := domain.UserDTO{}
 	if err := ctx.ShouldBindJSON(&user); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": compileErrors(err) })
 	}
@@ -24,7 +24,7 @@ func (service *HTTPHandler) SaveUser(ctx *gin.Context) {
 }
 
 func (service *HTTPHandler) Login(ctx *gin.Context) {
-	login := domain.UserDto{}
+	login := domain.UserDTO{}
 	if err := ctx.ShouldBindJSON(&login); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error(), "status": false })
 		return

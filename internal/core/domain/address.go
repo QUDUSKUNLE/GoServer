@@ -16,7 +16,7 @@ type Address struct {
 	UpdatedAt time.Time
 }
 
-type AddressDto struct {
+type AddressDTO struct {
 	StreetNo   int       `json:"StreetNo" binding:"required,gte=0,lte=1000"`
 	StreetName string    `json:"StreetName" binding:"required,max=50"`
 	Province   string    `json:"Province" binding:"required,max=50"`
